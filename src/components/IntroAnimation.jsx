@@ -124,9 +124,8 @@ const IntroAnimation = ({ onComplete }) => {
                       ease: entryEase,
                       filter: { duration: 0.9, delay: i * 0.07 },
                     }}
-                    className="inline-block"
+                    className="inline-block text-[clamp(28px,11vw,60px)] md:text-[clamp(60px,13vw,120px)]"
                     style={{
-                      fontSize: 'clamp(60px, 13vw, 120px)',
                       fontFamily: 'var(--font-display)',
                       color: 'var(--color-paper)',
                       lineHeight: 0.9,
@@ -161,12 +160,12 @@ const IntroAnimation = ({ onComplete }) => {
                   duration: 0.8,
                   ease: entryEase,
                 }}
+                className="text-[10px] sm:text-[12px] md:text-[14px]"
                 style={{
                   marginTop: '20px',
                   fontFamily: 'var(--font-mono)',
                   color: 'var(--color-ink-3)',
                   letterSpacing: '0.3em',
-                  fontSize: '14px',
                   textTransform: 'uppercase'
                 }}
               >
