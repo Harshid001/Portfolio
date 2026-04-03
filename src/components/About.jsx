@@ -34,13 +34,13 @@ const CountUp = ({ end, label }) => {
     <motion.div 
       onViewportEnter={() => setHasStarted(true)} 
       viewport={{ once: true, margin: "-50px" }}
-      className="flex flex-col brutal-border p-6"
+      className="flex flex-col brutal-border p-4 sm:p-6 h-full justify-center items-center text-center"
       style={{ backgroundColor: 'var(--color-paper)' }}
     >
-      <h3 style={{ fontSize: '72px', fontFamily: 'var(--font-display)', color: 'var(--color-ink)', lineHeight: 1 }}>
+      <h3 style={{ fontSize: 'clamp(40px, 8vw, 72px)', fontFamily: 'var(--font-display)', color: 'var(--color-ink)', lineHeight: 1 }}>
         {count}{end.toString().includes('+') || end.toString().includes('%') ? end.toString().replace(/[0-9]/g, '') : ''}
       </h3>
-      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--color-ink-3)', letterSpacing: '0.1em', uppercase: 'true' }}>
+      <p className="mt-2 text-[10px] sm:text-[11px] uppercase tracking-widest" style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-ink-3)' }}>
         {label}
       </p>
     </motion.div>
@@ -80,91 +80,34 @@ const About = () => {
         </motion.div>
 
         {/* 2-COLUMN GRID */}
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 xl:gap-24">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 xl:gap-24 items-start">
 
-          {/* LEFT COLUMN: My Journey + Image */}
-          <div className="w-full overflow-hidden">
-            <motion.h3
-              className="text-xl sm:text-2xl mb-6 sm:mb-10"
-              style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-ink)' }}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
-              My Journey
-            </motion.h3>
-
-            {/* Info Pills as Timeline Items */}
-            <div className="space-y-8 sm:space-y-10 mb-10">
-              {infoPills.map((pill, i) => (
-                <motion.div
-                  key={i}
-                  className="flex gap-4 sm:gap-6"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 + i * 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <div 
-                    className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 brutal-border flex items-center justify-center"
-                    style={{ backgroundColor: 'var(--color-paper)' }}
-                  >
-                    <span className="text-lg">{pill.icon}</span>
-                  </div>
-                  <div className="flex-1 pt-1">
-                    <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '0.15em', color: 'var(--color-ink)', textTransform: 'uppercase' }}>
-                      {pill.text}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
+          {/* LEFT COLUMN: Hero Image + Stats */}
+          <div className="w-full flex flex-col gap-10 sm:gap-12">
+            
             {/* Hero Image */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              className="relative w-full aspect-square brutal-border transition-all duration-300 group cursor-none"
-              style={{ boxShadow: '6px 6px 0 var(--color-ink)', backgroundColor: 'var(--color-paper-3)' }}
-              onMouseEnter={(e) => e.currentTarget.style.boxShadow = '12px 12px 0 var(--color-ink)'}
-              onMouseLeave={(e) => e.currentTarget.style.boxShadow = '6px 6px 0 var(--color-ink)'}
+              transition={{ duration: 0.6 }}
+              className="relative w-full aspect-square brutal-border transition-all duration-300 group cursor-crosshair"
+              style={{ boxShadow: '8px 8px 0 var(--color-ink)', backgroundColor: 'var(--color-paper-3)' }}
+              onMouseEnter={(e) => e.currentTarget.style.boxShadow = '16px 16px 0 var(--color-ink)'}
+              onMouseLeave={(e) => e.currentTarget.style.boxShadow = '8px 8px 0 var(--color-ink)'}
             >
-              <img src={heroImg} alt="About Harshid" className="w-full h-full object-cover grayscale transition-all duration-300 group-hover:grayscale-0" />
+              <img src={heroImg} alt="About Harshid" className="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0" />
             </motion.div>
-          </div>
 
-          {/* RIGHT COLUMN: Beyond Code + Stats */}
-          <div>
-            <motion.h3
-              className="text-xl sm:text-2xl mb-6 sm:mb-8"
-              style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-ink)' }}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
-              Beyond Code
-            </motion.h3>
-
-            <motion.div
-              className="space-y-4 sm:space-y-5 mb-8 sm:mb-12"
+            {/* Stats Grid */}
+            <motion.div 
+              className="grid grid-cols-2 gap-0" 
+              style={{ borderTop: '2px solid var(--color-ink)', borderLeft: '2px solid var(--color-ink)' }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3, duration: 0.6 }}
             >
-              <p className="text-[17px] leading-[1.8]" style={{ color: 'var(--color-ink-2)' }}>
-                I am a passionate Full Stack Developer currently pursuing a B.E. in Computer Science at Swaminarayan University.
-                I enjoy building raw, functional web applications, stripping away the unnecessary to focus on real-world problem-solving.
-                I am always open to new opportunities, collaborations, and challenging projects.
-              </p>
-            </motion.div>
-
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-0 mt-8" style={{ borderTop: '2px solid var(--color-ink)', borderLeft: '2px solid var(--color-ink)' }}>
               <div style={{ marginRight: '-2px', marginBottom: '-2px' }}>
                 <CountUp end={"5"} label="PROJECTS" />
               </div>
@@ -177,7 +120,81 @@ const About = () => {
               <div style={{ marginRight: '-2px', marginBottom: '-2px' }}>
                 <CountUp end={"100"} label="PASSION %" />
               </div>
+            </motion.div>
+
+          </div>
+
+          {/* RIGHT COLUMN: Text content + Info Pills */}
+          <div className="w-full flex flex-col gap-12 sm:gap-16 lg:pt-4">
+            
+            {/* Beyond Code (Description) */}
+            <div>
+              <motion.h3
+                className="text-2xl sm:text-3xl mb-6 font-bold uppercase tracking-tight"
+                style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-ink)' }}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
+                Beyond Code
+              </motion.h3>
+
+              <motion.div
+                className="space-y-4 sm:space-y-6"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+              >
+                <p className="text-lg sm:text-xl leading-relaxed text-justify" style={{ color: 'var(--color-ink-2)' }}>
+                  I am a passionate Full Stack Developer currently pursuing a B.E. in Computer Science at Swaminarayan University.
+                  <br/><br/>
+                  I enjoy building raw, functional web applications, stripping away the unnecessary to focus on real-world problem-solving.
+                  I am always open to new opportunities, collaborations, and challenging projects.
+                </p>
+              </motion.div>
             </div>
+
+            {/* My Journey (Info Pills) */}
+            <div>
+              <motion.h3
+                className="text-2xl sm:text-3xl mb-8 font-bold uppercase tracking-tight"
+                style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-ink)' }}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+              >
+                My Journey
+              </motion.h3>
+
+              <div className="space-y-6">
+                {infoPills.map((pill, i) => (
+                  <motion.div
+                    key={i}
+                    className="flex gap-4 sm:gap-6 items-center p-4 border-2 group hover:bg-neutral-100 transition-colors duration-300 hover:cursor-crosshair brutal-border"
+                    style={{ backgroundColor: 'var(--color-paper)' }}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.4 + i * 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <div 
+                      className="flex-shrink-0 w-12 h-12 flex items-center justify-center text-2xl group-hover:scale-125 transition-transform duration-300"
+                    >
+                      {pill.icon}
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-bold tracking-widest text-sm sm:text-base group-hover:translate-x-2 transition-transform duration-300" style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-ink)', textTransform: 'uppercase' }}>
+                        {pill.text}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
           </div>
         </div>
 
