@@ -1,0 +1,171 @@
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
+import { HiMenuAlt3, HiX } from 'react-icons/hi';
+
+const navLinks = [
+  { name: 'Home', href: '#home' },
+  { name: 'About', href: '#about' },
+  { name: 'Skills', href: '#skills' },
+  { name: 'Projects', href: '#projects' },
+  { name: 'Experience', href: '#experience' },
+  { name: 'Contact', href: '#contact' },
+];
+
+const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
+  const [navY, setNavY] = useState(0);
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const prev = scrollY.getPrevious();
+    if (latest > prev && latest > 100) {
+      setNavY(-70);
+    } else {
+      setNavY(0);
+    }
+  });
+
+  useEffect(() => {
+    const handleScrollTracking = () => {
+      setIsScrolled(window.scrollY > 20);
+      const sections = navLinks.map((l) => l.href.slice(1));
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sections[i]);
+        if (el && el.getBoundingClientRect().top <= 120) {
+          setActiveSection(sections[i]);
+          break;
+        }
+      }
+    };
+    window.addEventListener('scroll', handleScrollTracking);
+    return () => window.removeEventListener('scroll', handleScrollTracking);
+  }, []);
+
+  const scrollTo = (e, href) => {
+    e.preventDefault();
+    setIsMobileMenuOpen(false);
+    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <motion.nav
+      animate={{ y: navY }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      className="fixed top-0 left-0 w-full z-50 flex items-center"
+      style={{
+        height: '60px',
+        backgroundColor: 'var(--color-paper)',
+        backgroundImage: 'radial-gradient(var(--color-ink) 1px, transparent 1px)',
+        backgroundSize: '24px 24px',
+        borderBottom: `${isScrolled ? '3px' : '2px'} solid var(--color-ink)`
+      }}
+    >
+      <div className="w-full max-w-7xl mx-auto px-6 flex justify-between items-center h-full">
+        <a 
+          href="#home" 
+          onClick={(e) => scrollTo(e, '#home')} 
+          className="text-2xl transition-colors cursor-none hover:bg-ink hover:text-white"
+          style={{ 
+            fontFamily: 'var(--font-display)', 
+            color: 'var(--color-ink)',
+            lineHeight: 1,
+            padding: '4px 8px',
+            marginLeft: '-8px'
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-ink)'; e.currentTarget.style.color = 'var(--color-paper)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--color-ink)'; }}
+        >
+          &lt;HS /&gt;
+        </a>
+
+        <div className="hidden md:flex items-center h-full">
+          {navLinks.map((link) => (
+            <a 
+              key={link.name} 
+              href={link.href} 
+              onClick={(e) => scrollTo(e, link.href)}
+              className="h-full flex items-center px-5 cursor-none transition-colors"
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontWeight: 700,
+                fontSize: '13px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                color: activeSection === link.href.slice(1) ? 'var(--color-ink)' : 'var(--color-ink-2)',
+                borderBottom: activeSection === link.href.slice(1) ? '2px solid var(--color-ink)' : '2px solid transparent'
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-red)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = activeSection === link.href.slice(1) ? 'var(--color-ink)' : 'var(--color-ink-2)'; }}
+            >
+              {link.name}
+            </a>
+          ))}
+          <a 
+            href="#contact" 
+            onClick={(e) => scrollTo(e, '#contact')}
+            className="btn-primary cursor-none ml-4 h-[40px] flex items-center"
+            style={{ padding: '0 24px' }}
+          >
+            HIRE ME
+          </a>
+        </div>
+
+        <button 
+          className="md:hidden text-3xl cursor-none" 
+          style={{ color: 'var(--color-ink)' }} 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <HiX /> : <HiMenuAlt3 />}
+        </button>
+      </div>
+
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ clipPath: "inset(0 0 100% 0)" }} 
+            animate={{ clipPath: "inset(0 0 0% 0)" }} 
+            exit={{ clipPath: "inset(0 0 100% 0)" }} 
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="fixed inset-0 flex flex-col p-10 z-[100] md:hidden cursor-none" 
+            style={{ backgroundColor: 'var(--color-ink)' }}
+          >
+            <div className="flex justify-end mb-12">
+              <button 
+                className="text-4xl cursor-none" 
+                style={{ color: 'var(--color-paper)' }} 
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <HiX />
+              </button>
+            </div>
+            <div className="flex flex-col gap-6">
+              {navLinks.map((link, i) => (
+                <motion.a 
+                  key={link.name} 
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  href={link.href} 
+                  onClick={(e) => scrollTo(e, link.href)}
+                  className="text-5xl cursor-none transition-colors"
+                  style={{ 
+                    fontFamily: 'var(--font-display)',
+                    color: activeSection === link.href.slice(1) ? 'var(--color-red)' : 'var(--color-paper)' 
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-red)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = activeSection === link.href.slice(1) ? 'var(--color-red)' : 'var(--color-paper)'; }}
+                >
+                  {link.name}
+                </motion.a>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.nav>
+  );
+};
+
+export default Navbar;

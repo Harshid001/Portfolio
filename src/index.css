@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #f5f2ed;
+  --color-paper-2: #ede9e2;
+  --color-paper-3: #e0dcd4;
+  --color-ink: #0d0d0d;
+  --color-ink-2: #3a3a3a;
+  --color-ink-3: #888888;
+  --color-accent: #0d0d0d;
+  --color-red: #c0392b;
+  --color-white: #ffffff;
+
+  /* New Clean Professional Fonts */
+  --font-heading: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-code: "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Kept for backwards compatibility with existing UI components */
+  --font-display: var(--font-heading);
+  --font-mono: var(--font-code);
+}
+
+@layer base {
+  * {
+    cursor: none !important;
+    border-radius: 0 !important;
+  }
+
+  @media (pointer: coarse) {
+    * {
+      cursor: auto !important;
+    }
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body); /* Set Inter as default body font */
+    font-weight: 400;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    background-image: radial-gradient(var(--color-ink) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading); /* Set Poppins as default heading font */
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--color-ink);
+  }
+
+  code {
+    font-family: var(--font-code); /* Set Fira Code for all code blocks */
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .brutal-border {
+    border: 2px solid var(--color-ink);
+  }
+
+  .brutal-card {
+    background: var(--color-paper-2);
+    border: 2px solid var(--color-ink);
+    border-radius: 0;
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    border: 1px solid var(--color-ink);
+    padding: 3px 10px;
+    display: inline-block;
+    border-radius: 0;
+  }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+
+  .btn-primary {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    border: 2px solid var(--color-ink);
+    border-radius: 0;
+    padding: 14px 36px;
+    font-family: var(--font-body);
+    font-weight: 800;
+    transition: all 0.15s;
+  }
+  .btn-primary:hover {
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--color-ink);
+    border: 2px solid var(--color-ink);
+    border-radius: 0;
+    padding: 14px 36px;
+    font-family: var(--font-body);
+    font-weight: 800;
+    transition: all 0.15s;
+  }
+  .btn-secondary:hover {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--color-paper);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--color-ink);
+    border-radius: 0;
+  }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
