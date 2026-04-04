@@ -3,6 +3,7 @@ import SectionPresence from './SectionPresence';
 
 const projects = [
   { title: "StudyBuddy", description: "AI-powered study assistant to help students manage learning efficiently. Features a smart chatbot and resource management.", tech: ["React", "Node.js", "MongoDB", "Express"], github: "https://github.com/Harshid001/studybuddy" },
+  { title: "PINCODE", description: "Full-stack pincode directory app with search, filter by state/district/taluk, and dashboard analytics for Indian postal data.", tech: ["React", "Node.js", "MongoDB", "Express"], github: "https://github.com/Harshid001/PINCODE", live: "https://pincode-delta.vercel.app" },
   { title: "Smart Factory AI", description: "AI-based system to optimize smart factory operations and automation using real-time data analysis.", tech: ["Python", "AI/ML", "REST API", "Web"], github: "https://github.com/Harshid001/smartfactoryAIsystem" },
   { title: "Diwali Clone 1", description: "Festive responsive UI clone showcasing frontend and design skills with vibrant animations.", tech: ["HTML", "CSS", "JS"], live: "https://diwalicloneproject5.netlify.app/" },
   { title: "Diwali Clone 2", description: "Modern UI clone focused on layout accuracy and responsiveness for festive applications.", tech: ["HTML", "CSS", "JS"], live: "https://diwalicloneproject2.netlify.app/" },
