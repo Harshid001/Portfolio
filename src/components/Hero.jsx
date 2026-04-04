@@ -87,7 +87,7 @@ const Hero = () => {
           </div>
 
           <motion.div variants={fadeUp} className="mb-6 mt-12 flex items-center">
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '16px', color: 'var(--color-ink-3)', letterSpacing: '0.1em' }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '16px', color: 'var(--color-ink-2)', letterSpacing: '0.1em', fontWeight: 600 }}>
               [ FULL STACK DEVELOPER ]<span style={{ opacity: showCursor ? 1 : 0, color: 'var(--color-ink)', fontWeight: 'bold' }}>_</span>
             </span>
           </motion.div>

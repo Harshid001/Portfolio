@@ -15,13 +15,15 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
-  const [navY, setNavY] = useState(0);
+  const [navY, setNavY] = useState(-100);
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const prev = scrollY.getPrevious();
-    if (latest > prev && latest > 100) {
-      setNavY(-70);
+    if (latest < 80) {
+      setNavY(-100);
+    } else if (latest > prev && latest > 150) {
+      setNavY(-100);
     } else {
       setNavY(0);
     }

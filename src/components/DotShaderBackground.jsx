@@ -88,13 +88,15 @@ function Scene() {
   const size = useThree((s) => s.size)
   const viewport = useThree((s) => s.viewport)
   const materialRef = useRef(null)
+  const camera = useThree((s) => s.camera)
+  const raycaster = useThree((s) => s.raycaster)
   const rotation = 0
   const gridSize = 80
 
   const [trail, onMove] = useTrailTexture({
     size: 512,
-    radius: 0.15,
-    maxAge: 300,
+    radius: 0.25, // Increased radius to make it more responsive and visible
+    maxAge: 400, // Make trail last a bit longer
     interpolate: 1,
     ease: function easeInOutCirc(x) {
       return x < 0.5
@@ -103,19 +105,54 @@ function Scene() {
     },
   })
 
+  const meshRef = useRef(null)
+
   useFrame((state) => {
     if (materialRef.current) {
       materialRef.current.uniforms.time.value = state.clock.elapsedTime
     }
   })
 
-  const handlePointerMove = (e) => {
-    onMove(e)
-  }
+  useEffect(() => {
+    const el = document.getElementById('about')
+    if (!el || !meshRef.current) return
+
+    const handleMove = (e) => {
+      const rect = el.getBoundingClientRect()
+      const clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : e.clientX
+      const clientY = (e.touches && e.touches.length > 0) ? e.touches[0].clientY : e.clientY
+      
+      const x = clientX - rect.left
+      const y = clientY - rect.top
+      
+      // Convert to Normalized Device Coordinates (-1 to +1)
+      const mouseVec = new THREE.Vector2(
+        (x / rect.width) * 2 - 1,
+        -(y / rect.height) * 2 + 1
+      )
+      
+      raycaster.setFromCamera(mouseVec, camera)
+      const intersects = raycaster.intersectObject(meshRef.current)
+      
+      if (intersects.length > 0) {
+        onMove({ uv: intersects[0].uv })
+      }
+    }
+
+    el.addEventListener('mousemove', handleMove, { passive: true })
+    el.addEventListener('touchmove', handleMove, { passive: true })
+    el.addEventListener('touchstart', handleMove, { passive: true })
+
+    return () => {
+      el.removeEventListener('mousemove', handleMove)
+      el.removeEventListener('touchmove', handleMove)
+      el.removeEventListener('touchstart', handleMove)
+    }
+  }, [onMove, camera, raycaster])
 
   const scale = Math.max(viewport.width, viewport.height) / 2
   return (
-    <mesh scale={[scale, scale, 1]} onPointerMove={handlePointerMove}>
+    <mesh ref={meshRef} scale={[scale, scale, 1]}>
       <planeGeometry args={[2, 2]} />
       <dotMaterialImpl
         ref={materialRef}
