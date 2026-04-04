@@ -7,6 +7,7 @@ const CollabCursor = () => {
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [isDark, setIsDark] = useState(false);
   const trailRefs = useRef([]);
 
   const dotX = useMotionValue(0);
@@ -45,6 +46,7 @@ const CollabCursor = () => {
     const updateHoverState = (e) => {
       const target = e.target;
       setIsHovering(target.closest('a, button, [role="button"], input, textarea, select, label[for]') !== null);
+      setIsDark(target.closest('.dark-section') !== null);
     };
 
     const animateTrail = () => {
@@ -77,6 +79,9 @@ const CollabCursor = () => {
 
   if (isTouchDevice) return null;
 
+  const currentInk = isDark ? 'var(--color-paper)' : 'var(--color-ink)';
+  const currentPaper = isDark ? 'var(--color-ink)' : 'var(--color-paper)';
+
   return (
     <>
       {Array.from({ length: TRAIL_COUNT }).map((_, i) => (
@@ -86,9 +91,9 @@ const CollabCursor = () => {
           className="fixed top-0 left-0 pointer-events-none"
           style={{
             width: 8 - i, height: 8 - i,
-            backgroundColor: 'var(--color-ink)',
+            backgroundColor: currentInk,
             opacity: 0.6 - (i * 0.15),
-            zIndex: 9998
+            zIndex: 99998
           }}
         />
       ))}
@@ -96,10 +101,10 @@ const CollabCursor = () => {
         className="fixed top-0 left-0 pointer-events-none"
         style={{
           x: ringX, y: ringY, width: 28, height: 28, marginLeft: -14, marginTop: -14,
-          border: '2px solid var(--color-ink)',
-          backgroundColor: isHovering ? 'var(--color-ink)' : 'transparent',
+          border: `2px solid ${currentInk}`,
+          backgroundColor: isHovering ? currentInk : 'transparent',
           rotate: 45,
-          zIndex: 9999, transition: 'background-color 0.15s, border-color 0.15s',
+          zIndex: 99999, transition: 'background-color 0.15s, border-color 0.15s',
         }}
         animate={{ scale: isClicking ? 0.8 : isHovering ? 1.5 : 1 }}
         transition={{ duration: 0.15 }}
@@ -108,9 +113,9 @@ const CollabCursor = () => {
         className="fixed top-0 left-0 pointer-events-none"
         style={{
           x: dotX, y: dotY, width: 8, height: 8, marginLeft: -4, marginTop: -4,
-          backgroundColor: isClicking ? 'var(--color-red)' : isHovering ? 'var(--color-paper)' : 'var(--color-ink)',
+          backgroundColor: isClicking ? 'var(--color-red)' : isHovering ? currentPaper : currentInk,
           rotate: 45,
-          zIndex: 9999, transition: 'background-color 0.15s'
+          zIndex: 99999, transition: 'background-color 0.15s'
         }}
       />
     </>

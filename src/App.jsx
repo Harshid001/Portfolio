@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { CollabProvider } from './context/CollabContext';
 import CollabCursor from './components/CollabCursor';
 import GhostCursors from './components/GhostCursors';
@@ -40,18 +40,30 @@ function App() {
       </AnimatePresence>
 
       <div className="min-h-screen overflow-x-hidden custom-scrollbar bg-paper text-ink">
-        <Navbar />
+        <AnimatePresence>
+          {!showIntro && (
+            <motion.div
+              key="main-app-content"
+              initial={{ opacity: 0, y: 60 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+              className="w-full"
+            >
+              <Navbar />
 
-        <main>
-          <Hero />
-          <About />
-          <Skills />
-          <Projects />
-          <Experience />
-          <Contact />
-        </main>
+              <main>
+                <Hero />
+                <About />
+                <Skills />
+                <Projects />
+                <Experience />
+                <Contact />
+              </main>
 
-        <Footer />
+              <Footer />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </CollabProvider>
   );
