@@ -130,7 +130,7 @@ const About = () => {
             {/* Beyond Code (Description) */}
             <div>
               <motion.h3
-                className="text-2xl sm:text-3xl mb-6 font-bold uppercase tracking-tight"
+                className="text-2xl sm:text-3xl mb-6 font-black uppercase tracking-tight"
                 style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-ink)' }}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -147,7 +147,7 @@ const About = () => {
                 viewport={{ once: true }}
                 transition={{ delay: 0.2, duration: 0.6 }}
               >
-                <p className="text-lg sm:text-xl leading-relaxed text-justify" style={{ color: 'var(--color-ink-2)' }}>
+                <p className="text-lg sm:text-xl leading-relaxed text-justify font-medium" style={{ color: 'var(--color-ink)' }}>
                   I am a passionate Full Stack Developer currently pursuing a B.E. in Computer Science at Swaminarayan University.
                   <br/><br/>
                   I enjoy building raw, functional web applications, stripping away the unnecessary to focus on real-world problem-solving.
