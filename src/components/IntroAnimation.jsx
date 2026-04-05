@@ -63,14 +63,19 @@ const IntroAnimation = ({ onComplete }) => {
           exitX: px + Math.cos(angle) * exitDist,
           exitY: py + Math.sin(angle) * exitDist,
           orbitAngle: Math.random() * Math.PI * 2,
-          orbitSpeed: (Math.random() * 0.005 + 0.001) * (Math.random() > 0.5 ? 1 : -1),
+          orbitSpeed: (Math.random() * 0.003 + 0.001) * (Math.random() > 0.5 ? 1 : -1),
           // Orbit across the whole screen dynamically, outside text bounds
-          orbitRx: textHalfWidth + Math.random() * (w * 0.6), 
-          orbitRy: textHalfHeight + Math.random() * (h * 0.6),
+          orbitRx: textHalfWidth + 50 + Math.random() * (w * 0.45), 
+          orbitRy: textHalfHeight + 40 + Math.random() * (h * 0.45),
+          // Wandering offsets for "free" movement
+          wx: Math.random() * Math.PI * 2,
+          wy: Math.random() * Math.PI * 2,
+          ws: Math.random() * 0.02 + 0.005,
+          wr: Math.random() * 40 + 20,
           // Color selection matching variables
           color: Math.random() > 0.4 ? '#f5f2ed' : '#a1a1aa', // var(--color-paper) & var(--color-ink-3) approx
-          size: Math.random() * 1.8 + 1.2, 
-          delay: Math.random() * 600, // Staggered entry
+          size: Math.random() * 1.5 + 1.0, 
+          delay: Math.random() * 400, // Faster staggered entry
         };
       });
     };
@@ -117,8 +122,15 @@ const IntroAnimation = ({ onComplete }) => {
           if (elapsed > p.delay) {
             // Randomly orbit the name on the whole screen from phase 2
             p.orbitAngle += p.orbitSpeed;
-            targetX = cenX + Math.cos(p.orbitAngle) * p.orbitRx;
-            targetY = cenY + Math.sin(p.orbitAngle) * p.orbitRy;
+            
+            // Add wandering motion for "free" feel
+            p.wx += p.ws;
+            p.wy += p.ws * 1.1; 
+            const ox = Math.cos(p.wx) * p.wr;
+            const oy = Math.sin(p.wy) * p.wr;
+
+            targetX = cenX + Math.cos(p.orbitAngle) * p.orbitRx + ox;
+            targetY = cenY + Math.sin(p.orbitAngle) * p.orbitRy + oy;
           } else {
             shouldRender = false; // Wait until delay finishes
           }
@@ -128,7 +140,7 @@ const IntroAnimation = ({ onComplete }) => {
 
         // --- Physics Calculation ---
         // Mouse hover repulsion physics (Interactive Hover)
-        if (phase >= 3 && !isExiting) {
+        if (phase >= 2 && !isExiting) {
           const dx = p.x - mx;
           const dy = p.y - my;
           const interactionRadius = 250; // Larger radius, no lag zone
@@ -335,7 +347,8 @@ const IntroAnimation = ({ onComplete }) => {
                   style={{
                     backgroundColor: 'transparent',
                     color: 'var(--color-paper)',
-                    border: '2px solid var(--color-paper)',
+                    border: 'none',
+                    fontWeight: 'bold',
                     padding: '12px 32px',
                     fontFamily: 'var(--font-mono)',
                     fontSize: '12px',
