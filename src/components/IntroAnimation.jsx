@@ -4,105 +4,198 @@ import { motion, AnimatePresence } from 'framer-motion';
 const NameText = "HARSHID SONI";
 const SubtitleText = "FULL STACK DEVELOPER";
 
+// We'll keep the same phase system to sync the HTML animations:
+// Phase 1: Scattered
+// Phase 2: Assembling
+// Phase 3: Text becomes visible, Particle float
+// Phase 4: CTA, Typewriter setup
+
 const IntroAnimation = ({ onComplete }) => {
   const [phase, setPhase] = useState(1);
   const [isExiting, setIsExiting] = useState(false);
-  const [particles, setParticles] = useState([]);
   const [subtitle, setSubtitle] = useState('');
   
-  // Create particles from Canvas Text layout
+  const canvasRef = useRef(null);
+  const mouseRef = useRef({ x: -1000, y: -1000, radius: 150 }); // Higher radius for better interaction
+  const particlesRef = useRef([]);
+  // Track phase in a ref so requestAnimationFrame always gets the latest
+  const stateRef = useRef({ phase: 1, isExiting: false, w: 0, h: 0 });
+
   useEffect(() => {
-    // Phase timer sequence
-    // Phase 1 (0s) -> Scattered (default state)
-    // Phase 2 (50ms) -> Assemble starts immediately
-    // Phase 3 (1800ms) -> Text Solidifies, particles fade
-    // Phase 4 (2600ms+) -> Enter CTA + Typewriter
+    stateRef.current.phase = phase;
+    stateRef.current.isExiting = isExiting;
+  }, [phase, isExiting]);
+
+  // Main Canvas Setup and Particle Lifecycle
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d', { alpha: false }); 
+    let animationFrameId;
+    let startTime = performance.now();
+
+    const initParticles = () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      canvas.width = w;
+      canvas.height = h;
+      stateRef.current.w = w;
+      stateRef.current.h = h;
+
+      const textHalfWidth = Math.min(w * 0.4, 400); 
+      const textHalfHeight = Math.min(h * 0.2, 100);
+
+      // 2000 particles spread across the screen
+      const numParticles = 2000;
+
+      particlesRef.current = Array.from({ length: numParticles }, () => {
+        // Random point on screen for exiting
+        const px = (Math.random() - 0.5) * w;
+        const py = (Math.random() - 0.5) * h;
+        const exitDist = Math.random() * 800 + 600;
+        const angle = Math.atan2(py, px);
+
+        return {
+          x: (Math.random() - 0.5) * w * 1.5 + w / 2, // Physical initial X
+          y: (Math.random() - 0.5) * h * 1.5 + h / 2, // Physical initial Y
+          vx: 0,
+          vy: 0,
+          exitX: px + Math.cos(angle) * exitDist,
+          exitY: py + Math.sin(angle) * exitDist,
+          orbitAngle: Math.random() * Math.PI * 2,
+          orbitSpeed: (Math.random() * 0.005 + 0.001) * (Math.random() > 0.5 ? 1 : -1),
+          // Orbit across the whole screen dynamically, outside text bounds
+          orbitRx: textHalfWidth + Math.random() * (w * 0.6), 
+          orbitRy: textHalfHeight + Math.random() * (h * 0.6),
+          // Color selection matching variables
+          color: Math.random() > 0.4 ? '#f5f2ed' : '#a1a1aa', // var(--color-paper) & var(--color-ink-3) approx
+          size: Math.random() * 1.8 + 1.2, 
+          delay: Math.random() * 600, // Staggered entry
+        };
+      });
+    };
+
+    initParticles();
+
+    // Responsive adaptation
+    const onResize = () => {
+      initParticles();
+    };
+    window.addEventListener('resize', onResize);
+
+    const onMouseMove = (e) => {
+      mouseRef.current.x = e.clientX;
+      mouseRef.current.y = e.clientY;
+    };
+    window.addEventListener('mousemove', onMouseMove);
+
+    // Main Render Loop
+    const render = (time) => {
+      const elapsed = time - startTime;
+      const { phase, isExiting, w, h } = stateRef.current;
+      
+      // Clear screen with core black/ink color
+      ctx.fillStyle = '#0a0a0a'; 
+      ctx.fillRect(0, 0, w, h);
+
+      const mx = mouseRef.current.x;
+      const my = mouseRef.current.y;
+      const mRadius = mouseRef.current.radius;
+      const cenX = w / 2;
+      const cenY = h / 2;
+
+      particlesRef.current.forEach(p => {
+        let targetX = p.x;
+        let targetY = p.y;
+        let shouldRender = true;
+
+        if (isExiting) {
+          // Explode mode
+          targetX = cenX + p.exitX;
+          targetY = cenY + p.exitY;
+        } else if (phase >= 2) {
+          if (elapsed > p.delay) {
+            // Randomly orbit the name on the whole screen from phase 2
+            p.orbitAngle += p.orbitSpeed;
+            targetX = cenX + Math.cos(p.orbitAngle) * p.orbitRx;
+            targetY = cenY + Math.sin(p.orbitAngle) * p.orbitRy;
+          } else {
+            shouldRender = false; // Wait until delay finishes
+          }
+        } else {
+           shouldRender = false;
+        }
+
+        // --- Physics Calculation ---
+        // Mouse hover repulsion physics (Interactive Hover)
+        if (phase >= 3 && !isExiting) {
+          const dx = p.x - mx;
+          const dy = p.y - my;
+          const interactionRadius = 250; // Larger radius, no lag zone
+          const distSq = dx * dx + dy * dy;
+          
+          if (distSq < interactionRadius * interactionRadius) {
+            const dist = Math.sqrt(distSq) || 0.01;
+            // Stronger squared force logic gives snappy, fluid repulsion near the cursor
+            const force = Math.pow((interactionRadius - dist) / interactionRadius, 1.2);
+            
+            const pushAngle = Math.atan2(dy, dx);
+            
+            // 1. Shift target outward so the spring doesn't fight the push (creates shape)
+            targetX += Math.cos(pushAngle) * force * 180;
+            targetY += Math.sin(pushAngle) * force * 180;
+
+            // 2. Direct velocity push gives that instant zero-lag responsiveness
+            p.vx += Math.cos(pushAngle) * force * 6;
+            p.vy += Math.sin(pushAngle) * force * 6;
+          }
+        }
+
+        // Spring movement to target variables
+        const ease = isExiting ? 0.02 : 0.08;
+        const drag = isExiting ? 0.98 : 0.86; // Adjusted for buttery smoothness
+
+        const ax = (targetX - p.x) * ease;
+        const ay = (targetY - p.y) * ease;
+        
+        p.vx += ax;
+        p.vy += ay;
+        p.vx *= drag;
+        p.vy *= drag;
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // --- Rendering ---
+        if (shouldRender) {
+          // Slightly transparent during float to look like a ghostly aura so the main text reads clearly
+          ctx.fillStyle = phase >= 3 && !isExiting ? p.color + '99' : p.color; 
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+    
+    animationFrameId = requestAnimationFrame(render);
+
     const timers = [
       setTimeout(() => setPhase(2), 50),
       setTimeout(() => setPhase(3), 1800),
       setTimeout(() => setPhase(4), 2600),
     ];
 
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    
-    // We base size on innerHeight and innerWidth
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    canvas.width = w;
-    canvas.height = h;
-
-    // Match clamp(48px, 12vw, 130px)
-    let fontSize = Math.max(48, Math.min(130, w * 0.12));
-    // If mobile, maybe clamp down a bit more so it doesn't wrap awkwardly?
-    
-    ctx.font = `bold ${fontSize}px Poppins, ui-sans-serif, system-ui, sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = 'white';
-    ctx.letterSpacing = '0.04em';
-    
-    // Draw text centered
-    ctx.fillText(NameText, w / 2, h / 2 - 20); // slightly offset up to make room for subtitle
-
-    const imageData = ctx.getImageData(0, 0, w, h).data;
-    const validCoords = [];
-
-    // Step every 4 pixels horizontally and horizontally to sample positions
-    for (let y = 0; y < h; y += 4) {
-      for (let x = 0; x < w; x += 4) {
-        const index = (y * w + x) * 4;
-        const alpha = imageData[index + 3];
-        if (alpha > 128) {
-          validCoords.push({ x, y });
-        }
-      }
-    }
-
-    // Shuffle coords
-    for (let i = validCoords.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [validCoords[i], validCoords[j]] = [validCoords[j], validCoords[i]];
-    }
-
-    // We want ~300 particles. Use whatever is available up to 300
-    const numParticles = Math.min(300, validCoords.length);
-    const selectedCoords = validCoords.slice(0, numParticles);
-
-    const generated = selectedCoords.map((coord, i) => {
-      // Scatter fully across screen
-      const startX = Math.random() * w;
-      const startY = Math.random() * h;
-      
-      // Explosion vector from center outward for exit
-      const dx = coord.x - w / 2;
-      const dy = coord.y - h / 2;
-      const angle = Math.atan2(dy, dx);
-      // More explosive distance
-      const dist = Math.random() * 800 + 400;
-      
-      return {
-        id: i,
-        startX,
-        startY,
-        targetX: coord.x,
-        targetY: coord.y,
-        exitX: coord.x + Math.cos(angle) * dist,
-        exitY: coord.y + Math.sin(angle) * dist,
-        color: Math.random() > 0.4 ? 'var(--color-paper)' : 'var(--color-ink-3)',
-        size: Math.random() * 2 + 2,
-        delay: Math.random() * 0.8 // increased delay for smoother wave
-      };
-    });
-
-    setParticles(generated);
-
     return () => {
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('mousemove', onMouseMove);
+      cancelAnimationFrame(animationFrameId);
       timers.forEach(clearTimeout);
     };
-  }, []);
+  }, []); // Only runs once, physics isolated in loop
 
-  // Typewriter effect for Phase 4
+  // Typewriter effect isolated
   useEffect(() => {
     if (phase >= 4) {
       let currentLength = 0;
@@ -112,7 +205,7 @@ const IntroAnimation = ({ onComplete }) => {
         if (currentLength >= SubtitleText.length) {
           clearInterval(interval);
         }
-      }, 50); // Speedy typewriter
+      }, 50);
       return () => clearInterval(interval);
     }
   }, [phase]);
@@ -122,14 +215,7 @@ const IntroAnimation = ({ onComplete }) => {
     setIsExiting(true);
     setTimeout(() => {
       if (onComplete) onComplete();
-    }, 1200); // Wait longer before firing onComplete to let explosion finish
-  };
-
-  const springConfig = {
-    type: "spring",
-    stiffness: 40,  // Much softer spring
-    damping: 20,    // More damping for smoothness
-    mass: 1.5,      // Slightly heavier particles
+    }, 1200);
   };
 
   return (
@@ -148,24 +234,29 @@ const IntroAnimation = ({ onComplete }) => {
         }}
         exit={{ opacity: 0, transition: { duration: 1.5, ease: "easeInOut" } }}
       >
-        {/* CSS-only generic noise scanline overlay */}
+        {/* NATIVE CANVAS LAYER: Zero lag, massive particle count */}
+        <canvas 
+          ref={canvasRef} 
+          className="absolute inset-0 z-[1] w-full h-full pointer-events-none"
+        />
+
+        {/* Scanlines / Noise Overlay */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
             backgroundImage: `repeating-linear-gradient(rgba(0,0,0,0) 0px, rgba(0,0,0,0.1) 1px, rgba(0,0,0,0) 2px)`,
             backgroundSize: '100% 3px',
             opacity: 0.15,
-            zIndex: 1,
+            zIndex: 2,
           }}
         />
 
-        {/* SKIP button */}
         <motion.button
           onClick={handleComplete}
           initial={{ opacity: 0 }}
           animate={{ opacity: isExiting ? 0 : 1 }}
           transition={{ duration: 0.6 }}
-          className="absolute top-8 right-8 z-10 cursor-none hover:text-white transition-colors"
+          className="absolute top-8 right-8 z-[10] cursor-none hover:text-white transition-colors"
           style={{
             fontFamily: 'var(--font-mono)',
             color: 'var(--color-ink-3)',
@@ -178,89 +269,8 @@ const IntroAnimation = ({ onComplete }) => {
           SKIP →
         </motion.button>
 
-        <div className="relative w-full h-full" style={{ zIndex: 2 }}>
-          {/* Particles */}
-          <AnimatePresence>
-            {!isExiting && phase < 4 && particles.map((p) => {
-              // Target state based on phase
-              // phase 1: at start pos
-              // phase 2: assembling to target
-              // phase 3: fading out (opacity 0)
-              const isFading = phase >= 3;
-              
-              return (
-                <motion.div
-                  key={`p-${p.id}`}
-                  initial={{
-                    x: p.startX,
-                    y: p.startY,
-                    opacity: 1,
-                    scale: 1,
-                  }}
-                  animate={isExiting ? {
-                    x: p.exitX,
-                    y: p.exitY,
-                    opacity: 0,
-                    scale: 0.2,
-                  } : {
-                    x: phase >= 2 ? p.targetX : p.startX,
-                    y: phase >= 2 ? p.targetY : p.startY,
-                    opacity: isFading ? 0 : 1,
-                  }}
-                  transition={isExiting ? {
-                    duration: 1.0,
-                    ease: [0.16, 1, 0.3, 1],
-                  } : isFading ? {
-                    duration: 0.6,
-                  } : {
-                    ...springConfig,
-                    delay: p.delay, // natural wave-in
-                  }}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: p.size,
-                    height: p.size,
-                    backgroundColor: p.color,
-                    borderRadius: 0, // Sharp square edges
-                  }}
-                />
-              );
-            })}
-            
-            {/* If Exiting but particles already unmounted, re-render them for explosion */}
-            {isExiting && particles.map((p) => (
-               <motion.div
-                 key={`p-exit-${p.id}`}
-                 initial={{
-                   x: p.targetX,
-                   y: p.targetY,
-                   opacity: 1,
-                 }}
-                 animate={{
-                   x: p.exitX,
-                   y: p.exitY,
-                   opacity: 0,
-                 }}
-                 transition={{
-                   duration: 1.0 + Math.random() * 0.4,
-                   ease: "easeOut",
-                 }}
-                 style={{
-                   position: 'absolute',
-                   top: 0,
-                   left: 0,
-                   width: p.size,
-                   height: p.size,
-                   backgroundColor: p.color,
-                   borderRadius: 0,
-                 }}
-               />
-            ))}
-          </AnimatePresence>
-
-          {/* Solid Text Element - Phase 3 onwards */}
+        <div className="relative w-full h-full" style={{ zIndex: 3 }}>
+          {/* Main solid text layer overlapping the canvas particles seamlessly */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none" style={{ marginTop: '-20px' }}>
             <motion.h1
               initial={{ opacity: 0, scale: 0.95, filter: 'blur(8px)' }}
@@ -269,11 +279,11 @@ const IntroAnimation = ({ onComplete }) => {
                 scale: 1.1,
                 filter: 'blur(12px)',
               } : {
-                opacity: phase >= 3 ? 1 : 0,
-                scale: phase >= 3 ? 1 : 0.95,
-                filter: phase >= 3 ? 'blur(0px)' : 'blur(8px)',
+                opacity: phase >= 2 ? 1 : 0,
+                scale: phase >= 2 ? 1 : 0.95,
+                filter: phase >= 2 ? 'blur(0px)' : 'blur(8px)',
               }}
-              transition={isExiting ? { duration: 0.8 } : { duration: 0.8, ease: "easeOut" }}
+              transition={isExiting ? { duration: 0.8 } : { duration: 2, ease: "easeOut" }}
               className="text-[clamp(48px,12vw,130px)] m-0 leading-none whitespace-nowrap text-center"
               style={{
                 fontFamily: 'var(--font-display)',
@@ -285,7 +295,6 @@ const IntroAnimation = ({ onComplete }) => {
               {NameText}
             </motion.h1>
 
-            {/* Subtitle with Blinking Cursor */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={isExiting ? { opacity: 0, y: -20, filter: 'blur(4px)' } : { opacity: phase >= 4 ? 1 : 0 }}
@@ -311,7 +320,6 @@ const IntroAnimation = ({ onComplete }) => {
             </motion.div>
           </div>
           
-          {/* CTA Button Phase 4 */}
           <AnimatePresence>
             {phase >= 4 && !isExiting && (
               <motion.div
@@ -319,7 +327,7 @@ const IntroAnimation = ({ onComplete }) => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
                 transition={{ duration: 0.8, delay: 0.8 }}
-                className="absolute left-1/2 bottom-20 sm:bottom-32 -translate-x-1/2 z-10"
+                className="absolute left-1/2 bottom-20 sm:bottom-32 -translate-x-1/2 z-[10] pointer-events-auto"
               >
                 <button
                   onClick={handleComplete}
@@ -355,7 +363,6 @@ const IntroAnimation = ({ onComplete }) => {
 
         </div>
         
-        {/* Dissolve completely black on exit to transition into app */}
         <AnimatePresence>
           {isExiting && (
             <motion.div
