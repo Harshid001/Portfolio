@@ -49,7 +49,7 @@ const Contact = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
           
           <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.5 }}>
-            <span className="section-label mb-4 block">05 / GET IN TOUCH</span>
+            <span className="section-label mb-4 block">07 / GET IN TOUCH</span>
             <h2 className="mb-8" style={{ fontSize: 'clamp(48px, 10vw, 100px)', lineHeight: 0.9 }}>
               LET'S<br/>CONNECT
             </h2>

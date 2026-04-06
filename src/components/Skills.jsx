@@ -434,7 +434,7 @@ const Skills = () => {
           <span className="section-label mb-4 block">02 / SKILLS</span>
           <h2
             style={{
-              fontSize: 'clamp(40px, 8vw, 80px)',
+              fontSize: 'clamp(60px, 12vw, 140px)',
               lineHeight: 0.9,
             }}
           >
@@ -443,6 +443,8 @@ const Skills = () => {
             THE TRADE
           </h2>
         </motion.div>
+
+
 
         {/* Gallery viewport */}
         <div
@@ -576,6 +578,7 @@ const Skills = () => {
           0%, 100% { box-shadow: 6px 6px 0 var(--color-ink), 0 0 12px var(--color-ink); }
           50% { box-shadow: 6px 6px 0 var(--color-ink), 0 0 28px var(--color-ink); }
         }
+
       `}</style>
     </section>
   );

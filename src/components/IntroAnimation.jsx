@@ -194,9 +194,9 @@ const IntroAnimation = ({ onComplete }) => {
     animationFrameId = requestAnimationFrame(render);
 
     const timers = [
-      setTimeout(() => setPhase(2), 50),
-      setTimeout(() => setPhase(3), 1800),
-      setTimeout(() => setPhase(4), 2600),
+      setTimeout(() => setPhase(2), 80),
+      setTimeout(() => setPhase(3), 2600),
+      setTimeout(() => setPhase(4), 3500),
     ];
 
     return () => {
@@ -246,6 +246,47 @@ const IntroAnimation = ({ onComplete }) => {
         }}
         exit={{ opacity: 0, transition: { duration: 1.5, ease: "easeInOut" } }}
       >
+        {/* ── LOADING DOTS ── */}
+        <AnimatePresence>
+          {phase < 2 && (
+            <motion.div
+              key="loading-dots"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, transition: { duration: 0.4 } }}
+              style={{
+                position: 'absolute',
+                bottom: '10%',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                display: 'flex',
+                gap: '12px',
+                zIndex: 5,
+              }}
+            >
+              {[0, 1, 2].map((i) => (
+                <motion.span
+                  key={i}
+                  animate={{ opacity: [0.2, 1, 0.2] }}
+                  transition={{
+                    duration: 1.2,
+                    repeat: Infinity,
+                    delay: i * 0.25,
+                    ease: 'easeInOut',
+                  }}
+                  style={{
+                    display: 'block',
+                    width: 6,
+                    height: 6,
+                    backgroundColor: 'var(--color-ink-3)',
+                    borderRadius: '50%',
+                  }}
+                />
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* NATIVE CANVAS LAYER: Zero lag, massive particle count */}
         <canvas 
           ref={canvasRef} 
@@ -295,7 +336,7 @@ const IntroAnimation = ({ onComplete }) => {
                 scale: phase >= 2 ? 1 : 0.95,
                 filter: phase >= 2 ? 'blur(0px)' : 'blur(8px)',
               }}
-              transition={isExiting ? { duration: 0.8 } : { duration: 2, ease: "easeOut" }}
+              transition={isExiting ? { duration: 0.8 } : { duration: 2.8, ease: "easeOut" }}
               className="text-[clamp(48px,12vw,130px)] m-0 leading-none whitespace-nowrap text-center"
               style={{
                 fontFamily: 'var(--font-display)',
@@ -387,6 +428,27 @@ const IntroAnimation = ({ onComplete }) => {
             />
           )}
         </AnimatePresence>
+
+        {/* ── PROGRESS BAR ── */}
+        <motion.div
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            height: '2px',
+            width: '100%',
+            backgroundColor: 'var(--color-ink-3)',
+            transformOrigin: 'left',
+            opacity: 0.35,
+            zIndex: 6,
+          }}
+          initial={{ scaleX: 0 }}
+          animate={isExiting ? { opacity: 0 } : { scaleX: 1 }}
+          transition={isExiting
+            ? { duration: 0.3 }
+            : { duration: 3.8, ease: 'easeInOut' }
+          }
+        />
 
         <style>{`
           @keyframes pulseGlow {
