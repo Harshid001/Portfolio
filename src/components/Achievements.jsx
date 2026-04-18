@@ -2,6 +2,10 @@ import { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import SectionPresence from './SectionPresence';
 
+import hackathon1 from '../assets/hackathon/hackathon1.jpg';
+import hackathon2 from '../assets/hackathon/hackathon2.jpg';
+import hackathon3 from '../assets/hackathon/hackathon3.jpg';
+
 /* ─── Data ─── */
 const hackathonStats = [
   { value: '5+',  label: 'HACKATHONS ENTERED' },
@@ -250,6 +254,54 @@ const HackathonSection = () => {
             </motion.div>
           ))}
         </div>
+
+        {/* ── HACKATHON JOURNEY GALLERY ── */}
+        <motion.div
+          className="mt-24 mb-12"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <span className="section-label mb-4 block">GLIMPSES</span>
+          <h3 style={{ fontSize: 'clamp(28px, 5vw, 48px)', lineHeight: 1, fontFamily: 'var(--font-heading)', color: 'var(--color-ink)' }}>
+            HACKATHON JOURNEY
+          </h3>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          {[hackathon1, hackathon2, hackathon3].map((img, i) => (
+            <motion.div
+              key={i}
+              className="brutal-border relative group overflow-hidden cursor-crosshair"
+              style={{
+                aspectRatio: '1/1',
+                backgroundColor: 'var(--color-paper)',
+                boxShadow: '6px 6px 0 var(--color-ink)',
+                transition: 'box-shadow 0.2s ease',
+              }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.5, delay: i * 0.15 }}
+              whileHover={{ boxShadow: '12px 12px 0 var(--color-ink)', y: -5 }}
+            >
+              <img 
+                src={img} 
+                alt={`Hackathon Journey ${i + 1}`} 
+                className="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-105" 
+              />
+              
+              {/* Optional Brutalist tag */}
+              <div 
+                className="absolute top-4 left-4 px-3 py-1 brutal-border text-xs font-bold uppercase tracking-widest z-20 translate-y-[-150%] opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300"
+                style={{ backgroundColor: 'var(--color-paper)', color: 'var(--color-ink)' }}
+              >
+                PHOTO 0{i + 1}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
       </div>
     </section>
   );

@@ -1,7 +1,7 @@
 import { useRef, lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import heroImg from '../assets/hero.png';
+import heroImg from '../assets/Profile.png';
 import SectionPresence from './SectionPresence';
 
 const DotShaderBackground = lazy(() => import('./DotShaderBackground'));
@@ -15,9 +15,7 @@ const CountUp = ({ end, label }) => {
     let startTimestamp = null;
     const duration = 1500;
     
-    const step = (timestamp) => {
-      if (!startTimestamp) startTimestamp = timestamp;
-      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    const step = (timestamp) => {      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
       const easeProgress = 1 - Math.pow(1 - progress, 3);
       setCount(Math.floor(easeProgress * end));
       
