@@ -67,18 +67,18 @@ const Hero = () => {
             </span>
           </motion.div>
 
-          <div className="mb-4 overflow-hidden leading-[0.9]">
-            <motion.h1 style={{ fontSize: 'clamp(40px, 10vw, 110px)', color: 'var(--color-ink)' }} className="flex flex-wrap">
-              {['H','I',',',' ','I',"'",'M'].map((char, i) => (
+          <div className="mb-4 overflow-hidden leading-[0.85]">
+            <motion.h1 style={{ fontSize: 'clamp(56px, 15vw, 110px)', color: 'var(--color-ink)', letterSpacing: '-0.02em' }} className="flex flex-wrap">
+              {['H','A','R','S','H','I','D'].map((char, i) => (
                 <motion.span key={i} variants={textSlam} className="inline-block">{char === ' ' ? '\u00A0' : char}</motion.span>
               ))}
             </motion.h1>
-            <motion.h1 style={{ fontSize: 'clamp(40px, 10vw, 110px)', color: 'var(--color-ink)' }} className="flex flex-wrap">
-              {['H','A','R','S','H','I','D'].map((char, i) => (
+            <motion.h1 style={{ fontSize: 'clamp(56px, 15vw, 110px)', color: 'var(--color-ink)', letterSpacing: '-0.02em' }} className="flex flex-wrap">
+              {['S','O','N','I'].map((char, i) => (
                 <motion.span 
                   key={i} 
                   variants={textSlam} 
-                  className="inline-block decoration-ink underline decoration-[3px] underline-offset-[12px]"
+                  className="inline-block decoration-ink underline decoration-[4px] sm:decoration-[6px] underline-offset-[8px] sm:underline-offset-[16px]"
                 >
                   {char}
                 </motion.span>
@@ -97,14 +97,20 @@ const Hero = () => {
           </motion.p>
 
           <motion.div variants={fadeUp} className="flex flex-wrap mb-12">
-            <a href="#projects" onClick={(e) => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView(); }}
+            <motion.a 
+              href="#projects" 
+              onClick={(e) => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView(); }}
+              whileTap={{ scale: 0.95 }}
               className="btn-primary cursor-none h-[56px] flex items-center justify-center">
               VIEW PROJECTS
-            </a>
-            <a href="#contact" onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView(); }}
+            </motion.a>
+            <motion.a 
+              href="#contact" 
+              onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView(); }}
+              whileTap={{ scale: 0.95 }}
               className="btn-secondary cursor-none h-[56px] flex items-center justify-center -ml-[2px]">
               CONTACT ME
-            </a>
+            </motion.a>
           </motion.div>
 
           <motion.div variants={fadeUp} className="flex gap-4">
@@ -114,18 +120,19 @@ const Hero = () => {
               { icon: <FaYoutube />, link: "https://www.youtube.com/@Harshid001" },
               { icon: <FaTwitter />, link: "https://x.com/HarshidSoni2007" }
             ].map((social, i) => (
-              <a 
+              <motion.a 
                 key={i} 
                 href={social.link} 
                 target="_blank" 
                 rel="noreferrer"
+                whileTap={{ scale: 0.9, rotate: 5 }}
                 className="w-[44px] h-[44px] flex items-center justify-center text-xl cursor-none transition-all brutal-border" 
                 style={{ backgroundColor: 'var(--color-paper)', color: 'var(--color-ink)' }}
                 onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-ink)'; e.currentTarget.style.color = 'var(--color-white)'; e.currentTarget.style.transform = 'translateY(-4px)'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-paper)'; e.currentTarget.style.color = 'var(--color-ink)'; e.currentTarget.style.transform = 'translateY(0)'; }}
               >
                 {social.icon}
-              </a>
+              </motion.a>
             ))}
           </motion.div>
         </motion.div>

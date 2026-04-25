@@ -87,6 +87,7 @@ const About = () => {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
+              whileTap={{ scale: 0.98 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               className="relative w-full aspect-square brutal-border transition-all duration-300 group cursor-crosshair"
@@ -175,6 +176,7 @@ const About = () => {
                     style={{ backgroundColor: 'var(--color-paper)' }}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
+                    whileTap={{ x: 5, backgroundColor: 'var(--color-paper-2)' }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.4 + i * 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                   >

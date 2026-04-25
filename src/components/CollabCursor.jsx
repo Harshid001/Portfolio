@@ -79,8 +79,8 @@ const CollabCursor = () => {
 
   if (isTouchDevice) return null;
 
-  const currentInk = isDark ? 'var(--color-paper)' : 'var(--color-ink)';
-  const currentPaper = isDark ? 'var(--color-ink)' : 'var(--color-paper)';
+  const currentInk = isDark ? 'var(--color-white)' : 'var(--color-ink)';
+  const currentPaper = isDark ? 'var(--color-ink)' : 'var(--color-white)';
 
   return (
     <>

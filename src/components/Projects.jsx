@@ -23,6 +23,7 @@ const ProjectCard = ({ project, index }) => (
     viewport={{ once: true, margin: "-60px" }}
     transition={{ delay: (index % 2) * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }} 
     whileHover={{ y: -4, boxShadow: "6px 6px 0px var(--color-ink)" }}
+    whileTap={{ scale: 0.98, boxShadow: "2px 2px 0px var(--color-ink)" }}
     className="group relative overflow-hidden transition-all duration-150 cursor-none flex flex-col"
     style={{ 
       border: '2px solid var(--color-ink)', 
@@ -39,13 +40,19 @@ const ProjectCard = ({ project, index }) => (
     
     {/* Project Image Preview */}
     {project.image && (
-      <div className="w-full h-48 sm:h-56 border-b-2 overflow-hidden relative z-10" style={{ borderColor: 'var(--color-ink)' }}>
+      <a 
+        href={project.live || project.github} 
+        target="_blank" 
+        rel="noreferrer"
+        className="w-full h-48 sm:h-56 border-b-2 overflow-hidden relative z-10 block cursor-none" 
+        style={{ borderColor: 'var(--color-ink)' }}
+      >
         <img 
           src={project.image} 
           alt={project.title} 
           className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 hover:scale-105" 
         />
-      </div>
+      </a>
     )}
     
     <div className={`p-8 ${project.image ? 'pt-6' : 'pt-10'} flex flex-col flex-grow relative z-10`}>
@@ -83,18 +90,34 @@ const ProjectCard = ({ project, index }) => (
       </div>
       
       <div className="flex gap-6 mt-auto" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', fontWeight: 'bold' }}>
-        {project.github && (
-          <a href={project.github} target="_blank" rel="noreferrer" className="flex items-center gap-1 transition-colors cursor-none" style={{ color: 'var(--color-ink)' }}
-             onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-red)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-ink)'}>
-            → CODE
-          </a>
-        )}
-        {project.live && (
-          <a href={project.live} target="_blank" rel="noreferrer" className="flex items-center gap-1 transition-colors cursor-none" style={{ color: 'var(--color-ink)' }}
-             onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-red)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-ink)'}>
-            → LIVE
-          </a>
-        )}
+          {project.github && (
+            <motion.a 
+              href={project.github} 
+              target="_blank" 
+              rel="noreferrer" 
+              whileTap={{ scale: 0.9 }}
+              className="flex items-center gap-1 transition-colors cursor-none" 
+              style={{ color: 'var(--color-ink)' }}
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-red)'} 
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-ink)'}
+            >
+              → CODE
+            </motion.a>
+          )}
+          {project.live && (
+            <motion.a 
+              href={project.live} 
+              target="_blank" 
+              rel="noreferrer" 
+              whileTap={{ scale: 0.9 }}
+              className="flex items-center gap-1 transition-colors cursor-none" 
+              style={{ color: 'var(--color-ink)' }}
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-red)'} 
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-ink)'}
+            >
+              → LIVE
+            </motion.a>
+          )}
       </div>
     </div>
   </motion.div>

@@ -16,6 +16,7 @@ import Experience from './components/Experience';
 import Achievements from './components/Achievements';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import TouchFeedback from './components/TouchFeedback';
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -34,6 +35,7 @@ function App() {
       {!isMobile && <GhostCursors />}
       <ReactionBurst />
       {!isMobile && <LiveBar />}
+      <TouchFeedback />
 
       <AnimatePresence>
         {showIntro && (

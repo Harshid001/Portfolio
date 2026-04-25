@@ -2,7 +2,7 @@ import { FaGithub, FaLinkedin, FaYoutube, FaTwitter } from 'react-icons/fa';
 
 const Footer = () => {
   return (
-    <footer style={{ backgroundColor: 'var(--color-ink)', color: 'var(--color-paper)', borderTop: '3px solid var(--color-ink)' }}>
+    <footer className="dark-section" style={{ backgroundColor: 'var(--color-ink)', color: 'var(--color-paper)', borderTop: '3px solid var(--color-ink)' }}>
       
       {/* Marquee Strip Top */}
       <div 

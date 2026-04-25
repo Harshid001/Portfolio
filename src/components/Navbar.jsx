@@ -8,7 +8,6 @@ const navLinks = [
   { name: 'Skills', href: '#skills' },
   { name: 'Projects', href: '#projects' },
   { name: 'Experience', href: '#experience' },
-  { name: 'Contact', href: '#contact' },
 ];
 
 const Navbar = () => {
@@ -110,7 +109,7 @@ const Navbar = () => {
             className="btn-primary cursor-none ml-4 h-[40px] flex items-center"
             style={{ padding: '0 24px' }}
           >
-            HIRE ME
+            CONTACT
           </a>
         </div>
 
@@ -148,7 +147,7 @@ const Navbar = () => {
                   key={link.name} 
                   initial={{ opacity: 0, x: -30 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
+                  whileTap={{ scale: 0.9, x: 10 }}
                   href={link.href} 
                   onClick={(e) => scrollTo(e, link.href)}
                   className="text-5xl cursor-none transition-colors"

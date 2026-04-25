@@ -171,10 +171,13 @@ const IntroAnimation = ({ onComplete }) => {
               }}
               style={{ marginTop: '40px' }}
             >
-              <button
+              <motion.button
                 onClick={handleComplete}
+                whileTap={{ scale: 0.95 }}
                 onMouseEnter={() => setHovered(true)}
                 onMouseLeave={() => setHovered(false)}
+                onTouchStart={() => setHovered(true)}
+                onTouchEnd={() => setHovered(false)}
                 style={{
                   position: 'relative',
                   background: 'transparent',
@@ -204,7 +207,7 @@ const IntroAnimation = ({ onComplete }) => {
                   }}
                 />
                 [ ENTER ]
-              </button>
+              </motion.button>
             </motion.div>
           </div>
         </motion.div>

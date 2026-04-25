@@ -5,7 +5,7 @@ const LiveBar = () => {
 
   return (
     <div 
-      className="fixed bottom-0 left-0 z-[8000]"
+      className="fixed bottom-0 left-0 z-[8000] dark-section"
       style={{
         backgroundColor: 'var(--color-ink)',
         color: 'var(--color-paper)',
