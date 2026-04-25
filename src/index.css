@@ -25,7 +25,6 @@
 @layer base {
   * {
     cursor: none !important;
-    border-radius: 0 !important;
   }
 
   @media (pointer: coarse) {
