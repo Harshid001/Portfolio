@@ -1,27 +1,56 @@
 import { motion } from 'framer-motion';
-import { FaReact, FaNodeJs, FaGitAlt, FaFigma, FaHtml5, FaCss3Alt, FaPython } from 'react-icons/fa';
+import { FaReact, FaNodeJs, FaGitAlt, FaFigma, FaHtml5, FaCss3Alt, FaPython, FaJava, FaDatabase } from 'react-icons/fa';
 import { DiMongodb, DiJavascript1 } from 'react-icons/di';
-import { SiTypescript, SiTailwindcss, SiPostgresql, SiExpress, SiBlender, SiC, SiCplusplus } from 'react-icons/si';
+import { 
+  SiTypescript, SiTailwindcss, SiPostgresql, SiExpress, SiBlender, SiC, SiCplusplus,
+  SiAngular, SiVuedotjs, SiJquery, SiDotnet, SiGo, SiPhp, SiRuby, SiRust,
+  SiApachecassandra, SiRedis, SiCouchbase, SiGraphql, SiSwagger
+} from 'react-icons/si';
+import { TbApi, TbPlugConnected } from 'react-icons/tb';
+import { VscSymbolInterface } from 'react-icons/vsc';
 import SectionPresence from './SectionPresence';
 
 const skills = [
+  // ── Frontend ───────────────────────────────────────────
   { name: 'React', category: 'Frontend', description: 'Component-driven UI architecture', level: 'Advanced', icon: FaReact },
   { name: 'JavaScript', category: 'Frontend', description: 'Dynamic, prototype-based scripting', level: 'Advanced', icon: DiJavascript1 },
   { name: 'TypeScript', category: 'Frontend', description: 'Typed superset of JavaScript', level: 'Intermediate', icon: SiTypescript },
-  { name: 'Tailwind CSS', category: 'Frontend', description: 'Utility-first CSS framework', level: 'Advanced', icon: SiTailwindcss },
-  { name: 'Node.js', category: 'Backend', description: 'Server-side JavaScript runtime', level: 'Advanced', icon: FaNodeJs },
-  { name: 'MongoDB', category: 'Backend', description: 'NoSQL document database', level: 'Advanced', icon: DiMongodb },
-  { name: 'PostgreSQL', category: 'Backend', description: 'Relational SQL database', level: 'Intermediate', icon: SiPostgresql },
-  { name: 'Git', category: 'Other', description: 'Distributed version control', level: 'Advanced', icon: FaGitAlt },
-  { name: 'Figma', category: 'Other', description: 'Collaborative design tool', level: 'Intermediate', icon: FaFigma },
-  { name: 'React Native', category: 'Frontend', description: 'Cross-platform mobile apps', level: 'Intermediate', icon: FaReact },
+  { name: 'Angular', category: 'Frontend', description: 'Enterprise-grade SPA framework', level: 'Intermediate', icon: SiAngular },
+  { name: 'Vue.js', category: 'Frontend', description: 'Progressive JS framework (Vuex, Pinia, Nuxt.js)', level: 'Intermediate', icon: SiVuedotjs },
   { name: 'HTML', category: 'Frontend', description: 'Structure of the web', level: 'Advanced', icon: FaHtml5 },
   { name: 'CSS', category: 'Frontend', description: 'Styling and layout', level: 'Advanced', icon: FaCss3Alt },
+  { name: 'Tailwind CSS', category: 'Frontend', description: 'Utility-first CSS framework', level: 'Advanced', icon: SiTailwindcss },
+  { name: 'React Native', category: 'Frontend', description: 'Cross-platform mobile apps', level: 'Intermediate', icon: FaReact },
+  { name: 'jQuery', category: 'Frontend', description: 'DOM manipulation (legacy systems)', level: 'Intermediate', icon: SiJquery },
+
+  // ── Backend ────────────────────────────────────────────
+  { name: 'Node.js', category: 'Backend', description: 'Server-side JavaScript runtime', level: 'Advanced', icon: FaNodeJs },
   { name: 'Express JS', category: 'Backend', description: 'Minimalist web framework', level: 'Intermediate', icon: SiExpress },
-  { name: 'Blender 3D', category: 'Other', description: '3D creation suite', level: 'Intermediate', icon: SiBlender },
+  { name: 'Python', category: 'Backend', description: 'General-purpose programming', level: 'Advanced', icon: FaPython },
+  { name: 'Java', category: 'Backend', description: 'Enterprise application development', level: 'Intermediate', icon: FaJava },
+  { name: 'C# / .NET', category: 'Backend', description: 'Microsoft ecosystem development', level: 'Intermediate', icon: SiDotnet },
+  { name: 'Go', category: 'Backend', description: 'High-performance concurrent programming', level: 'Intermediate', icon: SiGo },
+  { name: 'PHP', category: 'Backend', description: 'Server-side web scripting', level: 'Intermediate', icon: SiPhp },
+  { name: 'Ruby', category: 'Backend', description: 'Dynamic, elegant programming', level: 'Intermediate', icon: SiRuby },
+  { name: 'Rust', category: 'Backend', description: 'Memory-safe systems programming', level: 'Intermediate', icon: SiRust },
   { name: 'C Language', category: 'Backend', description: 'Low-level systems programming', level: 'Intermediate', icon: SiC },
   { name: 'C++', category: 'Backend', description: 'Object-oriented systems coding', level: 'Intermediate', icon: SiCplusplus },
-  { name: 'Python', category: 'Backend', description: 'General-purpose programming', level: 'Advanced', icon: FaPython },
+  { name: 'MongoDB', category: 'Backend', description: 'NoSQL document database', level: 'Advanced', icon: DiMongodb },
+  { name: 'PostgreSQL', category: 'Backend', description: 'Relational SQL database', level: 'Intermediate', icon: SiPostgresql },
+  { name: 'Relational DBs', category: 'Backend', description: 'Structured data with SQL queries', level: 'Intermediate', icon: FaDatabase },
+  { name: 'Cassandra', category: 'Backend', description: 'Distributed wide-column NoSQL store', level: 'Intermediate', icon: SiApachecassandra },
+  { name: 'Redis', category: 'Backend', description: 'In-memory key-value data store', level: 'Intermediate', icon: SiRedis },
+  { name: 'Couchbase', category: 'Backend', description: 'Distributed NoSQL cloud database', level: 'Intermediate', icon: SiCouchbase },
+
+  // ── Other ──────────────────────────────────────────────
+  { name: 'REST API', category: 'Other', description: 'RESTful service design & development', level: 'Advanced', icon: TbApi },
+  { name: 'GraphQL', category: 'Other', description: 'Flexible query language for APIs', level: 'Intermediate', icon: SiGraphql },
+  { name: 'gRPC', category: 'Other', description: 'High-performance RPC framework', level: 'Intermediate', icon: VscSymbolInterface },
+  { name: 'WebSockets', category: 'Other', description: 'Real-time bidirectional communication', level: 'Intermediate', icon: TbPlugConnected },
+  { name: 'API Docs', category: 'Other', description: 'Swagger / OpenAPI documentation', level: 'Intermediate', icon: SiSwagger },
+  { name: 'Git', category: 'Other', description: 'Distributed version control', level: 'Advanced', icon: FaGitAlt },
+  { name: 'Figma', category: 'Other', description: 'Collaborative design tool', level: 'Intermediate', icon: FaFigma },
+  { name: 'Blender 3D', category: 'Other', description: '3D creation suite', level: 'Intermediate', icon: SiBlender },
 ];
 
 const SkillItem = ({ skill }) => {

@@ -15,12 +15,12 @@ const hackathonStats = [
 ];
 
 const hackathonHighlights = [
-  { icon: '⚡', title: 'Rapid Prototyping', body: 'Shipped full-stack apps in 24–48 hours under real competition pressure.' },
-  { icon: '🤝', title: 'Team Collaboration', body: 'Divided tasks, communicated under stress, and delivered working prototypes together.' },
-  { icon: '🔧', title: 'Full-Stack Execution', body: 'API integration, backend logic, and Tailwind-powered UIs — all in one sprint.' },
-  { icon: '🏆', title: 'National Exposure', body: 'Competed alongside top developers from across India, sharpening competitive instincts.' },
-  { icon: '🧠', title: 'Problem Solving', body: 'Tackled real industry challenges judged on scalability, innovation, and usability.' },
-  { icon: '🚀', title: 'Growth Mindset', body: 'Every hackathon was a crash course in debugging, optimizing, and shipping fast.' },
+  { title: 'Rapid Prototyping', body: 'Shipped full-stack apps in 24–48 hours under real competition pressure.' },
+  { title: 'Team Collaboration', body: 'Divided tasks, communicated under stress, and delivered working prototypes together.' },
+  { title: 'Full-Stack Execution', body: 'API integration, backend logic, and Tailwind-powered UIs — all in one sprint.' },
+  { title: 'National Exposure', body: 'Competed alongside top developers from across India, sharpening competitive instincts.' },
+  { title: 'Problem Solving', body: 'Tackled real industry challenges judged on scalability, innovation, and usability.' },
+  { title: 'Growth Mindset', body: 'Every hackathon was a crash course in debugging, optimizing, and shipping fast.' },
 ];
 
 const certificates = [
@@ -230,11 +230,10 @@ const HackathonSection = () => {
                 color: 'var(--color-ink)', whiteSpace: 'nowrap',
               }}>HACK</span>
 
-              <div style={{ fontSize: 28, marginBottom: 12 }}>{item.icon}</div>
               <h3
                 data-invert="true"
                 style={{
-                  fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 16,
+                  fontFamily: 'var(--font-heading)', fontWeight: 900, fontSize: 18,
                   textTransform: 'uppercase', letterSpacing: '0.06em',
                   color: 'var(--color-ink)', marginBottom: 10,
                   transition: 'color 0.15s',
