@@ -73,12 +73,10 @@ const Navbar = () => {
     <motion.nav
       animate={{ y: navY }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
-      className="fixed top-0 left-0 w-full z-50 flex items-center"
+      className="fixed top-0 left-0 w-full z-50 flex items-center nav-dots"
       style={{
         height: '60px',
         backgroundColor: 'var(--color-paper)',
-        backgroundImage: 'radial-gradient(var(--color-ink) 1px, transparent 1px)',
-        backgroundSize: '24px 24px',
         borderBottom: `${isScrolled ? '3px' : '2px'} solid var(--color-ink)`
       }}
     >

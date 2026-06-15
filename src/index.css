@@ -175,6 +175,16 @@
     background: var(--color-ink-3);
     border-radius: 0;
   }
+
+  .nav-dots {
+    background-image: none;
+  }
+  @media (min-width: 768px) {
+    .nav-dots {
+      background-image: radial-gradient(var(--color-ink) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+  }
 }
 
 @keyframes pulse-dot {
