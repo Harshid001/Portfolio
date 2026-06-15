@@ -69,6 +69,15 @@ const projects = [
     image: fundHuntersImg,
     category: "WEBSITES"
   },
+  {
+    title: "Crop Sphere",
+    description: "A comprehensive agricultural platform and web dashboard.",
+    tech: ["React", "Tailwind CSS", "JavaScript"],
+    github: "https://github.com/Harshid001/crop_sphere",
+    live: "https://crop-sphere.vercel.app/",
+    image: "https://res.cloudinary.com/dh0xawlig/image/upload/q_auto/f_auto/v1781498309/Screenshot_2026-06-15_100751_vqz10c.png",
+    category: "WEBSITES"
+  },
   { 
     title: "Logitech clone", 
     description: "Logitech responsive UI clone showcasing frontend and design skills with vibrant animations.", 
