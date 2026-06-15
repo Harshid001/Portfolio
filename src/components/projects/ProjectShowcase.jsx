@@ -8,10 +8,10 @@ const ProjectShowcase = ({ project, index }) => {
       <AnimatePresence mode="wait">
         <motion.div
           key={project.title}
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -15 }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0, filter: 'blur(10px)', scale: 0.98 }}
+          animate={{ opacity: 1, filter: 'blur(0px)', scale: 1 }}
+          exit={{ opacity: 0, filter: 'blur(10px)', scale: 0.98, transition: { duration: 0.15 } }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="flex flex-col flex-grow"
         >
           {/* Project Image with View Project Overlay */}
