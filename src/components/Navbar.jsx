@@ -104,6 +104,15 @@ const Navbar = () => {
             </a>
           ))}
           <a 
+            href="/resume.pdf" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-secondary cursor-none ml-4 h-[40px] flex items-center"
+            style={{ padding: '0 24px' }}
+          >
+            RESUME
+          </a>
+          <a 
             href="#contact" 
             onClick={(e) => scrollTo(e, '#contact')}
             className="btn-primary cursor-none ml-4 h-[40px] flex items-center"
@@ -161,6 +170,24 @@ const Navbar = () => {
                   {link.name}
                 </motion.a>
               ))}
+              <motion.a 
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                whileTap={{ scale: 0.9, x: 10 }}
+                href="/resume.pdf" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-4xl sm:text-5xl cursor-none transition-colors mt-4"
+                style={{ 
+                  fontFamily: 'var(--font-display)',
+                  color: 'var(--color-ink)',
+                  WebkitTextStroke: '1px var(--color-paper)'
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-red)'; e.currentTarget.style.WebkitTextStroke = '0px'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--color-ink)'; e.currentTarget.style.WebkitTextStroke = '1px var(--color-paper)'; }}
+              >
+                RESUME
+              </motion.a>
             </div>
           </motion.div>
         )}

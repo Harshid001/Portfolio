@@ -4,9 +4,8 @@ import { DiMongodb, DiJavascript1 } from 'react-icons/di';
 import { SiTypescript, SiTailwindcss, SiPostgresql, SiExpress, SiBlender, SiC, SiCplusplus } from 'react-icons/si';
 
 const skillNames = [
-  'React', 'JavaScript', 'TypeScript', 'Tailwind CSS', 'Node.js',
-  'MongoDB', 'PostgreSQL', 'Git', 'Figma', 'React Native',
-  'HTML', 'CSS', 'Express JS', 'Blender 3D', 'C Language', 'C++', 'Python',
+  'React', 'JavaScript', 'Tailwind CSS', 'Node.js',
+  'MongoDB', 'Python', 'HTML / CSS', 'Express',
 ];
 
 const SkillsMarquee = () => {

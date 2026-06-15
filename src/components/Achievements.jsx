@@ -6,12 +6,16 @@ import hackathon1 from '../assets/hackathon/hackathon1.jpg';
 import hackathon2 from '../assets/hackathon/hackathon2.jpg';
 import hackathon3 from '../assets/hackathon/hackathon3.jpg';
 
-/* ─── Data ─── */
 const hackathonStats = [
   { value: '5+',  label: 'HACKATHONS ENTERED' },
   { value: '2',   label: 'NATIONAL LEVEL' },
   { value: '48H', label: 'MAX SPRINT' },
   { value: '∞',   label: 'LESSONS LEARNED' },
+];
+
+const hackathonDetails = [
+  { name: 'Smart India Hackathon', date: '2024', project: 'Smart Factory AI', level: 'National Level' },
+  { name: 'CodeFest Challenge', date: '2023', project: 'StudyBuddy Platform', level: 'State Level' },
 ];
 
 const hackathonHighlights = [
@@ -188,6 +192,45 @@ const HackathonSection = () => {
           ))}
         </motion.div>
 
+        {/* Hackathon Details List */}
+        <motion.div
+          className="mb-16 space-y-4"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', color: 'var(--color-ink)', textTransform: 'uppercase', marginBottom: '20px' }}>
+            Notable Participations
+          </h3>
+          {hackathonDetails.map((hack, i) => (
+            <div 
+              key={i}
+              className="flex flex-col sm:flex-row sm:items-center justify-between p-6 brutal-border transition-colors duration-300 group cursor-crosshair"
+              style={{ backgroundColor: 'var(--color-paper-3)' }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-ink)'; e.currentTarget.style.color = 'var(--color-paper)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-paper-3)'; e.currentTarget.style.color = 'var(--color-ink)'; }}
+            >
+              <div>
+                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: 800, textTransform: 'uppercase' }} className="group-hover:text-paper">
+                  {hack.name}
+                </h4>
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--color-ink-2)', letterSpacing: '0.1em', marginTop: '4px' }} className="group-hover:text-paper-2">
+                  BUILT: {hack.project}
+                </p>
+              </div>
+              <div className="mt-4 sm:mt-0 text-left sm:text-right">
+                <span className="inline-block px-3 py-1 mb-2 sm:mb-1 border" style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', borderColor: 'currentColor' }}>
+                  {hack.level}
+                </span>
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', fontWeight: 'bold' }}>
+                  {hack.date}
+                </p>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+
         {/* Highlight cards grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0" style={{ border: '2px solid var(--color-ink)' }}>
           {hackathonHighlights.map((item, i) => (
@@ -290,13 +333,7 @@ const HackathonSection = () => {
                 className="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-105" 
               />
               
-              {/* Optional Brutalist tag */}
-              <div 
-                className="absolute top-4 left-4 px-3 py-1 brutal-border text-xs font-bold uppercase tracking-widest z-20 translate-y-[-150%] opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300"
-                style={{ backgroundColor: 'var(--color-paper)', color: 'var(--color-ink)' }}
-              >
-                PHOTO 0{i + 1}
-              </div>
+              {/* Removed Brutalist tag (PHOTO 0{i+1}) */}
             </motion.div>
           ))}
         </div>

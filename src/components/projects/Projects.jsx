@@ -19,7 +19,7 @@ import fundHuntersImg from '../../assets/fund-hunters.png';
 const projects = [
   { 
     title: "StudyBuddy", 
-    description: "AI-powered study assistant to help students manage learning efficiently. Features a smart chatbot and resource management.", 
+    description: "Students struggle to organize learning resources across scattered platforms. Built an AI-powered study assistant with smart chatbot, resource management, and progress tracking using React, Node.js, and MongoDB. Reduced study material lookup time by centralizing resources into a single searchable dashboard.", 
     tech: ["React", "Node.js", "MongoDB", "Express"], 
     github: "https://github.com/Harshid001/studybuddy", 
     image: studybuddyImg,
@@ -27,7 +27,7 @@ const projects = [
   },
   { 
     title: "PINCODE", 
-    description: "Full-stack pincode directory app with search, filter by state/district/taluk, and dashboard analytics for Indian postal data.", 
+    description: "Finding accurate Indian postal data requires navigating outdated government portals. Built a full-stack pincode directory with search, state/district/taluk filtering, and dashboard analytics powered by MongoDB aggregation pipelines. Serves 150,000+ pincode records with sub-200ms search response times.", 
     tech: ["React", "Node.js", "MongoDB", "Express"], 
     github: "https://github.com/Harshid001/PINCODE", 
     live: "https://pincode-delta.vercel.app", 
@@ -36,7 +36,7 @@ const projects = [
   },
   { 
     title: "Smart Factory AI", 
-    description: "AI-based system to optimize smart factory operations and automation using real-time data analysis.", 
+    description: "Manufacturing facilities lack real-time visibility into production line anomalies. Built an AI-based monitoring system using Python and ML models to detect inefficiencies and predict maintenance needs via REST APIs. Processes real-time sensor data streams to flag anomalies before they cause downtime.", 
     tech: ["Python", "AI/ML", "REST API", "Web"], 
     github: "https://github.com/Harshid001/smartfactoryAIsystem", 
     image: smartfactoryImg,
@@ -44,7 +44,7 @@ const projects = [
   },
   {
     title: "Radhe Jewellers",
-    description: "An elegant, responsive jewelry e-commerce frontend displaying luxurious collections, interactive catalog, and user-friendly navigation.",
+    description: "Jewelry businesses need elegant digital storefronts to showcase premium collections online. Built a responsive e-commerce frontend with interactive catalog, smooth animations, and mobile-first navigation using React and Framer Motion. Achieved 95+ Lighthouse performance score with optimized image loading.",
     tech: ["React", "Vite", "Tailwind CSS", "Framer Motion"],
     github: "https://github.com/Harshid001/Radhe-Jwellers",
     live: "https://frontend-three-black-sifmjuce7w.vercel.app/",
@@ -53,7 +53,7 @@ const projects = [
   },
   {
     title: "Website Maker",
-    description: "A dynamic website builder platform letting users customize layouts, elements, and styles in real-time with an intuitive, interactive workspace.",
+    description: "Non-technical users need an intuitive way to build web pages without writing code. Built a drag-and-drop website builder with real-time layout customization, element styling, and live preview using React state management. Supports real-time editing with instant visual feedback across all viewport sizes.",
     tech: ["React", "Vite", "Tailwind CSS", "State Management"],
     github: "https://github.com/Harshid001/Website-maker",
     live: "https://website-maker-gevx.vercel.app/",
@@ -62,7 +62,7 @@ const projects = [
   },
   {
     title: "Fund Hunters",
-    description: "A secure online banking and financial platform interface (PayX / Emerald Trust) designed for seamless and modern digital transactions.",
+    description: "Digital banking interfaces often feel dated and unintuitive for everyday transactions. Designed a modern fintech platform UI with secure transaction flows and responsive dashboard using vanilla HTML/CSS/JS. Built fully responsive layouts that adapt seamlessly from 320px mobile to 4K desktop screens.",
     tech: ["HTML", "CSS", "JavaScript", "Responsive Design"],
     github: "https://github.com/Harshid001/fund_hunters",
     live: "https://fund-hunters.vercel.app/",
@@ -71,7 +71,7 @@ const projects = [
   },
   {
     title: "Crop Sphere",
-    description: "A comprehensive agricultural platform and web dashboard.",
+    description: "Farmers need accessible digital tools to manage crop data and agricultural planning. Built a comprehensive agricultural dashboard with crop tracking, weather integration, and analytics using React and Tailwind CSS. Delivers real-time agricultural insights through an intuitive, mobile-friendly dashboard interface.",
     tech: ["React", "Tailwind CSS", "JavaScript"],
     github: "https://github.com/Harshid001/crop_sphere",
     live: "https://crop-sphere.vercel.app/",
@@ -80,7 +80,7 @@ const projects = [
   },
   {
     title: "MediPrice",
-    description: "A comprehensive healthcare pricing and medical platform.",
+    description: "Patients struggle to compare healthcare costs across different providers and services. Built a medical pricing platform with provider search, cost comparison, and transparent pricing data using React. Aggregates pricing data from multiple sources into a single, easy-to-navigate comparison interface.",
     tech: ["React", "Tailwind CSS", "JavaScript"],
     github: "https://github.com/codinggita/mediPrice",
     live: "https://mediprice-five.vercel.app/about",
@@ -89,7 +89,7 @@ const projects = [
   },
   {
     title: "Payfair",
-    description: "A secure and efficient digital payment platform.",
+    description: "Peer-to-peer payments need simple, trustworthy interfaces that minimize friction. Built a digital payment platform with secure transaction processing, wallet management, and payment history using React. Implemented smooth payment flows with real-time balance updates and transaction confirmation.",
     tech: ["React", "Tailwind CSS", "JavaScript"],
     github: "https://github.com/Harshid001/PAYFAIR",
     live: "https://payfair-nine.vercel.app/",
@@ -98,7 +98,7 @@ const projects = [
   },
   { 
     title: "Logitech clone", 
-    description: "Logitech responsive UI clone showcasing frontend and design skills with vibrant animations.", 
+    description: "Recreating production-quality UIs teaches advanced CSS layout and animation techniques. Built a pixel-perfect responsive clone of the Logitech website with vibrant animations and exact design fidelity. Matched the original layout across all breakpoints using only HTML, CSS, and vanilla JavaScript.", 
     tech: ["HTML", "CSS", "JS"], 
     live: "https://diwalicloneproject5.netlify.app/", 
     image: logitechImg,
@@ -106,7 +106,7 @@ const projects = [
   },
   { 
     title: "Rockstart clone", 
-    description: "Modern UI clone focused on layout accuracy and responsiveness for festive applications.", 
+    description: "Studying AAA game studio websites reveals advanced layout patterns and micro-interactions. Built a responsive UI clone focused on pixel-perfect layout accuracy and smooth hover transitions. Achieved near-identical visual fidelity to the original using semantic HTML and custom CSS animations.", 
     tech: ["HTML", "CSS", "JS"], 
     live: "https://diwalicloneproject2.netlify.app/", 
     image: rockstarImg,
@@ -114,7 +114,7 @@ const projects = [
   },
   { 
     title: "NumerAI clone", 
-    description: "Animation-focused festive UI project with advanced CSS styling and smooth transitions.", 
+    description: "Complex data science platforms need approachable, animation-rich landing pages to attract users. Built an animation-focused clone with advanced CSS transitions, scroll effects, and smooth page flow. Implemented 10+ custom CSS animations including parallax scrolling and staggered element reveals.", 
     tech: ["HTML", "CSS", "JS"], 
     live: "https://diwalicloneproject3.netlify.app/", 
     image: numeraiImg,

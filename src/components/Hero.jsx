@@ -96,7 +96,7 @@ const Hero = () => {
             Building scalable web apps & solving real-world problems. No fluff, just functional code and brutal aesthetics.
           </motion.p>
 
-          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row mb-12 w-full sm:w-auto">
+          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row mb-12 w-full sm:w-auto flex-wrap">
             <motion.a 
               href="#projects" 
               onClick={(e) => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView(); }}
@@ -110,6 +110,14 @@ const Hero = () => {
               whileTap={{ scale: 0.95 }}
               className="btn-secondary cursor-none h-[56px] w-full sm:w-auto flex items-center justify-center mt-4 sm:mt-0 sm:-ml-[2px]">
               CONTACT ME
+            </motion.a>
+            <motion.a 
+              href="/resume.pdf" 
+              target="_blank"
+              rel="noopener noreferrer"
+              whileTap={{ scale: 0.95 }}
+              className="btn-secondary cursor-none h-[56px] w-full sm:w-auto flex items-center justify-center mt-4 sm:mt-0 sm:-ml-[2px]">
+              DOWNLOAD RESUME
             </motion.a>
           </motion.div>
 

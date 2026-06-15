@@ -114,10 +114,10 @@ const About = () => {
                 <CountUp end={"2"} label="YEARS LEARNING" />
               </div>
               <div style={{ marginRight: '-2px', marginBottom: '-2px' }}>
-                <CountUp end={"3"} label="TECH STACKS" />
+                <CountUp end={"9"} label="PROJECTS DEPLOYED" />
               </div>
               <div style={{ marginRight: '-2px', marginBottom: '-2px' }}>
-                <CountUp end={"100"} label="PASSION %" />
+                <CountUp end={"4"} label="CERTIFICATIONS" />
               </div>
             </motion.div>
 
