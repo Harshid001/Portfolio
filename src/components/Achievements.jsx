@@ -14,8 +14,8 @@ const hackathonStats = [
 ];
 
 const hackathonDetails = [
-  { name: 'Smart India Hackathon', date: '2024', project: 'Smart Factory AI', level: 'National Level' },
-  { name: 'CodeFest Challenge', date: '2023', project: 'StudyBuddy Platform', level: 'State Level' },
+  { name: 'Smart India Hackathon', date: '2026', project: 'Smart Factory AI', level: 'National Level' },
+  { name: 'CodeFest Challenge', date: '2025', project: 'StudyBuddy Platform', level: 'State Level' },
 ];
 
 const hackathonHighlights = [
