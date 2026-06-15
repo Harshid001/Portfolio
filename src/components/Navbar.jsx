@@ -151,13 +151,13 @@ const Navbar = () => {
             }}
             aria-label="Toggle Dark Mode"
           >
-            <span className="absolute left-1 text-[12px]" style={{ color: 'var(--color-ink)' }}><HiMoon /></span>
-            <span className="absolute right-1 text-[12px]" style={{ color: 'var(--color-ink)' }}><HiSun /></span>
+            <span className="absolute left-[4px] text-[12px]" style={{ color: 'var(--color-ink)' }}><HiMoon /></span>
+            <span className="absolute right-[4px] text-[12px]" style={{ color: 'var(--color-ink)' }}><HiSun /></span>
             <motion.div 
-              className="w-5 h-5 rounded-full absolute z-10"
-              style={{ backgroundColor: 'var(--color-ink)', top: '1px' }}
+              className="w-[20px] h-[20px] rounded-full absolute z-10"
+              style={{ backgroundColor: 'var(--color-ink)', top: '2px' }}
               initial={false}
-              animate={{ left: isDark ? '3px' : '28px' }}
+              animate={{ left: isDark ? '2px' : '30px' }}
               transition={{ type: "spring", stiffness: 500, damping: 30 }}
             />
           </button>
@@ -177,13 +177,13 @@ const Navbar = () => {
             }}
             aria-label="Toggle Dark Mode"
           >
-            <span className="absolute left-1 text-[12px]" style={{ color: 'var(--color-ink)' }}><HiMoon /></span>
-            <span className="absolute right-1 text-[12px]" style={{ color: 'var(--color-ink)' }}><HiSun /></span>
+            <span className="absolute left-[3px] text-[12px]" style={{ color: 'var(--color-ink)' }}><HiMoon /></span>
+            <span className="absolute right-[3px] text-[12px]" style={{ color: 'var(--color-ink)' }}><HiSun /></span>
             <motion.div 
-              className="w-4 h-4 rounded-full absolute z-10"
-              style={{ backgroundColor: 'var(--color-ink)', top: '1px' }}
+              className="w-[18px] h-[18px] rounded-full absolute z-10"
+              style={{ backgroundColor: 'var(--color-ink)', top: '2px' }}
               initial={false}
-              animate={{ left: isDark ? '3px' : '29px' }}
+              animate={{ left: isDark ? '2px' : '28px' }}
               transition={{ type: "spring", stiffness: 500, damping: 30 }}
             />
           </button>
