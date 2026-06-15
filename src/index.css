@@ -152,6 +152,19 @@
     background: var(--color-ink);
     border-radius: 0;
   }
+
+  .dark-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .dark-scrollbar::-webkit-scrollbar-track {
+    background: var(--color-ink);
+  }
+
+  .dark-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--color-ink-3);
+    border-radius: 0;
+  }
 }
 
 @keyframes pulse-dot {
