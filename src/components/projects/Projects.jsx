@@ -78,6 +78,15 @@ const projects = [
     image: "https://res.cloudinary.com/dh0xawlig/image/upload/q_auto/f_auto/v1781498309/Screenshot_2026-06-15_100751_vqz10c.png",
     category: "WEBSITES"
   },
+  {
+    title: "MediPrice",
+    description: "A comprehensive healthcare pricing and medical platform.",
+    tech: ["React", "Tailwind CSS", "JavaScript"],
+    github: "https://github.com/codinggita/mediPrice",
+    live: "https://mediprice-five.vercel.app/about",
+    image: "https://res.cloudinary.com/dh0xawlig/image/upload/q_auto/f_auto/v1778065370/Screenshot_2026-05-06_161814_g2g0bn.png",
+    category: "WEBSITES"
+  },
   { 
     title: "Logitech clone", 
     description: "Logitech responsive UI clone showcasing frontend and design skills with vibrant animations.", 
