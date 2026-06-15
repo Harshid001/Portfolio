@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import SectionPresence from '../SectionPresence';
 import ProjectShowcase from './ProjectShowcase';
@@ -125,6 +125,17 @@ const projects = [
 
 const Projects = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    if (isHovered) return;
+    
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % projects.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [isHovered, activeIndex]);
 
   const activeProject = projects[activeIndex];
   const activeCategory = activeProject?.category || 'APPLICATIONS';
@@ -136,6 +147,8 @@ const Projects = () => {
       id="projects" 
       className="py-16 lg:py-24 relative border-t-2" 
       style={{ backgroundColor: 'var(--color-paper-2)', borderColor: 'var(--color-ink)' }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
