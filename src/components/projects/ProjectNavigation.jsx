@@ -136,7 +136,7 @@ const ProjectNavigation = ({ projects, activeIndex, setActiveIndex }) => {
 
       {/* Navigation List - Mobile Horizontal / Desktop Vertical */}
       <div 
-        className="flex flex-col flex-grow w-full py-4 space-y-1"
+        className="flex flex-col flex-grow w-full py-4 space-y-1 dark-section"
         role="tablist"
         aria-label="Project selection"
         style={{

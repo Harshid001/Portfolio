@@ -118,7 +118,7 @@ const ProjectShowcase = ({ project, index }) => {
                 {project.tech.map((t, i) => (
                   <span 
                     key={i} 
-                    className="tag rounded-none"
+                    className="tag rounded-none transition-colors duration-300"
                     style={{ 
                       backgroundColor: 'transparent', 
                       color: 'var(--color-ink)', 
@@ -128,6 +128,14 @@ const ProjectShowcase = ({ project, index }) => {
                       fontFamily: 'var(--font-mono)',
                       textTransform: 'uppercase',
                       letterSpacing: '0.05em'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-ink)';
+                      e.currentTarget.style.color = 'var(--color-paper)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.color = 'var(--color-ink)';
                     }}
                   >
                     {t}
