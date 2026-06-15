@@ -151,8 +151,8 @@ const Navbar = () => {
             }}
             aria-label="Toggle Dark Mode"
           >
-            <span className="absolute left-[4px] text-[12px]" style={{ color: 'var(--color-ink)' }}><HiMoon /></span>
-            <span className="absolute right-[4px] text-[12px]" style={{ color: 'var(--color-ink)' }}><HiSun /></span>
+            <span className="absolute left-[6px] text-[12px] z-20 transition-colors duration-300 pointer-events-none" style={{ color: isDark ? 'var(--color-paper)' : 'var(--color-ink)' }}><HiMoon /></span>
+            <span className="absolute right-[6px] text-[12px] z-20 transition-colors duration-300 pointer-events-none" style={{ color: !isDark ? 'var(--color-paper)' : 'var(--color-ink)' }}><HiSun /></span>
             <motion.div 
               className="w-[20px] h-[20px] rounded-full absolute z-10"
               style={{ backgroundColor: 'var(--color-ink)', top: '2px' }}
@@ -177,8 +177,8 @@ const Navbar = () => {
             }}
             aria-label="Toggle Dark Mode"
           >
-            <span className="absolute left-[3px] text-[12px]" style={{ color: 'var(--color-ink)' }}><HiMoon /></span>
-            <span className="absolute right-[3px] text-[12px]" style={{ color: 'var(--color-ink)' }}><HiSun /></span>
+            <span className="absolute left-[5px] text-[12px] z-20 transition-colors duration-300 pointer-events-none" style={{ color: isDark ? 'var(--color-paper)' : 'var(--color-ink)' }}><HiMoon /></span>
+            <span className="absolute right-[5px] text-[12px] z-20 transition-colors duration-300 pointer-events-none" style={{ color: !isDark ? 'var(--color-paper)' : 'var(--color-ink)' }}><HiSun /></span>
             <motion.div 
               className="w-[18px] h-[18px] rounded-full absolute z-10"
               style={{ backgroundColor: 'var(--color-ink)', top: '2px' }}
