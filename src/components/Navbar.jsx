@@ -63,7 +63,7 @@ const Navbar = () => {
         borderBottom: `${isScrolled ? '3px' : '2px'} solid var(--color-ink)`
       }}
     >
-      <div className="w-full max-w-7xl mx-auto px-6 flex justify-between items-center h-full">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-full">
         <a 
           href="#home" 
           onClick={(e) => scrollTo(e, '#home')} 
@@ -150,7 +150,7 @@ const Navbar = () => {
                   whileTap={{ scale: 0.9, x: 10 }}
                   href={link.href} 
                   onClick={(e) => scrollTo(e, link.href)}
-                  className="text-5xl cursor-none transition-colors"
+                  className="text-4xl sm:text-5xl cursor-none transition-colors"
                   style={{ 
                     fontFamily: 'var(--font-display)',
                     color: activeSection === link.href.slice(1) ? 'var(--color-red)' : 'var(--color-paper)' 

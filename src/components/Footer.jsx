@@ -15,14 +15,14 @@ const Footer = () => {
       >
         <div style={{ display: 'inline-block', animation: 'marquee 25s linear infinite' }}>
           {[...Array(3)].map((_, i) => (
-            <span key={i} style={{ fontFamily: 'var(--font-display)', fontSize: '20px', paddingRight: '12px' }}>
+            <span key={i} style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(14px, 4vw, 20px)', paddingRight: '12px' }}>
               AVAILABLE FOR WORK · FULL STACK DEVELOPER · REACT · NODE.JS · 
             </span>
           ))}
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-6 items-center border-b-2 pb-10" style={{ borderColor: 'var(--color-ink-2)' }}>
           
           {/* Left: Logo */}

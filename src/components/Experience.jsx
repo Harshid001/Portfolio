@@ -13,22 +13,22 @@ const Experience = () => {
     <section id="experience" className="py-24 relative border-t-2" style={{ backgroundColor: 'var(--color-paper)', borderColor: 'var(--color-ink)' }}>
       <SectionPresence sectionId="experience" />
       
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} className="mb-20">
           <span className="section-label mb-4 block">04 / MY JOURNEY</span>
-          <h2 style={{ fontSize: 'clamp(40px, 8vw, 80px)', lineHeight: 0.9 }}>
+          <h2 style={{ fontSize: 'clamp(32px, 10vw, 80px)', lineHeight: 0.9 }}>
             EXPERIENCE<br/>& GROWTH
           </h2>
         </motion.div>
 
-        <div className="relative max-w-3xl pl-10 md:pl-16">
+        <div className="relative max-w-3xl pl-8 sm:pl-12 md:pl-16">
           {/* Vertical Line */}
           <motion.div 
             initial={{ scaleY: 0 }}
             whileInView={{ scaleY: 1 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 1, ease: "easeInOut" }}
-            className="absolute left-3.5 md:left-5 top-0 bottom-0"
+            className="absolute left-[7px] top-0 bottom-0"
             style={{ width: '2px', backgroundColor: 'var(--color-ink)', transformOrigin: 'top' }} 
           />
 
@@ -44,7 +44,7 @@ const Experience = () => {
               >
                 {/* Node */}
                 <div 
-                  className="absolute -left-10 md:-left-14 top-1 z-10 transition-colors cursor-none"
+                  className="absolute -left-8 sm:-left-12 md:-left-16 top-1 z-10 transition-colors cursor-none"
                   style={{ 
                     width: '16px', height: '16px', 
                     backgroundColor: 'var(--color-ink)', 

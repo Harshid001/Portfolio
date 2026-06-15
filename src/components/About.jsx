@@ -35,7 +35,7 @@ const CountUp = ({ end, label }) => {
       className="flex flex-col brutal-border p-4 sm:p-6 h-full justify-center items-center text-center"
       style={{ backgroundColor: 'var(--color-paper)' }}
     >
-      <h3 style={{ fontSize: 'clamp(40px, 8vw, 72px)', fontFamily: 'var(--font-display)', color: 'var(--color-ink)', lineHeight: 1 }}>
+      <h3 style={{ fontSize: 'clamp(32px, 8vw, 72px)', fontFamily: 'var(--font-display)', color: 'var(--color-ink)', lineHeight: 1 }}>
         {count}{end.toString().includes('+') || end.toString().includes('%') ? end.toString().replace(/[0-9]/g, '') : ''}
       </h3>
       <p className="mt-2 text-[10px] sm:text-[11px] uppercase tracking-widest" style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-ink-3)' }}>
@@ -61,7 +61,7 @@ const About = () => {
         <DotShaderBackground />
       </Suspense>
 
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 sm:px-12 md:px-20">
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-8 md:px-12 lg:px-20">
 
         {/* CENTERED HEADING */}
         <motion.div
@@ -72,7 +72,7 @@ const About = () => {
           transition={{ duration: 0.8 }}
         >
           <span className="section-label mb-4 block">01 / ABOUT ME</span>
-          <h2 style={{ fontSize: 'clamp(40px, 8vw, 80px)', lineHeight: 0.9, color: 'var(--color-ink)' }}>
+          <h2 style={{ fontSize: 'clamp(32px, 10vw, 80px)', lineHeight: 0.9, color: 'var(--color-ink)' }}>
             MORE THAN<br/>JUST CODE
           </h2>
         </motion.div>

@@ -152,7 +152,7 @@ const SkillCategory = ({ title, categorySkills }) => (
         {title}
       </h3>
     </motion.div>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {categorySkills.map((skill) => (
         <SkillItem key={skill.name} skill={skill} />
       ))}
@@ -173,7 +173,7 @@ const Skills = () => {
     >
       <SectionPresence sectionId="skills" />
 
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="mb-20"
           initial={{ opacity: 0, y: 50 }}
@@ -183,7 +183,7 @@ const Skills = () => {
           <span className="section-label mb-4 block" style={{ color: 'var(--color-ink)' }}>02 / SKILLS</span>
           <h2
             style={{
-              fontSize: 'clamp(50px, 10vw, 120px)',
+              fontSize: 'clamp(40px, 10vw, 120px)',
               lineHeight: 0.9,
               fontFamily: 'var(--font-heading)',
               color: 'var(--color-ink)',

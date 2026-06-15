@@ -35,7 +35,7 @@ const ProjectNavigation = ({ projects, activeIndex, setActiveIndex }) => {
         onClick={() => setActiveIndex(globalIndex)}
         onKeyDown={(e) => handleKeyDown(e, globalIndex)}
         whileTap={{ scale: 0.98 }}
-        className={`w-full flex items-start gap-4 px-4 py-3 lg:px-5 lg:py-4 transition-all duration-300 cursor-none ${
+        className={`w-full flex shrink-0 justify-start items-start gap-4 px-4 py-3 lg:px-5 lg:py-4 transition-all duration-300 cursor-none ${
           isActive ? '' : 'hover:pl-5 lg:hover:pl-7'
         }`}
         style={{
@@ -136,7 +136,7 @@ const ProjectNavigation = ({ projects, activeIndex, setActiveIndex }) => {
 
       {/* Navigation List - Mobile Horizontal / Desktop Vertical */}
       <div 
-        className="flex flex-col flex-grow w-full py-4 space-y-1 dark-section overflow-y-auto dark-scrollbar max-h-[350px] lg:max-h-[550px]"
+        className="flex flex-col flex-grow w-full py-4 space-y-1 dark-section overflow-y-auto dark-scrollbar max-h-[250px] md:max-h-[300px] lg:max-h-[550px]"
         role="tablist"
         aria-label="Project selection"
         style={{

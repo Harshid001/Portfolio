@@ -104,11 +104,11 @@ const Contact = () => {
     <section id="contact" className="py-24 relative border-t-2" style={{ backgroundColor: 'var(--color-paper-2)', borderColor: 'var(--color-ink)' }}>
       <SectionPresence sectionId="contact" />
 
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
           <MotionDiv initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.5 }}>
             <span className="section-label mb-4 block">07 / GET IN TOUCH</span>
-            <h2 className="mb-8" style={{ fontSize: 'clamp(48px, 10vw, 100px)', lineHeight: 0.9 }}>
+            <h2 className="mb-8" style={{ fontSize: 'clamp(36px, 10vw, 100px)', lineHeight: 0.9 }}>
               LET'S<br />CONNECT
             </h2>
             <p className="text-[17px] mb-12 max-w-md" style={{ color: 'var(--color-ink-2)', lineHeight: 1.8 }}>
@@ -135,7 +135,7 @@ const Contact = () => {
           </MotionDiv>
 
           <MotionDiv initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.5, delay: 0.2 }}>
-            <form onSubmit={handleSubmit} className="p-10 relative" style={{ backgroundColor: 'var(--color-white)', border: '2px solid var(--color-ink)' }}>
+            <form onSubmit={handleSubmit} className="p-6 sm:p-10 relative" style={{ backgroundColor: 'var(--color-white)', border: '2px solid var(--color-ink)' }}>
               {status.type === "sent" && (
                 <div className="absolute top-0 left-0 w-full p-4 text-center z-10" style={{ backgroundColor: 'var(--color-ink)', color: 'var(--color-paper)' }}>
                   {status.message}

@@ -23,15 +23,13 @@
 }
 
 @layer base {
-  * {
-    cursor: none !important;
+  @media (hover: hover) and (pointer: fine) {
+    * {
+      cursor: none !important;
+    }
   }
 
-  @media (pointer: coarse) {
-    * {
-      cursor: auto !important;
-    }
-    
+  @media (hover: none), (pointer: coarse) {
     /* Improve touch targets for mobile */
     a, button {
       min-height: 44px;

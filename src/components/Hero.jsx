@@ -48,7 +48,7 @@ const Hero = () => {
         }}
       />
 
-      <div className="w-full max-w-7xl mx-auto px-6 relative z-10">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* TEXT CONTENT */}
         <motion.div 
@@ -68,12 +68,12 @@ const Hero = () => {
           </motion.div>
 
           <div className="mb-4 overflow-hidden leading-[0.85]">
-            <motion.h1 style={{ fontSize: 'clamp(56px, 15vw, 110px)', color: 'var(--color-ink)', letterSpacing: '-0.02em' }} className="flex flex-wrap">
+            <motion.h1 style={{ fontSize: 'clamp(40px, 12vw, 110px)', color: 'var(--color-ink)', letterSpacing: '-0.02em' }} className="flex flex-wrap">
               {['H','A','R','S','H','I','D'].map((char, i) => (
                 <motion.span key={i} variants={textSlam} className="inline-block">{char === ' ' ? '\u00A0' : char}</motion.span>
               ))}
             </motion.h1>
-            <motion.h1 style={{ fontSize: 'clamp(56px, 15vw, 110px)', color: 'var(--color-ink)', letterSpacing: '-0.02em' }} className="flex flex-wrap">
+            <motion.h1 style={{ fontSize: 'clamp(40px, 12vw, 110px)', color: 'var(--color-ink)', letterSpacing: '-0.02em' }} className="flex flex-wrap">
               {['S','O','N','I'].map((char, i) => (
                 <motion.span 
                   key={i} 
@@ -96,19 +96,19 @@ const Hero = () => {
             Building scalable web apps & solving real-world problems. No fluff, just functional code and brutal aesthetics.
           </motion.p>
 
-          <motion.div variants={fadeUp} className="flex flex-wrap mb-12">
+          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row mb-12 w-full sm:w-auto">
             <motion.a 
               href="#projects" 
               onClick={(e) => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView(); }}
               whileTap={{ scale: 0.95 }}
-              className="btn-primary cursor-none h-[56px] flex items-center justify-center">
+              className="btn-primary cursor-none h-[56px] w-full sm:w-auto flex items-center justify-center">
               VIEW PROJECTS
             </motion.a>
             <motion.a 
               href="#contact" 
               onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView(); }}
               whileTap={{ scale: 0.95 }}
-              className="btn-secondary cursor-none h-[56px] flex items-center justify-center -ml-[2px]">
+              className="btn-secondary cursor-none h-[56px] w-full sm:w-auto flex items-center justify-center mt-4 sm:mt-0 sm:-ml-[2px]">
               CONTACT ME
             </motion.a>
           </motion.div>
