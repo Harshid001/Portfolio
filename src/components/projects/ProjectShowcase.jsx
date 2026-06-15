@@ -22,6 +22,7 @@ const ProjectShowcase = ({ project, index }) => {
               aspectRatio: '16 / 9',
               backgroundColor: 'var(--color-paper)'
             }}
+            onTouchStart={() => {}} // Enables :active state on mobile Safari
           >
             {project.image ? (
               <>
@@ -29,9 +30,9 @@ const ProjectShowcase = ({ project, index }) => {
                   src={project.image} 
                   alt={project.title} 
                   loading="lazy"
-                  className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105" 
+                  className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-active:grayscale-0 group-hover:scale-105 group-active:scale-105" 
                 />
-                <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-300">
                    {(project.live || project.github) ? (
                      <a 
                        href={project.live || project.github} 

@@ -326,11 +326,12 @@ const HackathonSection = () => {
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.5, delay: i * 0.15 }}
               whileHover={{ boxShadow: '12px 12px 0 var(--color-ink)', y: -5 }}
+              onTouchStart={() => {}} // Enables :active state on mobile Safari
             >
               <img 
                 src={img} 
                 alt={`Hackathon Journey ${i + 1}`} 
-                className="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-105" 
+                className="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-active:grayscale-0 group-hover:scale-105 group-active:scale-105" 
               />
               
               {/* Removed Brutalist tag (PHOTO 0{i+1}) */}
