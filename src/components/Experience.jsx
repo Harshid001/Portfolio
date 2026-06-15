@@ -3,7 +3,7 @@ import SectionPresence from './SectionPresence';
 
 const experiences = [
   { year: "2023", title: "Learning Full Stack Development", description: "Started my journey with HTML, CSS, and JavaScript. Explored the fundamentals of web architecture and responsive design." },
-  { year: "2024", title: "Building Real-World Projects", description: "Built real-world projects including StudyBuddy (AI study assistant) and responsive landing page clones for Logitech, Rockstar, and NumerAI. Mastered React.js and started working with Node.js and MongoDB." },
+  { year: "2024", title: "Building Real-World Projects", description: "Built real-world projects including StudyBuddy (AI study assistant) and e-commerce platforms. Mastered React.js and started working with Node.js and MongoDB." },
   { year: "2024", title: "Debugging & Performance Optimization", description: "Focused on writing clean, efficient code and optimizing web performance. Learned advanced state management and API integration." },
   { year: "2025", title: "Open to Opportunities", description: "Currently looking for internships, freelance projects, and full-time roles to apply my skills and grow as a developer." }
 ];

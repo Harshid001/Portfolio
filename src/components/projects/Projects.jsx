@@ -43,30 +43,12 @@ const projects = [
     category: "APPLICATIONS"
   },
   {
-    title: "Radhe Jewellers",
-    description: "Jewelry businesses need elegant digital storefronts to showcase premium collections online. Built a responsive e-commerce frontend with interactive catalog, smooth animations, and mobile-first navigation using React and Framer Motion. Achieved 95+ Lighthouse performance score with optimized image loading.",
-    tech: ["React", "Vite", "Tailwind CSS", "Framer Motion"],
-    github: "https://github.com/Harshid001/Radhe-Jwellers",
-    live: "https://frontend-three-black-sifmjuce7w.vercel.app/",
-    image: radheJewellersImg,
-    category: "WEBSITES"
-  },
-  {
     title: "Website Maker",
     description: "Non-technical users need an intuitive way to build web pages without writing code. Built a drag-and-drop website builder with real-time layout customization, element styling, and live preview using React state management. Supports real-time editing with instant visual feedback across all viewport sizes.",
     tech: ["React", "Vite", "Tailwind CSS", "State Management"],
     github: "https://github.com/Harshid001/Website-maker",
     live: "https://website-maker-gevx.vercel.app/",
     image: websiteMakerImg,
-    category: "WEBSITES"
-  },
-  {
-    title: "Fund Hunters",
-    description: "Digital banking interfaces often feel dated and unintuitive for everyday transactions. Designed a modern fintech platform UI with secure transaction flows and responsive dashboard using vanilla HTML/CSS/JS. Built fully responsive layouts that adapt seamlessly from 320px mobile to 4K desktop screens.",
-    tech: ["HTML", "CSS", "JavaScript", "Responsive Design"],
-    github: "https://github.com/Harshid001/fund_hunters",
-    live: "https://fund-hunters.vercel.app/",
-    image: fundHuntersImg,
     category: "WEBSITES"
   },
   {
@@ -96,28 +78,22 @@ const projects = [
     image: "https://res.cloudinary.com/dh0xawlig/image/upload/q_auto/f_auto/v1778339333/Screenshot_2026-05-09_203414_mi2sxq.png",
     category: "WEBSITES"
   },
-  { 
-    title: "Logitech clone", 
-    description: "Recreating production-quality UIs teaches advanced CSS layout and animation techniques. Built a pixel-perfect responsive clone of the Logitech website with vibrant animations and exact design fidelity. Matched the original layout across all breakpoints using only HTML, CSS, and vanilla JavaScript.", 
-    tech: ["HTML", "CSS", "JS"], 
-    live: "https://diwalicloneproject5.netlify.app/", 
-    image: logitechImg,
+  {
+    title: "Radhe Jewellers",
+    description: "Jewelry businesses need elegant digital storefronts to showcase premium collections online. Built a responsive e-commerce frontend with interactive catalog, smooth animations, and mobile-first navigation using React and Framer Motion. Achieved 95+ Lighthouse performance score with optimized image loading.",
+    tech: ["React", "Vite", "Tailwind CSS", "Framer Motion"],
+    github: "https://github.com/Harshid001/Radhe-Jwellers",
+    live: "https://frontend-three-black-sifmjuce7w.vercel.app/",
+    image: radheJewellersImg,
     category: "WEBSITES"
   },
-  { 
-    title: "Rockstart clone", 
-    description: "Studying AAA game studio websites reveals advanced layout patterns and micro-interactions. Built a responsive UI clone focused on pixel-perfect layout accuracy and smooth hover transitions. Achieved near-identical visual fidelity to the original using semantic HTML and custom CSS animations.", 
-    tech: ["HTML", "CSS", "JS"], 
-    live: "https://diwalicloneproject2.netlify.app/", 
-    image: rockstarImg,
-    category: "WEBSITES"
-  },
-  { 
-    title: "NumerAI clone", 
-    description: "Complex data science platforms need approachable, animation-rich landing pages to attract users. Built an animation-focused clone with advanced CSS transitions, scroll effects, and smooth page flow. Implemented 10+ custom CSS animations including parallax scrolling and staggered element reveals.", 
-    tech: ["HTML", "CSS", "JS"], 
-    live: "https://diwalicloneproject3.netlify.app/", 
-    image: numeraiImg,
+  {
+    title: "Fund Hunters",
+    description: "Digital banking interfaces often feel dated and unintuitive for everyday transactions. Designed a modern fintech platform UI with secure transaction flows and responsive dashboard using vanilla HTML/CSS/JS. Built fully responsive layouts that adapt seamlessly from 320px mobile to 4K desktop screens.",
+    tech: ["HTML", "CSS", "JavaScript", "Responsive Design"],
+    github: "https://github.com/Harshid001/fund_hunters",
+    live: "https://fund-hunters.vercel.app/",
+    image: fundHuntersImg,
     category: "WEBSITES"
   }
 ];
