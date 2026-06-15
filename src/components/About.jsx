@@ -42,7 +42,7 @@ const About = () => {
         </motion.div>
 
         {/* 2-COLUMN GRID */}
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 items-center">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-24 items-center lg:items-start pt-8">
 
           {/* LEFT COLUMN: Hero Image */}
           <div className="w-full flex justify-center lg:justify-start">
@@ -52,7 +52,7 @@ const About = () => {
               whileTap={{ scale: 0.98 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.6 }}
-              className="relative w-full max-w-md aspect-square brutal-border transition-all duration-300 group overflow-hidden cursor-crosshair"
+              className="relative w-full max-w-sm lg:max-w-[420px] aspect-[4/5] brutal-border transition-all duration-300 group overflow-hidden cursor-crosshair"
               style={{ boxShadow: '8px 8px 0 var(--color-ink)', backgroundColor: 'var(--color-paper-3)' }}
               onMouseEnter={(e) => e.currentTarget.style.boxShadow = '16px 16px 0 var(--color-ink)'}
               onMouseLeave={(e) => e.currentTarget.style.boxShadow = '8px 8px 0 var(--color-ink)'}
@@ -61,6 +61,7 @@ const About = () => {
                 src={heroImg} 
                 alt="About Harshid" 
                 className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105" 
+                style={{ objectPosition: 'center top' }}
               />
               <div 
                 className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none"
@@ -70,12 +71,12 @@ const About = () => {
           </div>
 
           {/* RIGHT COLUMN: Text content */}
-          <div className="w-full flex flex-col gap-8">
+          <div className="w-full flex flex-col gap-8 lg:pt-4">
             
             {/* Beyond Code (Description) */}
             <div>
               <motion.h3
-                className="text-3xl sm:text-4xl mb-6 font-black uppercase tracking-tight"
+                className="text-3xl sm:text-4xl mb-8 font-black uppercase tracking-tight"
                 style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-ink)' }}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -86,7 +87,7 @@ const About = () => {
               </motion.h3>
 
               <motion.div
-                className="space-y-6"
+                className="space-y-6 lg:space-y-8"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}

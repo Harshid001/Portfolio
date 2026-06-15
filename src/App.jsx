@@ -43,7 +43,7 @@ function App() {
         )}
       </AnimatePresence>
 
-      <div className="min-h-screen overflow-x-hidden custom-scrollbar bg-paper text-ink">
+      <div className="min-h-screen overflow-x-hidden custom-scrollbar" style={{ backgroundColor: 'var(--color-paper)', color: 'var(--color-ink)' }}>
         <AnimatePresence>
           {!showIntro && (
             <motion.div

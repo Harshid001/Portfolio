@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
-import { HiMenuAlt3, HiX } from 'react-icons/hi';
+import { HiMenuAlt3, HiX, HiMoon, HiSun } from 'react-icons/hi';
 
 const navLinks = [
   { name: 'Home', href: '#home' },
@@ -15,6 +15,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [navY, setNavY] = useState(-100);
+  const [isDark, setIsDark] = useState(false);
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -41,8 +42,26 @@ const Navbar = () => {
       }
     };
     window.addEventListener('scroll', handleScrollTracking);
+    
+    // Theme init
+    if (document.documentElement.classList.contains('dark')) {
+      setIsDark(true);
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      setIsDark(true);
+      document.documentElement.classList.add('dark');
+    }
+
     return () => window.removeEventListener('scroll', handleScrollTracking);
   }, []);
+
+  const toggleTheme = () => {
+    setIsDark(!isDark);
+    if (!isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
 
   const scrollTo = (e, href) => {
     e.preventDefault();
@@ -120,15 +139,64 @@ const Navbar = () => {
           >
             CONTACT
           </a>
+          
+          {/* Desktop Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="relative flex items-center ml-6 cursor-none transition-colors border-2"
+            style={{
+              width: '56px',
+              height: '28px',
+              borderRadius: '14px',
+              backgroundColor: 'var(--color-paper-2)',
+              borderColor: 'var(--color-ink)'
+            }}
+            aria-label="Toggle Dark Mode"
+          >
+            <span className="absolute left-1 text-[12px]" style={{ color: 'var(--color-ink)' }}><HiMoon /></span>
+            <span className="absolute right-1 text-[12px]" style={{ color: 'var(--color-ink)' }}><HiSun /></span>
+            <motion.div 
+              className="w-5 h-5 rounded-full absolute z-10"
+              style={{ backgroundColor: 'var(--color-ink)', top: '1px' }}
+              initial={false}
+              animate={{ left: isDark ? '3px' : '28px' }}
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            />
+          </button>
         </div>
 
-        <button 
-          className="md:hidden text-3xl cursor-none" 
-          style={{ color: 'var(--color-ink)' }} 
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          {isMobileMenuOpen ? <HiX /> : <HiMenuAlt3 />}
-        </button>
+        <div className="flex items-center md:hidden gap-4">
+          {/* Mobile Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="relative flex items-center cursor-none transition-colors border-2"
+            style={{
+              width: '52px',
+              height: '26px',
+              borderRadius: '13px',
+              backgroundColor: 'var(--color-paper-2)',
+              borderColor: 'var(--color-ink)'
+            }}
+            aria-label="Toggle Dark Mode"
+          >
+            <span className="absolute left-1 text-[12px]" style={{ color: 'var(--color-ink)' }}><HiMoon /></span>
+            <span className="absolute right-1 text-[12px]" style={{ color: 'var(--color-ink)' }}><HiSun /></span>
+            <motion.div 
+              className="w-4 h-4 rounded-full absolute z-10"
+              style={{ backgroundColor: 'var(--color-ink)', top: '1px' }}
+              initial={false}
+              animate={{ left: isDark ? '3px' : '29px' }}
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            />
+          </button>
+          <button 
+            className="text-3xl cursor-none" 
+            style={{ color: 'var(--color-ink)' }} 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <HiX /> : <HiMenuAlt3 />}
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>

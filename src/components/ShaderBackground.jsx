@@ -25,6 +25,8 @@ export default function ShaderBackground() {
       uniform float time;
       uniform vec2 mouse;
       uniform float hoverStrength;
+      uniform vec3 uBgColor;
+      uniform vec3 uRayColor;
 
       void main(void) {
         vec2 uv = (gl_FragCoord.xy * 2.0 - resolution.xy) / min(resolution.x, resolution.y);
@@ -51,22 +53,16 @@ export default function ShaderBackground() {
           }
         }
 
-        // Neo-brutal: dark grey/black rays on light paper background
         vec3 darkTint = vec3(
           color.r * 0.55 + 0.008,
           color.g * 0.50 + 0.006,
           color.b * 0.45 + 0.004
         );
 
-        // Paper white background matching --color-paper (#f5f2ed)
-        vec3 bgColor = vec3(0.96, 0.95, 0.93);
-
         float brightness = (darkTint.r + darkTint.g + darkTint.b) / 3.0;
 
-        // Invert the mix: rays darken the light background
-        vec3 rayColor = vec3(0.05, 0.05, 0.05);
         float rayIntensity = smoothstep(0.0, 0.12, brightness);
-        vec3 finalColor = mix(bgColor, rayColor, rayIntensity * 0.85);
+        vec3 finalColor = mix(uBgColor, uRayColor, rayIntensity * 0.85);
 
         gl_FragColor = vec4(finalColor, 1.0);
       }
@@ -82,6 +78,8 @@ export default function ShaderBackground() {
       resolution: { value: new THREE.Vector2() },
       mouse: { value: new THREE.Vector2(0.5, 0.5) },
       hoverStrength: { value: 0.0 },
+      uBgColor: { value: new THREE.Color('#f5f2ed') },
+      uRayColor: { value: new THREE.Color('#0d0d0d') },
     }
 
     const material = new THREE.ShaderMaterial({
@@ -135,6 +133,24 @@ export default function ShaderBackground() {
     )
     visObserver.observe(container)
 
+    const updateColors = () => {
+      const rootStyle = getComputedStyle(document.documentElement);
+      const paperColor = rootStyle.getPropertyValue('--color-paper').trim() || '#f5f2ed';
+      const inkColor = rootStyle.getPropertyValue('--color-ink').trim() || '#0d0d0d';
+      uniforms.uBgColor.value.set(paperColor);
+      uniforms.uRayColor.value.set(inkColor);
+    };
+    updateColors();
+
+    const themeObserver = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.attributeName === 'class') {
+          updateColors();
+        }
+      }
+    });
+    themeObserver.observe(document.documentElement, { attributes: true });
+
     const animate = () => {
       const animationId = requestAnimationFrame(animate)
       if (!isVisible) {
@@ -164,6 +180,7 @@ export default function ShaderBackground() {
 
     return () => {
       visObserver.disconnect()
+      themeObserver.disconnect()
       window.removeEventListener('resize', onResize)
       container.removeEventListener('mousemove', onMouseMove)
       container.removeEventListener('mouseenter', onMouseEnter)

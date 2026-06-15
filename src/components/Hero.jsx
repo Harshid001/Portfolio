@@ -42,8 +42,8 @@ const Hero = () => {
         className="absolute inset-0 z-[1] pointer-events-none"
         style={{
           background: `
-            radial-gradient(ellipse at 30% 50%, rgba(245, 242, 237, 0.55) 0%, transparent 60%),
-            linear-gradient(90deg, rgba(245, 242, 237, 0.5) 0%, rgba(245, 242, 237, 0.15) 50%, transparent 70%)
+            radial-gradient(ellipse at 30% 50%, color-mix(in srgb, var(--color-paper) 55%, transparent) 0%, transparent 60%),
+            linear-gradient(90deg, color-mix(in srgb, var(--color-paper) 50%, transparent) 0%, color-mix(in srgb, var(--color-paper) 15%, transparent) 50%, transparent 70%)
           `,
         }}
       />

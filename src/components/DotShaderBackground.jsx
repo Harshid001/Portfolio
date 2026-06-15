@@ -114,6 +114,33 @@ function Scene() {
   })
 
   useEffect(() => {
+    const updateColors = () => {
+      const rootStyle = getComputedStyle(document.documentElement);
+      const paperColor = rootStyle.getPropertyValue('--color-paper').trim() || '#f5f2ed';
+      const inkColor = rootStyle.getPropertyValue('--color-ink').trim() || '#0d0d0d';
+      
+      if (materialRef.current) {
+        materialRef.current.uniforms.bgColor.value.set(paperColor);
+        materialRef.current.uniforms.dotColor.value.set(inkColor);
+      }
+    };
+    
+    updateColors();
+    
+    const themeObserver = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.attributeName === 'class') {
+          updateColors();
+        }
+      }
+    });
+    
+    themeObserver.observe(document.documentElement, { attributes: true });
+    
+    return () => themeObserver.disconnect();
+  }, []);
+
+  useEffect(() => {
     const el = document.getElementById('about')
     if (!el || !meshRef.current) return
 

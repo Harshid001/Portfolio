@@ -23,6 +23,18 @@
 }
 
 @layer base {
+  html.dark {
+    --color-paper: #0d0d0d;
+    --color-paper-2: #161616;
+    --color-paper-3: #222222;
+    --color-ink: #f5f2ed;
+    --color-ink-2: #c4c4c4;
+    --color-ink-3: #888888;
+    --color-accent: #f5f2ed;
+    --color-red: #ff4757;
+    --color-white: #000000;
+  }
+
   @media (hover: hover) and (pointer: fine) {
     * {
       cursor: none !important;
