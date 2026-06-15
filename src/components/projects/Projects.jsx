@@ -87,6 +87,15 @@ const projects = [
     image: "https://res.cloudinary.com/dh0xawlig/image/upload/q_auto/f_auto/v1778065370/Screenshot_2026-05-06_161814_g2g0bn.png",
     category: "WEBSITES"
   },
+  {
+    title: "Payfair",
+    description: "A secure and efficient digital payment platform.",
+    tech: ["React", "Tailwind CSS", "JavaScript"],
+    github: "https://github.com/Harshid001/PAYFAIR",
+    live: "https://payfair-nine.vercel.app/",
+    image: "https://res.cloudinary.com/dh0xawlig/image/upload/q_auto/f_auto/v1778339333/Screenshot_2026-05-09_203414_mi2sxq.png",
+    category: "WEBSITES"
+  },
   { 
     title: "Logitech clone", 
     description: "Logitech responsive UI clone showcasing frontend and design skills with vibrant animations.", 
