@@ -141,7 +141,7 @@ const Navbar = () => {
           {/* Desktop Theme Toggle */}
           <button
             onClick={toggleTheme}
-            className="relative flex items-center ml-6 cursor-none transition-colors border-2"
+            className="relative ml-6 cursor-none transition-colors border-2"
             style={{
               width: '56px',
               height: '28px',
@@ -151,15 +151,22 @@ const Navbar = () => {
             }}
             aria-label="Toggle Dark Mode"
           >
-            <span className="absolute left-[6px] text-[12px] z-20 transition-colors duration-300 pointer-events-none" style={{ color: isDark ? 'var(--color-paper)' : 'var(--color-ink)' }}><HiMoon /></span>
-            <span className="absolute right-[6px] text-[12px] z-20 transition-colors duration-300 pointer-events-none" style={{ color: !isDark ? 'var(--color-paper)' : 'var(--color-ink)' }}><HiSun /></span>
+            {/* Sliding Circle Background */}
             <motion.div 
-              className="w-[20px] h-[20px] rounded-full absolute z-10"
-              style={{ backgroundColor: 'var(--color-ink)', top: '2px' }}
+              className="absolute z-0 w-[22px] h-[22px] rounded-full"
+              style={{ backgroundColor: 'var(--color-ink)', top: '1px' }}
               initial={false}
-              animate={{ left: isDark ? '2px' : '30px' }}
+              animate={{ left: isDark ? '1px' : '29px' }}
               transition={{ type: "spring", stiffness: 500, damping: 30 }}
             />
+            {/* Moon Icon Container */}
+            <div className="absolute left-0 top-0 w-[24px] h-[24px] flex items-center justify-center z-10 pointer-events-none">
+              <HiMoon className="text-[13px] transition-colors duration-300" style={{ color: isDark ? 'var(--color-paper)' : 'var(--color-ink)' }} />
+            </div>
+            {/* Sun Icon Container */}
+            <div className="absolute right-0 top-0 w-[24px] h-[24px] flex items-center justify-center z-10 pointer-events-none">
+              <HiSun className="text-[13px] transition-colors duration-300" style={{ color: !isDark ? 'var(--color-paper)' : 'var(--color-ink)' }} />
+            </div>
           </button>
         </div>
 
@@ -167,7 +174,7 @@ const Navbar = () => {
           {/* Mobile Theme Toggle */}
           <button
             onClick={toggleTheme}
-            className="relative flex items-center cursor-none transition-colors border-2"
+            className="relative cursor-none transition-colors border-2"
             style={{
               width: '52px',
               height: '26px',
@@ -177,15 +184,22 @@ const Navbar = () => {
             }}
             aria-label="Toggle Dark Mode"
           >
-            <span className="absolute left-[5px] text-[12px] z-20 transition-colors duration-300 pointer-events-none" style={{ color: isDark ? 'var(--color-paper)' : 'var(--color-ink)' }}><HiMoon /></span>
-            <span className="absolute right-[5px] text-[12px] z-20 transition-colors duration-300 pointer-events-none" style={{ color: !isDark ? 'var(--color-paper)' : 'var(--color-ink)' }}><HiSun /></span>
+            {/* Sliding Circle Background */}
             <motion.div 
-              className="w-[18px] h-[18px] rounded-full absolute z-10"
-              style={{ backgroundColor: 'var(--color-ink)', top: '2px' }}
+              className="absolute z-0 w-5 h-5 rounded-full"
+              style={{ backgroundColor: 'var(--color-ink)', top: '1px' }}
               initial={false}
-              animate={{ left: isDark ? '2px' : '28px' }}
+              animate={{ left: isDark ? '1px' : '27px' }}
               transition={{ type: "spring", stiffness: 500, damping: 30 }}
             />
+            {/* Moon Icon Container */}
+            <div className="absolute left-0 top-0 w-[22px] h-[22px] flex items-center justify-center z-10 pointer-events-none">
+              <HiMoon className="text-[12px] transition-colors duration-300" style={{ color: isDark ? 'var(--color-paper)' : 'var(--color-ink)' }} />
+            </div>
+            {/* Sun Icon Container */}
+            <div className="absolute right-0 top-0 w-[22px] h-[22px] flex items-center justify-center z-10 pointer-events-none">
+              <HiSun className="text-[12px] transition-colors duration-300" style={{ color: !isDark ? 'var(--color-paper)' : 'var(--color-ink)' }} />
+            </div>
           </button>
           <button 
             className="text-3xl cursor-none" 
