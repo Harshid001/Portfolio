@@ -3,11 +3,9 @@ import { FaReact, FaNodeJs, FaGitAlt, FaFigma, FaHtml5, FaCss3Alt, FaPython, FaJ
 import { DiMongodb, DiJavascript1 } from 'react-icons/di';
 import { 
   SiTypescript, SiTailwindcss, SiPostgresql, SiExpress, SiBlender, SiC, SiCplusplus,
-  SiAngular, SiVuedotjs, SiJquery, SiDotnet, SiGo, SiPhp, SiRuby, SiRust,
-  SiApachecassandra, SiRedis, SiCouchbase, SiGraphql, SiSwagger
+  SiAngular, SiVuedotjs, SiJquery, SiDotnet, SiGo, SiGraphql, SiSwagger, SiUnrealengine
 } from 'react-icons/si';
 import { TbApi, TbPlugConnected } from 'react-icons/tb';
-import { VscSymbolInterface } from 'react-icons/vsc';
 import SectionPresence from './SectionPresence';
 
 const skills = [
@@ -30,22 +28,16 @@ const skills = [
   { name: 'Java', category: 'Backend', description: 'Enterprise application development', level: 'Intermediate', icon: FaJava },
   { name: 'C# / .NET', category: 'Backend', description: 'Microsoft ecosystem development', level: 'Intermediate', icon: SiDotnet },
   { name: 'Go', category: 'Backend', description: 'High-performance concurrent programming', level: 'Intermediate', icon: SiGo },
-  { name: 'PHP', category: 'Backend', description: 'Server-side web scripting', level: 'Intermediate', icon: SiPhp },
-  { name: 'Ruby', category: 'Backend', description: 'Dynamic, elegant programming', level: 'Intermediate', icon: SiRuby },
-  { name: 'Rust', category: 'Backend', description: 'Memory-safe systems programming', level: 'Intermediate', icon: SiRust },
   { name: 'C Language', category: 'Backend', description: 'Low-level systems programming', level: 'Intermediate', icon: SiC },
   { name: 'C++', category: 'Backend', description: 'Object-oriented systems coding', level: 'Intermediate', icon: SiCplusplus },
   { name: 'MongoDB', category: 'Backend', description: 'NoSQL document database', level: 'Advanced', icon: DiMongodb },
   { name: 'PostgreSQL', category: 'Backend', description: 'Relational SQL database', level: 'Intermediate', icon: SiPostgresql },
   { name: 'Relational DBs', category: 'Backend', description: 'Structured data with SQL queries', level: 'Intermediate', icon: FaDatabase },
-  { name: 'Cassandra', category: 'Backend', description: 'Distributed wide-column NoSQL store', level: 'Intermediate', icon: SiApachecassandra },
-  { name: 'Redis', category: 'Backend', description: 'In-memory key-value data store', level: 'Intermediate', icon: SiRedis },
-  { name: 'Couchbase', category: 'Backend', description: 'Distributed NoSQL cloud database', level: 'Intermediate', icon: SiCouchbase },
 
   // ── Other ──────────────────────────────────────────────
   { name: 'REST API', category: 'Other', description: 'RESTful service design & development', level: 'Advanced', icon: TbApi },
   { name: 'GraphQL', category: 'Other', description: 'Flexible query language for APIs', level: 'Intermediate', icon: SiGraphql },
-  { name: 'gRPC', category: 'Other', description: 'High-performance RPC framework', level: 'Intermediate', icon: VscSymbolInterface },
+  { name: 'Unreal Engine', category: 'Other', description: 'Advanced real-time 3D creation tool', level: 'Intermediate', icon: SiUnrealengine },
   { name: 'WebSockets', category: 'Other', description: 'Real-time bidirectional communication', level: 'Intermediate', icon: TbPlugConnected },
   { name: 'API Docs', category: 'Other', description: 'Swagger / OpenAPI documentation', level: 'Intermediate', icon: SiSwagger },
   { name: 'Git', category: 'Other', description: 'Distributed version control', level: 'Advanced', icon: FaGitAlt },
