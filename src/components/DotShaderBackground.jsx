@@ -144,27 +144,27 @@ function Scene() {
     const el = document.getElementById('about')
     if (!el || !meshRef.current) return
 
+    let ticking = false;
+
     const handleMove = (e) => {
-      const rect = el.getBoundingClientRect()
-      const clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : e.clientX
-      const clientY = (e.touches && e.touches.length > 0) ? e.touches[0].clientY : e.clientY
-      
-      const x = clientX - rect.left
-      const y = clientY - rect.top
-      
-      // Convert to Normalized Device Coordinates (-1 to +1)
-      const mouseVec = new THREE.Vector2(
-        (x / rect.width) * 2 - 1,
-        -(y / rect.height) * 2 + 1
-      )
-      
-      raycaster.setFromCamera(mouseVec, camera)
-      const intersects = raycaster.intersectObject(meshRef.current)
-      
-      if (intersects.length > 0) {
-        onMove({ uv: intersects[0].uv })
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const rect = el.getBoundingClientRect();
+          const clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : e.clientX;
+          const clientY = (e.touches && e.touches.length > 0) ? e.touches[0].clientY : e.clientY;
+          
+          // Direct UV calculation is orders of magnitude faster than Three.js raycasting
+          const uv = new THREE.Vector2(
+            (clientX - rect.left) / rect.width,
+            1.0 - ((clientY - rect.top) / rect.height)
+          );
+          
+          onMove({ uv });
+          ticking = false;
+        });
+        ticking = true;
       }
-    }
+    };
 
     el.addEventListener('mousemove', handleMove, { passive: true })
     el.addEventListener('touchmove', handleMove, { passive: true })
