@@ -43,6 +43,15 @@ const projects = [
     category: "APPLICATIONS"
   },
   {
+    title: "Traveloop",
+    description: "Travel planning is often fragmented across multiple apps and websites, making trip organization frustrating. Built a modern travel platform with personalized onboarding, destination discovery, and itinerary planning using React. Delivers a seamless trip-planning experience with intuitive UI flows and responsive design across all devices.",
+    tech: ["React", "Vite", "Tailwind CSS", "JavaScript"],
+    github: "https://github.com/Harshid001/traveloop",
+    live: "https://traveloop-wheat.vercel.app/onboarding",
+    image: "https://res.cloudinary.com/dxvggspmi/image/upload/v1781610545/Screenshot_2026-06-16_171746_oub72r.png",
+    category: "WEBSITES"
+  },
+  {
     title: "Website Maker",
     description: "Non-technical users need an intuitive way to build web pages without writing code. Built a drag-and-drop website builder with real-time layout customization, element styling, and live preview using React state management. Supports real-time editing with instant visual feedback across all viewport sizes.",
     tech: ["React", "Vite", "Tailwind CSS", "State Management"],
@@ -94,15 +103,6 @@ const projects = [
     github: "https://github.com/Harshid001/fund_hunters",
     live: "https://fund-hunters.vercel.app/",
     image: fundHuntersImg,
-    category: "WEBSITES"
-  },
-  {
-    title: "Traveloop",
-    description: "Travel planning is often fragmented across multiple apps and websites, making trip organization frustrating. Built a modern travel platform with personalized onboarding, destination discovery, and itinerary planning using React. Delivers a seamless trip-planning experience with intuitive UI flows and responsive design across all devices.",
-    tech: ["React", "Vite", "Tailwind CSS", "JavaScript"],
-    github: "https://github.com/Harshid001/traveloop",
-    live: "https://traveloop-wheat.vercel.app/onboarding",
-    image: "https://res.cloudinary.com/dxvggspmi/image/upload/v1781610545/Screenshot_2026-06-16_171746_oub72r.png",
     category: "WEBSITES"
   }
 ];
