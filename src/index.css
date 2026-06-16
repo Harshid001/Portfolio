@@ -20,6 +20,13 @@
   /* Kept for backwards compatibility with existing UI components */
   --font-display: var(--font-heading);
   --font-mono: var(--font-code);
+
+  /* Standardized Animation Variables */
+  --ease-base: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --duration-slow: 500ms;
 }
 
 @layer base {
@@ -87,8 +94,10 @@
     font-family: var(--font-code); /* Set Fira Code for all code blocks */
   }
 
-  html {
-    scroll-behavior: smooth;
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 }
 

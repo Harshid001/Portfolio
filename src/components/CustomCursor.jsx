@@ -51,9 +51,16 @@ const CustomCursor = () => {
       setTimeout(() => setIsClicking(false), 150);
     };
 
-    const updateHoverState = (e) => {
-      const target = e.target;
-      setIsHovering(target.closest(HOVER_SELECTORS) !== null);
+    const handleMouseOver = (e) => {
+      if (e.target.closest && e.target.closest(HOVER_SELECTORS)) {
+        setIsHovering(true);
+      }
+    };
+
+    const handleMouseOut = (e) => {
+      if (!e.relatedTarget || (e.relatedTarget.closest && !e.relatedTarget.closest(HOVER_SELECTORS))) {
+        setIsHovering(false);
+      }
     };
 
     const animateTrail = () => {
@@ -70,13 +77,15 @@ const CustomCursor = () => {
     };
 
     document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mousemove', updateHoverState);
+    document.addEventListener('mouseover', handleMouseOver);
+    document.addEventListener('mouseout', handleMouseOut);
     document.addEventListener('mousedown', onMouseDown);
     animFrame = requestAnimationFrame(animateTrail);
 
     return () => {
       document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mousemove', updateHoverState);
+      document.removeEventListener('mouseover', handleMouseOver);
+      document.removeEventListener('mouseout', handleMouseOut);
       document.removeEventListener('mousedown', onMouseDown);
       cancelAnimationFrame(animFrame);
     };

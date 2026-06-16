@@ -52,21 +52,29 @@ const About = () => {
               whileTap={{ scale: 0.98 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.6 }}
-              className="relative w-full max-w-sm lg:max-w-[420px] aspect-[4/5] brutal-border transition-all duration-300 group overflow-hidden cursor-crosshair"
-              style={{ boxShadow: '8px 8px 0 var(--color-ink)', backgroundColor: 'var(--color-paper-3)' }}
-              onMouseEnter={(e) => e.currentTarget.style.boxShadow = '16px 16px 0 var(--color-ink)'}
-              onMouseLeave={(e) => e.currentTarget.style.boxShadow = '8px 8px 0 var(--color-ink)'}
+              className="relative w-full max-w-sm lg:max-w-[420px] aspect-[4/5] group cursor-crosshair"
             >
-              <img 
-                src={heroImg} 
-                alt="Harshid Soni — Full Stack Developer portrait" 
-                className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105" 
-                style={{ objectPosition: 'center top' }}
-              />
+              {/* GPU-accelerated brutalist shadow */}
               <div 
-                className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none"
-                style={{ backgroundColor: 'var(--color-ink)' }}
+                className="absolute inset-0 bg-[var(--color-ink)] transition-transform duration-300 ease-out group-hover:translate-x-4 group-hover:translate-y-4"
+                style={{ transform: 'translate(8px, 8px)', willChange: 'transform' }}
               />
+              {/* Foreground content container */}
+              <div 
+                className="absolute inset-0 brutal-border overflow-hidden transition-transform duration-300 ease-out group-hover:-translate-x-1 group-hover:-translate-y-1"
+                style={{ backgroundColor: 'var(--color-paper-3)', willChange: 'transform' }}
+              >
+                <img 
+                  src={heroImg} 
+                  alt="Harshid Soni — Full Stack Developer portrait" 
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" 
+                  style={{ objectPosition: 'center top' }}
+                />
+                <div 
+                  className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none"
+                  style={{ backgroundColor: 'var(--color-ink)' }}
+                />
+              </div>
             </motion.div>
           </div>
 

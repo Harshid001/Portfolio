@@ -55,23 +55,30 @@ const Experience = () => {
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-ink)'}
                 />
 
-                <div 
-                  className="brutal-card p-6 cursor-none transition-all duration-150"
-                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '4px 4px 0 var(--color-ink)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
-                >
-                  <span 
-                    className="inline-block mb-4 tag" 
-                    style={{ backgroundColor: 'transparent', color: 'var(--color-ink)' }}
+                <div className="relative group cursor-none">
+                  {/* GPU-accelerated brutalist shadow */}
+                  <div 
+                    className="absolute inset-0 bg-[var(--color-ink)] transition-transform duration-150 pointer-events-none"
+                    style={{ willChange: 'transform' }}
+                  />
+                  {/* Foreground Content */}
+                  <div 
+                    className="relative z-10 h-full brutal-card p-6 transition-transform duration-150 group-hover:-translate-y-1 group-hover:-translate-x-1"
+                    style={{ willChange: 'transform' }}
                   >
-                    {exp.year}
-                  </span>
-                  <h3 className="mb-3" style={{ fontFamily: 'var(--font-body)', fontWeight: 800, fontSize: '18px', color: 'var(--color-ink)' }}>
-                    {exp.title}
-                  </h3>
-                  <p style={{ color: 'var(--color-ink-2)', fontSize: '14px', lineHeight: 1.6 }}>
-                    {exp.description}
-                  </p>
+                    <span 
+                      className="inline-block mb-4 tag" 
+                      style={{ backgroundColor: 'transparent', color: 'var(--color-ink)' }}
+                    >
+                      {exp.year}
+                    </span>
+                    <h3 className="mb-3" style={{ fontFamily: 'var(--font-body)', fontWeight: 800, fontSize: '18px', color: 'var(--color-ink)' }}>
+                      {exp.title}
+                    </h3>
+                    <p style={{ color: 'var(--color-ink-2)', fontSize: '14px', lineHeight: 1.6 }}>
+                      {exp.description}
+                    </p>
+                  </div>
                 </div>
               </motion.div>
             ))}

@@ -322,26 +322,28 @@ const HackathonSection = () => {
             return (
               <motion.div
                 key={i}
-                className="brutal-border relative group overflow-hidden cursor-crosshair"
-                style={{
-                  aspectRatio: '1/1',
-                  backgroundColor: 'var(--color-paper)',
-                  boxShadow: '6px 6px 0 var(--color-ink)',
-                  transition: 'box-shadow 0.2s ease',
-                }}
+                className="relative group cursor-crosshair"
+                style={{ aspectRatio: '1/1' }}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.5, delay: i * 0.15 }}
-                whileHover={{ boxShadow: '12px 12px 0 var(--color-ink)', y: -5 }}
-                onTouchStart={() => {}} // Enables :active state on mobile Safari
+                onTouchStart={() => {}}
               >
-                <img 
-                  src={img} 
-                  alt={hackathonAlts[i]} 
-                  loading="lazy"
-                  className="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-active:grayscale-0 group-hover:scale-105 group-active:scale-105" 
+                {/* GPU-accelerated brutalist shadow */}
+                <div 
+                  className="absolute inset-0 bg-[var(--color-ink)] transition-transform duration-200 ease-out group-hover:translate-x-3 group-hover:translate-y-3"
+                  style={{ transform: 'translate(6px, 6px)', willChange: 'transform' }}
                 />
+                {/* Foreground image container */}
+                <div className="relative z-10 w-full h-full brutal-border overflow-hidden bg-[var(--color-paper)] transition-transform duration-200 ease-out group-hover:-translate-y-1 group-hover:-translate-x-1" style={{ willChange: 'transform' }}>
+                  <img 
+                    src={img} 
+                    alt={hackathonAlts[i]} 
+                    loading="lazy"
+                    className="w-full h-full object-cover grayscale transition-transform duration-500 group-hover:grayscale-0 group-active:grayscale-0 group-hover:scale-105 group-active:scale-105" 
+                  />
+                </div>
               </motion.div>
             );
           })}
@@ -367,17 +369,28 @@ const CertificateCard = ({ cert, index }) => {
       transition={{ duration: 0.6, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -8, rotate: 0, transition: { duration: 0.2 } }}
       style={{
-        backgroundColor: cert.color,
-        border: `2px solid var(--color-ink)`,
-        boxShadow: hovered
-          ? '10px 10px 0 var(--color-ink)'
-          : '6px 6px 0 var(--color-ink)',
-        transition: 'box-shadow 0.2s ease',
         cursor: 'crosshair',
-        overflow: 'hidden',
         position: 'relative',
       }}
     >
+      {/* GPU-accelerated brutalist shadow */}
+      <div 
+        className="absolute inset-0 transition-transform duration-200 ease-out pointer-events-none"
+        style={{ 
+          backgroundColor: 'var(--color-ink)',
+          transform: hovered ? 'translate(10px, 10px)' : 'translate(6px, 6px)',
+          willChange: 'transform'
+        }}
+      />
+
+      {/* Foreground Content wrapper */}
+      <div 
+        className="relative z-10 overflow-hidden h-full flex flex-col"
+        style={{
+          backgroundColor: cert.color,
+          border: `2px solid var(--color-ink)`,
+        }}
+      >
       {/* Certificate number watermark */}
       <div style={{
         position: 'absolute', top: '-10px', right: '-10px',
@@ -471,6 +484,7 @@ const CertificateCard = ({ cert, index }) => {
             </svg>
           </motion.div>
         </div>
+      </div>
       </div>
     </motion.div>
   );
