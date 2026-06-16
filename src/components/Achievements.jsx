@@ -245,6 +245,7 @@ const HackathonSection = () => {
                 position: 'relative',
                 overflow: 'hidden',
                 cursor: 'crosshair',
+                backgroundColor: 'var(--color-paper-2)',
               }}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
