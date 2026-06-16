@@ -30,7 +30,7 @@ const ProjectShowcase = ({ project, index }) => {
               <>
                 <img 
                   src={project.image} 
-                  alt={project.title} 
+                  alt={`${project.title} project screenshot`} 
                   loading="lazy"
                   className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-active:grayscale-0 group-hover:scale-105 group-active:scale-105" 
                 />

@@ -68,21 +68,23 @@ const Hero = () => {
           </motion.div>
 
           <div className="mb-4 overflow-hidden leading-[0.85]">
-            <motion.h1 style={{ fontSize: 'clamp(40px, 12vw, 110px)', color: 'var(--color-ink)', letterSpacing: '-0.02em' }} className="flex flex-wrap">
-              {['H','A','R','S','H','I','D'].map((char, i) => (
-                <motion.span key={i} variants={textSlam} className="inline-block">{char === ' ' ? '\u00A0' : char}</motion.span>
-              ))}
-            </motion.h1>
-            <motion.h1 style={{ fontSize: 'clamp(40px, 12vw, 110px)', color: 'var(--color-ink)', letterSpacing: '-0.02em' }} className="flex flex-wrap">
-              {['S','O','N','I'].map((char, i) => (
-                <motion.span 
-                  key={i} 
-                  variants={textSlam} 
-                  className="inline-block decoration-ink underline decoration-[4px] sm:decoration-[6px] underline-offset-[8px] sm:underline-offset-[16px]"
-                >
-                  {char}
-                </motion.span>
-              ))}
+            <motion.h1 className="flex flex-col" style={{ fontSize: 'clamp(40px, 12vw, 110px)', color: 'var(--color-ink)', letterSpacing: '-0.02em' }}>
+              <motion.span className="flex flex-wrap">
+                {['H','A','R','S','H','I','D'].map((char, i) => (
+                  <motion.span key={`first-${i}`} variants={textSlam} className="inline-block">{char === ' ' ? '\u00A0' : char}</motion.span>
+                ))}
+              </motion.span>
+              <motion.span className="flex flex-wrap">
+                {['S','O','N','I'].map((char, i) => (
+                  <motion.span 
+                    key={`last-${i}`} 
+                    variants={textSlam} 
+                    className="inline-block decoration-ink underline decoration-[4px] sm:decoration-[6px] underline-offset-[8px] sm:underline-offset-[16px]"
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+              </motion.span>
             </motion.h1>
           </div>
 

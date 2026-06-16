@@ -1,0 +1,16 @@
+{
+  "name": "Harshid Soni — Full Stack Developer",
+  "short_name": "HS Portfolio",
+  "description": "Full Stack Developer portfolio — React, Node.js, MongoDB, Python. View projects, skills, and get in touch.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d0d0d",
+  "theme_color": "#0d0d0d",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

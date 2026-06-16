@@ -313,32 +313,38 @@ const HackathonSection = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-          {[hackathon1, hackathon2, hackathon3].map((img, i) => (
-            <motion.div
-              key={i}
-              className="brutal-border relative group overflow-hidden cursor-crosshair"
-              style={{
-                aspectRatio: '1/1',
-                backgroundColor: 'var(--color-paper)',
-                boxShadow: '6px 6px 0 var(--color-ink)',
-                transition: 'box-shadow 0.2s ease',
-              }}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.5, delay: i * 0.15 }}
-              whileHover={{ boxShadow: '12px 12px 0 var(--color-ink)', y: -5 }}
-              onTouchStart={() => {}} // Enables :active state on mobile Safari
-            >
-              <img 
-                src={img} 
-                alt={`Hackathon Journey ${i + 1}`} 
-                className="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-active:grayscale-0 group-hover:scale-105 group-active:scale-105" 
-              />
-              
-              {/* Removed Brutalist tag (PHOTO 0{i+1}) */}
-            </motion.div>
-          ))}
+          {[hackathon1, hackathon2, hackathon3].map((img, i) => {
+            const hackathonAlts = [
+              "Harshid Soni at hackathon event - team collaboration",
+              "Hackathon coding session - building prototypes under pressure",
+              "Hackathon team presentation and project demo"
+            ];
+            return (
+              <motion.div
+                key={i}
+                className="brutal-border relative group overflow-hidden cursor-crosshair"
+                style={{
+                  aspectRatio: '1/1',
+                  backgroundColor: 'var(--color-paper)',
+                  boxShadow: '6px 6px 0 var(--color-ink)',
+                  transition: 'box-shadow 0.2s ease',
+                }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.5, delay: i * 0.15 }}
+                whileHover={{ boxShadow: '12px 12px 0 var(--color-ink)', y: -5 }}
+                onTouchStart={() => {}} // Enables :active state on mobile Safari
+              >
+                <img 
+                  src={img} 
+                  alt={hackathonAlts[i]} 
+                  loading="lazy"
+                  className="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-active:grayscale-0 group-hover:scale-105 group-active:scale-105" 
+                />
+              </motion.div>
+            );
+          })}
         </div>
 
       </div>

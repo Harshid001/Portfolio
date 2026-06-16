@@ -59,7 +59,7 @@ const About = () => {
             >
               <img 
                 src={heroImg} 
-                alt="About Harshid" 
+                alt="Harshid Soni — Full Stack Developer portrait" 
                 className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105" 
                 style={{ objectPosition: 'center top' }}
               />
