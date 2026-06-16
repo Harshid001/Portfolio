@@ -178,6 +178,7 @@ const HackathonSection = () => {
                 borderRight: i < hackathonStats.length - 1 ? '2px solid var(--color-ink)' : 'none',
                 textAlign: 'center',
                 backgroundColor: 'var(--color-paper)',
+                color: 'var(--color-ink)',
               }}
               whileHover={{ backgroundColor: 'var(--color-ink)', color: 'var(--color-paper)' }}
               transition={{ duration: 0.15 }}
@@ -185,7 +186,7 @@ const HackathonSection = () => {
               <p style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 900, lineHeight: 1, color: 'inherit' }}>
                 {stat.value}
               </p>
-              <p style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.18em', color: 'var(--color-ink-3)', marginTop: '6px', textTransform: 'uppercase' }}>
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.18em', color: 'inherit', opacity: 0.7, marginTop: '6px', textTransform: 'uppercase' }}>
                 {stat.label}
               </p>
             </motion.div>
@@ -207,23 +208,23 @@ const HackathonSection = () => {
             <div 
               key={i}
               className="flex flex-col sm:flex-row sm:items-center justify-between p-6 brutal-border transition-colors duration-300 group cursor-crosshair"
-              style={{ backgroundColor: 'var(--color-paper-3)' }}
+              style={{ backgroundColor: 'var(--color-paper-3)', color: 'var(--color-ink)' }}
               onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-ink)'; e.currentTarget.style.color = 'var(--color-paper)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-paper-3)'; e.currentTarget.style.color = 'var(--color-ink)'; }}
             >
               <div>
-                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: 800, textTransform: 'uppercase' }} className="group-hover:text-paper">
+                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: 800, textTransform: 'uppercase', color: 'inherit' }}>
                   {hack.name}
                 </h4>
-                <p style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--color-ink-2)', letterSpacing: '0.1em', marginTop: '4px' }} className="group-hover:text-paper-2">
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'inherit', opacity: 0.8, letterSpacing: '0.1em', marginTop: '4px' }}>
                   BUILT: {hack.project}
                 </p>
               </div>
               <div className="mt-4 sm:mt-0 text-left sm:text-right">
-                <span className="inline-block px-3 py-1 mb-2 sm:mb-1 border" style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', borderColor: 'currentColor' }}>
+                <span className="inline-block px-3 py-1 mb-2 sm:mb-1 border" style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', textTransform: 'uppercase', borderColor: 'currentColor', color: 'inherit' }}>
                   {hack.level}
                 </span>
-                <p style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', fontWeight: 'bold' }}>
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', fontWeight: 'bold', color: 'inherit' }}>
                   {hack.date}
                 </p>
               </div>
