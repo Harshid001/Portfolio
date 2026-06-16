@@ -1,4 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { FaGithub } from 'react-icons/fa';
+import { FiExternalLink } from 'react-icons/fi';
 
 const ProjectShowcase = ({ project, index }) => {
   if (!project) return null;
@@ -32,35 +34,64 @@ const ProjectShowcase = ({ project, index }) => {
                   loading="lazy"
                   className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-active:grayscale-0 group-hover:scale-105 group-active:scale-105" 
                 />
-                <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-300">
-                   {(project.live || project.github) ? (
+                <div className="absolute inset-0 bg-black/60 flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-300">
+                   {project.live && (
                      <a 
-                       href={project.live || project.github} 
+                       href={project.live} 
                        target="_blank" 
                        rel="noreferrer" 
-                       className="px-6 py-3 cursor-none"
+                       className="flex items-center gap-2 px-6 py-3 cursor-none transition-all duration-300"
                        style={{
                          border: '1px solid var(--color-paper)',
-                         color: 'var(--color-paper)',
+                         backgroundColor: 'var(--color-paper)',
+                         color: 'var(--color-ink)',
                          fontFamily: 'var(--font-mono)',
                          fontSize: '12px',
                          fontWeight: 'bold',
                          letterSpacing: '0.1em',
-                         transition: 'all 0.3s',
                          textTransform: 'uppercase'
                        }}
                        onMouseEnter={(e) => {
-                         e.currentTarget.style.backgroundColor = 'var(--color-paper)';
-                         e.currentTarget.style.color = 'var(--color-ink)';
-                       }}
-                       onMouseLeave={(e) => {
                          e.currentTarget.style.backgroundColor = 'transparent';
                          e.currentTarget.style.color = 'var(--color-paper)';
                        }}
+                       onMouseLeave={(e) => {
+                         e.currentTarget.style.backgroundColor = 'var(--color-paper)';
+                         e.currentTarget.style.color = 'var(--color-ink)';
+                       }}
                      >
-                       VIEW PROJECT
+                       <FiExternalLink className="text-lg" /> LIVE DEMO
                      </a>
-                   ) : (
+                   )}
+                   {project.github && (
+                     <a 
+                       href={project.github} 
+                       target="_blank" 
+                       rel="noreferrer" 
+                       className="flex items-center gap-2 px-6 py-3 cursor-none transition-all duration-300"
+                       style={{
+                         border: '1px solid var(--color-paper)',
+                         backgroundColor: 'var(--color-paper)',
+                         color: 'var(--color-ink)',
+                         fontFamily: 'var(--font-mono)',
+                         fontSize: '12px',
+                         fontWeight: 'bold',
+                         letterSpacing: '0.1em',
+                         textTransform: 'uppercase'
+                       }}
+                       onMouseEnter={(e) => {
+                         e.currentTarget.style.backgroundColor = 'transparent';
+                         e.currentTarget.style.color = 'var(--color-paper)';
+                       }}
+                       onMouseLeave={(e) => {
+                         e.currentTarget.style.backgroundColor = 'var(--color-paper)';
+                         e.currentTarget.style.color = 'var(--color-ink)';
+                       }}
+                     >
+                       <FaGithub className="text-lg" /> VIEW CODE
+                     </a>
+                   )}
+                   {!project.live && !project.github && (
                      <span style={{ color: 'var(--color-paper)', fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>COMING SOON</span>
                    )}
                 </div>
@@ -145,64 +176,7 @@ const ProjectShowcase = ({ project, index }) => {
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div 
-              className="flex flex-wrap gap-4 mt-auto" 
-              style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', fontWeight: 'bold' }}
-            >
-              {project.live && (
-                <motion.a 
-                  href={project.live} 
-                  target="_blank" 
-                  rel="noreferrer" 
-                  whileTap={{ scale: 0.95 }}
-                  className="flex items-center justify-center px-6 py-3 transition-colors cursor-none rounded-none" 
-                  style={{ 
-                    backgroundColor: 'var(--color-ink)',
-                    color: 'var(--color-paper)',
-                    border: '1px solid var(--color-ink)',
-                    letterSpacing: '0.05em'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = 'var(--color-ink)';
-                  }} 
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'var(--color-ink)';
-                    e.currentTarget.style.color = 'var(--color-paper)';
-                  }}
-                  aria-label={`View live demo of ${project.title}`}
-                >
-                  → LIVE DEMO
-                </motion.a>
-              )}
-              {project.github && (
-                <motion.a 
-                  href={project.github} 
-                  target="_blank" 
-                  rel="noreferrer" 
-                  whileTap={{ scale: 0.95 }}
-                  className="flex items-center justify-center px-6 py-3 transition-colors cursor-none rounded-none" 
-                  style={{ 
-                    backgroundColor: 'transparent',
-                    color: 'var(--color-ink)',
-                    border: '1px solid var(--color-ink)',
-                    letterSpacing: '0.05em'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'var(--color-ink)';
-                    e.currentTarget.style.color = 'var(--color-paper)';
-                  }} 
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = 'var(--color-ink)';
-                  }}
-                  aria-label={`View source code for ${project.title}`}
-                >
-                  → VIEW CODE
-                </motion.a>
-              )}
-            </div>
+            {/* Action Buttons removed */}
           </div>
         </motion.div>
       </AnimatePresence>
