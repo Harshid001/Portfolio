@@ -5,6 +5,7 @@ const THREE_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.mi
 const ParticleMorph = () => {
   const stageRef = useRef(null);
   const cleanupRef = useRef(null);
+  const labelRef = useRef(null);
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -402,6 +403,32 @@ const ParticleMorph = () => {
             }
           }
 
+          // Update dynamic label
+          if (labelRef.current) {
+            let activeKey = ORDER[0];
+            if (phase === 'morph') {
+              const t = Math.min(elapsed / MORPH_MS, 1);
+              if (t > 0.5) {
+                activeKey = ORDER[restIndex];
+              } else {
+                activeKey = ORDER[(restIndex === 0 ? ORDER.length - 1 : restIndex - 1)];
+              }
+            } else if (phase === 'hold') {
+              activeKey = ORDER[restIndex];
+            }
+            
+            if (labelRef.current.dataset.key !== activeKey) {
+              labelRef.current.dataset.key = activeKey;
+              const names = {
+                github: "GITHUB",
+                linkedin: "LINKEDIN",
+                youtube: "YOUTUBE",
+                x: "TWITTER | X"
+              };
+              labelRef.current.textContent = names[activeKey];
+            }
+          }
+
           points.rotation.y += (targetRotation.y - points.rotation.y) * 0.06;
           points.rotation.x += (targetRotation.x - points.rotation.x) * 0.06;
           points.rotation.y += 0.0022 + scrollVelocity * 0.01;
@@ -497,7 +524,15 @@ const ParticleMorph = () => {
   }, []);
 
   return (
-    <div ref={stageRef} id="particle-stage" style={{ position: 'relative', width: '100%', height: '100%', minHeight: '500px' }}>
+    <div id="particle-stage" ref={stageRef} className="relative w-full h-full cursor-pointer">
+      <div 
+        ref={labelRef} 
+        className="absolute top-10 left-0 w-full text-center tracking-[0.3em] font-mono text-sm opacity-50 pointer-events-none z-10 font-bold transition-opacity duration-300" 
+        style={{ color: 'var(--color-ink)' }}
+        data-key="github"
+      >
+        GITHUB
+      </div>
       <svg width="0" height="0" style={{ position: 'absolute' }}>
         <filter id="glass-refraction" x="-20%" y="-20%" width="140%" height="140%">
           <feTurbulence type="fractalNoise" baseFrequency="0.008 0.012" numOctaves="2" seed="7" result="noise" />
