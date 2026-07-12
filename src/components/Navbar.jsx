@@ -15,7 +15,13 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [navY, setNavY] = useState(-100);
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(() => {
+    // Check local storage or classlist on initial render
+    if (typeof window !== 'undefined') {
+      return localStorage.theme !== 'light';
+    }
+    return true;
+  });
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -44,19 +50,26 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScrollTracking);
     
     // Theme init
-    if (document.documentElement.classList.contains('dark')) {
+    if (localStorage.theme === 'light') {
+      setIsDark(false);
+      document.documentElement.classList.remove('dark');
+    } else {
       setIsDark(true);
+      document.documentElement.classList.add('dark');
     }
 
     return () => window.removeEventListener('scroll', handleScrollTracking);
   }, []);
 
   const toggleTheme = () => {
-    setIsDark(!isDark);
-    if (!isDark) {
+    const nextDark = !isDark;
+    setIsDark(nextDark);
+    if (nextDark) {
       document.documentElement.classList.add('dark');
+      localStorage.theme = 'dark';
     } else {
       document.documentElement.classList.remove('dark');
+      localStorage.theme = 'light';
     }
   };
 
