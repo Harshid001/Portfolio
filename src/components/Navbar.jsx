@@ -46,9 +46,6 @@ const Navbar = () => {
     // Theme init
     if (document.documentElement.classList.contains('dark')) {
       setIsDark(true);
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setIsDark(true);
-      document.documentElement.classList.add('dark');
     }
 
     return () => window.removeEventListener('scroll', handleScrollTracking);
@@ -170,16 +167,16 @@ const Navbar = () => {
             className="absolute z-0 w-[22px] h-[22px] rounded-full"
             style={{ backgroundColor: 'var(--color-ink)', top: '1px' }}
             initial={false}
-            animate={{ left: isDark ? '1px' : '29px' }}
+            animate={{ left: isDark ? '29px' : '1px' }}
             transition={{ type: "spring", stiffness: 500, damping: 30 }}
           />
-          {/* Moon Icon Container */}
-          <div className="absolute left-0 top-0 w-[24px] h-[24px] flex items-center justify-center z-10 pointer-events-none">
-            <HiMoon className="text-[13px] transition-colors duration-300" style={{ color: isDark ? 'var(--color-paper)' : 'var(--color-ink)' }} />
-          </div>
           {/* Sun Icon Container */}
-          <div className="absolute right-0 top-0 w-[24px] h-[24px] flex items-center justify-center z-10 pointer-events-none">
+          <div className="absolute left-0 top-0 w-[24px] h-[24px] flex items-center justify-center z-10 pointer-events-none">
             <HiSun className="text-[13px] transition-colors duration-300" style={{ color: !isDark ? 'var(--color-paper)' : 'var(--color-ink)' }} />
+          </div>
+          {/* Moon Icon Container */}
+          <div className="absolute right-0 top-0 w-[24px] h-[24px] flex items-center justify-center z-10 pointer-events-none">
+            <HiMoon className="text-[13px] transition-colors duration-300" style={{ color: isDark ? 'var(--color-paper)' : 'var(--color-ink)' }} />
           </div>
         </button>
 
@@ -201,16 +198,16 @@ const Navbar = () => {
             className="absolute z-0 w-5 h-5 rounded-full"
             style={{ backgroundColor: 'var(--color-ink)', top: '1px' }}
             initial={false}
-            animate={{ left: isDark ? '1px' : '27px' }}
+            animate={{ left: isDark ? '27px' : '1px' }}
             transition={{ type: "spring", stiffness: 500, damping: 30 }}
           />
-          {/* Moon Icon Container */}
-          <div className="absolute left-0 top-0 w-[22px] h-[22px] flex items-center justify-center z-10 pointer-events-none">
-            <HiMoon className="text-[12px] transition-colors duration-300" style={{ color: isDark ? 'var(--color-paper)' : 'var(--color-ink)' }} />
-          </div>
           {/* Sun Icon Container */}
-          <div className="absolute right-0 top-0 w-[22px] h-[22px] flex items-center justify-center z-10 pointer-events-none">
+          <div className="absolute left-0 top-0 w-[22px] h-[22px] flex items-center justify-center z-10 pointer-events-none">
             <HiSun className="text-[12px] transition-colors duration-300" style={{ color: !isDark ? 'var(--color-paper)' : 'var(--color-ink)' }} />
+          </div>
+          {/* Moon Icon Container */}
+          <div className="absolute right-0 top-0 w-[22px] h-[22px] flex items-center justify-center z-10 pointer-events-none">
+            <HiMoon className="text-[12px] transition-colors duration-300" style={{ color: isDark ? 'var(--color-paper)' : 'var(--color-ink)' }} />
           </div>
         </button>
       </div>

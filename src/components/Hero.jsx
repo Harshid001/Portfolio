@@ -2,6 +2,7 @@ import { useState, useEffect, lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaYoutube, FaTwitter } from 'react-icons/fa';
 import SectionPresence from './SectionPresence';
+import ParticleMorph from './ParticleMorph';
 
 const ShaderBackground = lazy(() => import('./ShaderBackground'));
 
@@ -48,14 +49,14 @@ const Hero = () => {
         }}
       />
 
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 hero-two-col">
         
-        {/* TEXT CONTENT */}
+        {/* LEFT COLUMN — TEXT CONTENT */}
         <motion.div 
           variants={staggerContainer} 
           initial="hidden" 
           animate="visible" 
-          className="max-w-2xl pt-10 lg:pt-0"
+          className="hero-left max-w-2xl pt-10 lg:pt-0"
         >
           <motion.div variants={fadeUp} className="mb-8">
             <span className="section-label flex items-center gap-3">
@@ -98,19 +99,19 @@ const Hero = () => {
             Building scalable web apps & solving real-world problems. No fluff, just functional code and brutal aesthetics.
           </motion.p>
 
-          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row mb-12 w-full sm:w-auto flex-wrap">
+          <motion.div variants={fadeUp} className="flex flex-col lg:flex-row mb-12 w-full lg:w-auto flex-wrap lg:flex-nowrap gap-4 lg:gap-0">
             <motion.a 
               href="#projects" 
               onClick={(e) => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView(); }}
               whileTap={{ scale: 0.95 }}
-              className="btn-primary cursor-none h-[56px] w-full sm:w-auto flex items-center justify-center">
+              className="btn-primary cursor-none h-[56px] w-full lg:w-auto flex items-center justify-center">
               VIEW PROJECTS
             </motion.a>
             <motion.a 
               href="#contact" 
               onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView(); }}
               whileTap={{ scale: 0.95 }}
-              className="btn-secondary cursor-none h-[56px] w-full sm:w-auto flex items-center justify-center mt-4 sm:mt-0 sm:-ml-[2px]">
+              className="btn-secondary cursor-none h-[56px] w-full lg:w-auto flex items-center justify-center lg:-ml-[2px]">
               CONTACT ME
             </motion.a>
             <motion.a 
@@ -118,7 +119,7 @@ const Hero = () => {
               target="_blank"
               rel="noopener noreferrer"
               whileTap={{ scale: 0.95 }}
-              className="btn-secondary cursor-none h-[56px] w-full sm:w-auto flex items-center justify-center mt-4 sm:mt-0 sm:-ml-[2px]">
+              className="btn-secondary cursor-none h-[56px] w-full lg:w-auto flex items-center justify-center lg:-ml-[2px]">
               DOWNLOAD RESUME
             </motion.a>
           </motion.div>
@@ -146,6 +147,11 @@ const Hero = () => {
             ))}
           </motion.div>
         </motion.div>
+
+        {/* RIGHT COLUMN — PARTICLE WIDGET (desktop only) */}
+        <div className="hero-right">
+          <ParticleMorph />
+        </div>
       </div>
 
       <div 

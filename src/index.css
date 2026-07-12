@@ -74,7 +74,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     margin: 0;
-    background-image: radial-gradient(var(--color-ink) 1px, transparent 1px);
+    background-image: radial-gradient(color-mix(in srgb, var(--color-ink) 15%, transparent) 0.5px, transparent 0.5px);
     background-size: 24px 24px;
   }
 
@@ -134,10 +134,12 @@
     color: var(--color-paper);
     border: 2px solid var(--color-ink);
     border-radius: 0;
-    padding: 14px 36px;
+    padding: 14px 24px;
     font-family: var(--font-body);
+    font-size: 14px;
     font-weight: 800;
     transition: all 0.15s;
+    white-space: nowrap;
   }
   .btn-primary:hover {
     background: var(--color-paper);
@@ -149,10 +151,12 @@
     color: var(--color-ink);
     border: 2px solid var(--color-ink);
     border-radius: 0;
-    padding: 14px 36px;
+    padding: 14px 24px;
     font-family: var(--font-body);
+    font-size: 14px;
     font-weight: 800;
     transition: all 0.15s;
+    white-space: nowrap;
   }
   .btn-secondary:hover {
     background: var(--color-ink);
@@ -190,9 +194,135 @@
   }
   @media (min-width: 768px) {
     .nav-dots {
-      background-image: radial-gradient(var(--color-ink) 1px, transparent 1px);
+      background-image: radial-gradient(color-mix(in srgb, var(--color-ink) 15%, transparent) 0.5px, transparent 0.5px);
       background-size: 24px 24px;
     }
+  }
+
+  /* ── Hero two-column layout ── */
+  .hero-two-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  @media (min-width: 1024px) {
+    .hero-two-col {
+      flex-direction: row;
+      align-items: center;
+      gap: 0;
+    }
+
+    .hero-left {
+      flex: 1 1 auto;
+      min-width: 50%;
+      position: relative;
+      z-index: 10;
+    }
+
+    .hero-right {
+      width: 40vw;
+      max-width: 500px;
+      height: 100%;
+      min-height: 500px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 5;
+      flex-shrink: 0;
+    }
+  }
+
+  /* Responsive shrink 768–1023px */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .hero-right {
+      width: 35vw;
+      max-width: 480px;
+      min-height: 400px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  /* Mobile: hide widget entirely */
+  @media (max-width: 767px) {
+    .hero-right {
+      display: none !important;
+    }
+  }
+
+  /* Particle stage layering */
+  #particle-stage {
+    pointer-events: none;
+  }
+  #particle-stage canvas {
+    pointer-events: auto;
+  }
+
+  /* ---------- Glass panel acting as a 3D plate ---------- */
+  #particle-glass {
+    position: absolute;
+    left: 50%; top: 50%;
+    /* Fixed square dimensions so border-radius: 50% makes a perfect circle */
+    width: 360px; height: 360px;
+    /* Translate down so it sits under the centered model, then rotate */
+    transform: translate(calc(-50% + 65px), calc(-50% + 110px)) rotateX(72deg);
+    z-index: 0;
+    overflow: hidden;
+    border-radius: 50%;
+    /* Refracts the real background behind it via SVG displacement + blurs it. */
+    backdrop-filter: url(#glass-refraction) blur(6px) saturate(160%) brightness(1.04);
+    -webkit-backdrop-filter: blur(18px) saturate(160%) brightness(1.04);
+    border: 1px solid rgba(255,255,255,0.20);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.40),
+      inset 0 0 0 1px rgba(26,22,18,0.04),
+      inset 0 -14px 22px -14px rgba(26,22,18,0.10),
+      0 24px 40px -16px rgba(26,22,18,0.15),
+      0 2px 6px rgba(26,22,18,0.05);
+    pointer-events: none;
+  }
+  /* Base tint so it still reads as glass even where there's nothing behind to refract */
+  #particle-glass::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 40%, rgba(200,195,185,0.03) 100%);
+  }
+  /* Thin bright rim on the top edge, like real bevel catching ambient light */
+  #particle-glass-rim {
+    position: absolute; left: 4%; right: 4%; top: 1px; height: 1px;
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.9) 70%, rgba(255,255,255,0) 100%);
+    z-index: 1; pointer-events: none;
+  }
+  /* Grounded contact shadow under the plate */
+  #particle-glass-shadow {
+    position: absolute;
+    left: 50%; top: 50%;
+    /* Shadow should be an ellipse sitting just below the plate */
+    width: 380px; height: 25px;
+    transform: translate(calc(-50% + 65px), calc(-50% + 130px));
+    background: radial-gradient(ellipse at center, rgba(26,22,18,0.22) 0%, rgba(26,22,18,0) 70%);
+    z-index: 0; pointer-events: none;
+  }
+
+  /* ---------- Entry animation: glass fades/settles in on page load ---------- */
+  #particle-glass-wrap {
+    position: absolute; inset: 0;
+    opacity: 0;
+    perspective: 1000px;
+    transform: scale(0.94) translateY(14px);
+    transform-origin: 50% 62%;
+    animation: glass-intro 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+  }
+  @keyframes glass-intro {
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #particle-glass-wrap { animation: none; opacity: 1; transform: none; }
   }
 }
 
