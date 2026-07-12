@@ -250,6 +250,14 @@ const ParticleMorph = () => {
       const points = new THREE.Points(geometry, material);
       scene.add(points);
 
+      // ---------- Visibility Optimization ----------
+      let isVisible = true;
+      const visObserver = new IntersectionObserver(
+        ([entry]) => { isVisible = entry.isIntersecting; },
+        { threshold: 0 }
+      );
+      visObserver.observe(container);
+
       // ---------- Interactivity state ----------
       const mouse = { x: 0, y: 0 };
       const targetRotation = { x: 0, y: 0 };
@@ -357,6 +365,7 @@ const ParticleMorph = () => {
       function animate(now) {
         if (disposed) return;
         animId = requestAnimationFrame(animate);
+        if (!isVisible) return; // skip GPU math when out of view
 
         scrollVelocity *= 0.94;
 
@@ -517,6 +526,7 @@ const ParticleMorph = () => {
       cleanupRef.current = () => {
         disposed = true;
         cancelAnimationFrame(animId);
+        visObserver.disconnect();
         container.removeEventListener('mouseenter', onMouseEnter);
         container.removeEventListener('mousemove', onMouseMove);
         container.removeEventListener('mouseleave', onMouseLeave);

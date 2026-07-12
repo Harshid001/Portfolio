@@ -264,6 +264,10 @@
   }
 
   /* ---------- Glass panel acting as a 3D plate ---------- */
+  #particle-glass-wrap {
+    will-change: transform;
+    transform: translateZ(0);
+  }
   #particle-glass {
     position: absolute;
     left: 50%; top: 50%;

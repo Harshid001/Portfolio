@@ -36,18 +36,23 @@ const Navbar = () => {
   });
 
   useEffect(() => {
+    let scrollTimeout = null;
     const handleScrollTracking = () => {
-      setIsScrolled(window.scrollY > 20);
-      const sections = navLinks.map((l) => l.href.slice(1));
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sections[i]);
-        if (el && el.getBoundingClientRect().top <= 120) {
-          setActiveSection(sections[i]);
-          break;
+      if (scrollTimeout) return;
+      scrollTimeout = requestAnimationFrame(() => {
+        setIsScrolled(window.scrollY > 20);
+        const sections = navLinks.map((l) => l.href.slice(1));
+        for (let i = sections.length - 1; i >= 0; i--) {
+          const el = document.getElementById(sections[i]);
+          if (el && el.getBoundingClientRect().top <= 120) {
+            setActiveSection(sections[i]);
+            break;
+          }
         }
-      }
+        scrollTimeout = null;
+      });
     };
-    window.addEventListener('scroll', handleScrollTracking);
+    window.addEventListener('scroll', handleScrollTracking, { passive: true });
     
     // Theme init
     if (localStorage.theme === 'light') {
