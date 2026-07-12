@@ -7,7 +7,7 @@ const CollabCursor = () => {
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(false);
   const trailRefs = useRef([]);
 
   const dotX = useMotionValue(0);
@@ -79,8 +79,9 @@ const CollabCursor = () => {
 
   if (isTouchDevice) return null;
 
-  const currentInk = isDark ? 'var(--color-white)' : 'var(--color-ink)';
-  const currentPaper = isDark ? 'var(--color-ink)' : 'var(--color-white)';
+  const currentInk = isDark ? '#ffffff' : 'var(--color-ink)';
+  const currentPaper = isDark ? '#000000' : 'var(--color-paper)';
+  const blendMode = isDark ? 'difference' : 'normal';
 
   return (
     <>
@@ -93,7 +94,8 @@ const CollabCursor = () => {
             width: 8 - i, height: 8 - i,
             backgroundColor: currentInk,
             opacity: 0.6 - (i * 0.15),
-            zIndex: 99998
+            zIndex: 99998,
+            mixBlendMode: blendMode
           }}
         />
       ))}
@@ -105,6 +107,7 @@ const CollabCursor = () => {
           backgroundColor: isHovering ? currentInk : 'transparent',
           rotate: 45,
           zIndex: 99999, transition: 'background-color 0.15s, border-color 0.15s',
+          mixBlendMode: blendMode
         }}
         animate={{ scale: isClicking ? 0.8 : isHovering ? 1.5 : 1 }}
         transition={{ duration: 0.15 }}
@@ -115,7 +118,8 @@ const CollabCursor = () => {
           x: dotX, y: dotY, width: 8, height: 8, marginLeft: -4, marginTop: -4,
           backgroundColor: isClicking ? 'var(--color-red)' : isHovering ? currentPaper : currentInk,
           rotate: 45,
-          zIndex: 99999, transition: 'background-color 0.15s'
+          zIndex: 99999, transition: 'background-color 0.15s',
+          mixBlendMode: blendMode
         }}
       />
     </>
