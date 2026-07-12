@@ -5,7 +5,6 @@ const THREE_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.mi
 const ParticleMorph = () => {
   const stageRef = useRef(null);
   const cleanupRef = useRef(null);
-  const labelRef = useRef(null);
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -403,29 +402,45 @@ const ParticleMorph = () => {
             }
           }
 
-          // Update dynamic label
-          if (labelRef.current) {
-            let activeKey = ORDER[0];
-            if (phase === 'morph') {
-              const t = Math.min(elapsed / MORPH_MS, 1);
-              if (t > 0.5) {
-                activeKey = ORDER[restIndex];
-              } else {
-                activeKey = ORDER[(restIndex === 0 ? ORDER.length - 1 : restIndex - 1)];
-              }
-            } else if (phase === 'hold') {
-              activeKey = ORDER[restIndex];
-            }
+          // Update the label text to match the currently targeted shape
+          const labelEl = document.getElementById('particle-model-label');
+          if (labelEl) {
+            let displayIndex = restIndex;
+            let t = 0;
             
-            if (labelRef.current.dataset.key !== activeKey) {
-              labelRef.current.dataset.key = activeKey;
-              const names = {
-                github: "GITHUB",
-                linkedin: "LINKEDIN",
-                youtube: "YOUTUBE",
-                x: "TWITTER | X"
-              };
-              labelRef.current.textContent = names[activeKey];
+            if (phase === 'morph') {
+              t = Math.min((now - phaseStart) / MORPH_MS, 1);
+              // Show old name during first half of morph
+              if (t < 0.5) {
+                displayIndex = (restIndex - 1 + ORDER.length) % ORDER.length;
+              }
+            }
+
+            const name = ORDER[displayIndex];
+            let displayText = name === 'x' ? 'X (TWITTER)' : name.toUpperCase();
+            
+            // Dynamic text animation during morph
+            if (phase === 'morph') {
+              const progress = Math.abs(t - 0.5); // 0.5 -> 0 -> 0.5
+              const intensity = 0.5 - progress;   // 0 -> 0.5 -> 0
+              
+              // Add a subtle text scramble effect during the blurtiest part of the transition
+              if (intensity > 0.3) {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+><[]';
+                displayText = displayText.split('').map(c => c === ' ' ? ' ' : chars[Math.floor(Math.random() * chars.length)]).join('');
+              }
+              
+              labelEl.innerText = displayText;
+              labelEl.style.opacity = Math.max(0, progress * 2); 
+              labelEl.style.transform = `translate(calc(-50% + 25px), ${intensity * 15}px)`;
+              labelEl.style.filter = `blur(${intensity * 5}px)`;
+              labelEl.style.letterSpacing = `${0.2 + intensity * 0.5}em`;
+            } else {
+              labelEl.innerText = displayText;
+              labelEl.style.opacity = 1;
+              labelEl.style.transform = `translate(calc(-50% + 25px), 0px)`;
+              labelEl.style.filter = `blur(0px)`;
+              labelEl.style.letterSpacing = `0.2em`;
             }
           }
 
@@ -524,24 +539,34 @@ const ParticleMorph = () => {
   }, []);
 
   return (
-    <div id="particle-stage" ref={stageRef} className="relative w-full h-full cursor-pointer">
-      <div 
-        ref={labelRef} 
-        className="absolute top-10 left-0 w-full text-center tracking-[0.3em] font-mono text-sm opacity-50 pointer-events-none z-10 font-bold transition-opacity duration-300" 
-        style={{ color: 'var(--color-ink)' }}
-        data-key="github"
-      >
-        GITHUB
-      </div>
+    <div ref={stageRef} id="particle-stage" style={{ position: 'relative', width: '100%', height: '100%', minHeight: '500px' }}>
       <svg width="0" height="0" style={{ position: 'absolute' }}>
         <filter id="glass-refraction" x="-20%" y="-20%" width="140%" height="140%">
           <feTurbulence type="fractalNoise" baseFrequency="0.008 0.012" numOctaves="2" seed="7" result="noise" />
           <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G" />
         </filter>
       </svg>
-      <div id="particle-glass-wrap">
+      <div id="particle-glass-wrap" className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
+        <div id="particle-glass">
+          <div id="particle-glass-rim"></div>
+        </div>
         <div id="particle-glass-shadow"></div>
-        <div id="particle-glass"><div id="particle-glass-rim"></div></div>
+      </div>
+      
+      {/* MODEL NAME LABEL */}
+      <div 
+        id="particle-model-label" 
+        className="absolute top-0 lg:top-2 left-1/2 px-5 py-2 rounded-full text-xs sm:text-sm font-bold tracking-[0.2em] pointer-events-none z-10 transition-colors duration-300 backdrop-blur-md whitespace-nowrap"
+        style={{ 
+          color: 'var(--color-ink)', 
+          backgroundColor: 'color-mix(in srgb, var(--color-paper) 80%, transparent)',
+          border: '1px solid color-mix(in srgb, var(--color-ink) 15%, transparent)',
+          fontFamily: 'var(--font-mono)',
+          boxShadow: '0 4px 12px color-mix(in srgb, var(--color-ink) 5%, transparent)',
+          transform: 'translateX(calc(-50% + 25px))'
+        }}
+      >
+        GITHUB
       </div>
     </div>
   );
