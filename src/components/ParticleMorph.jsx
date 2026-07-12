@@ -40,7 +40,7 @@ const ParticleMorph = () => {
       // ---------- Renderer / Scene / Camera ----------
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-      camera.position.z = 270;
+      camera.position.z = window.innerWidth < 768 ? 320 : 270;
 
       const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -55,6 +55,7 @@ const ParticleMorph = () => {
       const onResize = () => {
         if (disposed) return;
         camera.aspect = container.clientWidth / container.clientHeight;
+        camera.position.z = window.innerWidth < 768 ? 320 : 270;
         camera.updateProjectionMatrix();
         renderer.setSize(container.clientWidth, container.clientHeight, false);
       };
@@ -115,7 +116,7 @@ const ParticleMorph = () => {
         ctx.restore();
       }
 
-      const PARTICLE_COUNT = 6000;
+      const PARTICLE_COUNT = window.innerWidth < 768 ? 3000 : 6000;
 
       function sampleShape(key) {
         const c = newCanvas();

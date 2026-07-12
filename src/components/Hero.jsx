@@ -148,10 +148,13 @@ const Hero = () => {
           </motion.div>
         </motion.div>
 
-        {/* RIGHT COLUMN — PARTICLE WIDGET (desktop only) */}
-        <div className="hero-right">
+        {/* RIGHT COLUMN — PARTICLE MORPH WIDGET */}
+        <motion.div 
+          variants={fadeUp} 
+          className="hero-right flex items-center justify-center relative w-full lg:w-auto h-[400px] lg:h-[500px] xl:h-[600px] mt-12 lg:mt-0"
+        >
           <ParticleMorph />
-        </div>
+        </motion.div>
       </div>
 
       <div 
