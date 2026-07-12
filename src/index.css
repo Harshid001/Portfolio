@@ -248,10 +248,10 @@
     }
   }
 
-  /* Mobile: hide widget entirely */
+  /* Mobile: full width */
   @media (max-width: 767px) {
     .hero-right {
-      display: none !important;
+      width: 100%;
     }
   }
 
