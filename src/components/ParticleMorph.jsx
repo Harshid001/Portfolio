@@ -441,13 +441,13 @@ const ParticleMorph = () => {
               
               labelEl.innerText = displayText;
               labelEl.style.opacity = Math.max(0, progress * 2); 
-              labelEl.style.transform = `translate(calc(-50% + 20px), ${intensity * 15}px)`;
+              labelEl.style.transform = `translate(calc(-50% + 15px), ${intensity * 15}px)`;
               labelEl.style.filter = `blur(${intensity * 5}px)`;
               labelEl.style.letterSpacing = `${0.2 + intensity * 0.5}em`;
             } else {
               labelEl.innerText = displayText;
               labelEl.style.opacity = 1;
-              labelEl.style.transform = `translate(calc(-50% + 20px), 0px)`;
+              labelEl.style.transform = `translate(calc(-50% + 15px), 0px)`;
               labelEl.style.filter = `blur(0px)`;
               labelEl.style.letterSpacing = `0.2em`;
             }
@@ -573,7 +573,7 @@ const ParticleMorph = () => {
           border: '1px solid color-mix(in srgb, var(--color-ink) 15%, transparent)',
           fontFamily: 'var(--font-mono)',
           boxShadow: '0 4px 12px color-mix(in srgb, var(--color-ink) 5%, transparent)',
-          transform: 'translateX(calc(-50% + 20px))'
+          transform: 'translateX(calc(-50% + 15px))'
         }}
       >
         GITHUB
