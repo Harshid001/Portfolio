@@ -18,15 +18,6 @@ import fundHuntersImg from '../../assets/fund-hunters.png';
 
 const projects = [
   { 
-    title: "Team Hacksheild", 
-    description: "Voice-first mutual-fund advisory platform enabling real-time voice conversations (STT via OpenAI), WebSocket streaming, and automated investment report generation.", 
-    tech: ["React", "Vite", "Express", "TypeScript"], 
-    github: "https://github.com/Harshid001/team_hacksheild", 
-    live: "https://harshidsoniportfolio.vercel.app/", 
-    image: "https://res.cloudinary.com/dh0xawlig/image/upload/v1783864799/Screenshot_2026-07-12_192909_llxok0.png",
-    category: "APPLICATIONS"
-  },
-  { 
     title: "StudyBuddy", 
     description: "Students struggle to organize learning resources across scattered platforms. Built an AI-powered study assistant with smart chatbot, resource management, and progress tracking using React, Node.js, and MongoDB. Reduced study material lookup time by centralizing resources into a single searchable dashboard.", 
     tech: ["React", "Node.js", "MongoDB", "Express"], 
@@ -50,6 +41,15 @@ const projects = [
     github: "https://github.com/Harshid001/smartfactoryAIsystem", 
     image: smartfactoryImg,
     category: "APPLICATIONS"
+  },
+  { 
+    title: "MF-advisor", 
+    description: "Voice-first mutual-fund advisory platform enabling real-time voice conversations (STT via OpenAI), WebSocket streaming, and automated investment report generation.", 
+    tech: ["React", "Vite", "Express", "TypeScript"], 
+    github: "https://github.com/Harshid001/team_hacksheild", 
+    live: "https://mf-advisor-seven.vercel.app/", 
+    image: "https://res.cloudinary.com/dh0xawlig/image/upload/v1783864799/Screenshot_2026-07-12_192909_llxok0.png",
+    category: "WEBSITES"
   },
   {
     title: "Traveloop",
