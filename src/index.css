@@ -268,9 +268,9 @@
     position: absolute;
     left: 50%; top: 50%;
     /* Fixed square dimensions so border-radius: 50% makes a perfect circle */
-    width: 360px; height: 360px;
+    width: 400px; height: 400px;
     /* Translate down so it sits under the centered model, then rotate */
-    transform: translate(calc(-50% + 65px), calc(-50% + 110px)) rotateX(72deg);
+    transform: translate(-50%, calc(-50% + 130px)) rotateX(72deg);
     z-index: 0;
     overflow: hidden;
     border-radius: 50%;
@@ -303,8 +303,8 @@
     position: absolute;
     left: 50%; top: 50%;
     /* Shadow should be an ellipse sitting just below the plate */
-    width: 380px; height: 25px;
-    transform: translate(calc(-50% + 65px), calc(-50% + 130px));
+    width: 420px; height: 28px;
+    transform: translate(-50%, calc(-50% + 150px));
     background: radial-gradient(ellipse at center, rgba(26,22,18,0.22) 0%, rgba(26,22,18,0) 70%);
     z-index: 0; pointer-events: none;
   }

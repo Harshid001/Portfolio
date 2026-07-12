@@ -68,9 +68,9 @@ const ParticleMorph = () => {
         c.width = c.height = 64;
         const ctx = c.getContext('2d');
         const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-        g.addColorStop(0, 'rgba(26,22,18,1)');
-        g.addColorStop(0.5, 'rgba(26,22,18,0.9)');
-        g.addColorStop(1, 'rgba(26,22,18,0)');
+        g.addColorStop(0, 'rgba(255,255,255,1)');
+        g.addColorStop(0.5, 'rgba(255,255,255,0.9)');
+        g.addColorStop(1, 'rgba(255,255,255,0)');
         ctx.fillStyle = g;
         ctx.fillRect(0, 0, 64, 64);
         return new THREE.CanvasTexture(c);
@@ -212,6 +212,7 @@ const ParticleMorph = () => {
           uTexture: { value: dotTexture },
           uSize: { value: 2.1 * Math.min(window.devicePixelRatio || 1, 2) },
           uOpacity: { value: 0.85 },
+          uColor: { value: new THREE.Color('#1a1612') },
           uIntro: { value: prefersReducedMotion ? 1 : 0 },
           uSpread: { value: INTRO_SPREAD }
         },
@@ -232,11 +233,12 @@ const ParticleMorph = () => {
         fragmentShader: `
           uniform sampler2D uTexture;
           uniform float uOpacity;
+          uniform vec3 uColor;
           varying float vAlpha;
           void main() {
             vec4 tex = texture2D(uTexture, gl_PointCoord);
             if (tex.a < 0.02) discard;
-            gl_FragColor = vec4(tex.rgb, tex.a * uOpacity * vAlpha);
+            gl_FragColor = vec4(uColor, tex.a * uOpacity * vAlpha);
           }
         `,
         transparent: true,
@@ -359,6 +361,10 @@ const ParticleMorph = () => {
 
         if (!prefersReducedMotion) {
           const elapsed = now - phaseStart;
+
+          // Update theme color dynamically
+          const isDark = document.documentElement.classList.contains('dark');
+          material.uniforms.uColor.value.set(isDark ? '#f5f2ed' : '#1a1612');
 
           if (phase === 'intro') {
             const introProgress = Math.min(elapsed / INTRO_MS, 1);
