@@ -163,17 +163,13 @@
     color: var(--color-paper);
   }
 
+  .custom-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
   .custom-scrollbar::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: var(--color-paper);
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: var(--color-ink);
-    border-radius: 0;
+    display: none;
   }
 
   .dark-scrollbar::-webkit-scrollbar {
