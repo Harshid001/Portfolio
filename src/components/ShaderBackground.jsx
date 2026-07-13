@@ -1,13 +1,18 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 
 export default function ShaderBackground() {
   const containerRef = useRef(null)
   const sceneRef = useRef(null)
   const mouseRef = useRef({ x: 0.5, y: 0.5 })
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
-    if (!containerRef.current) return
+    setIsMobile(window.innerWidth < 768)
+  }, [])
+
+  useEffect(() => {
+    if (isMobile || !containerRef.current) return
     const container = containerRef.current
 
     const vertexShader = `
@@ -196,6 +201,8 @@ export default function ShaderBackground() {
       }
     }
   }, [])
+
+  if (isMobile) return null;
 
   return (
     <div

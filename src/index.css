@@ -248,13 +248,6 @@
     }
   }
 
-  /* Mobile: hide widget entirely */
-  @media (max-width: 767px) {
-    .hero-right {
-      display: none !important;
-    }
-  }
-
   /* Particle stage layering */
   #particle-stage {
     pointer-events: none;

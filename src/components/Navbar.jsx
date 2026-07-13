@@ -156,7 +156,7 @@ const Navbar = () => {
 
         <div className="flex items-center md:hidden gap-4">
           <button 
-            className="text-3xl cursor-none" 
+            className="w-11 h-11 flex items-center justify-center text-3xl cursor-none" 
             style={{ color: 'var(--color-ink)' }} 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
@@ -183,9 +183,9 @@ const Navbar = () => {
           {/* Sliding Circle Background */}
           <motion.div 
             className="absolute z-0 w-[22px] h-[22px] rounded-full"
-            style={{ backgroundColor: 'var(--color-ink)', top: '1px' }}
+            style={{ backgroundColor: 'var(--color-ink)', top: '1px', left: '1px' }}
             initial={false}
-            animate={{ left: isDark ? '29px' : '1px' }}
+            animate={{ x: isDark ? 28 : 0 }}
             transition={{ type: "spring", stiffness: 500, damping: 30 }}
           />
           {/* Sun Icon Container */}
@@ -214,9 +214,9 @@ const Navbar = () => {
           {/* Sliding Circle Background */}
           <motion.div 
             className="absolute z-0 w-5 h-5 rounded-full"
-            style={{ backgroundColor: 'var(--color-ink)', top: '1px' }}
+            style={{ backgroundColor: 'var(--color-ink)', top: '1px', left: '1px' }}
             initial={false}
-            animate={{ left: isDark ? '27px' : '1px' }}
+            animate={{ x: isDark ? 26 : 0 }}
             transition={{ type: "spring", stiffness: 500, damping: 30 }}
           />
           {/* Sun Icon Container */}

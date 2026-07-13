@@ -293,10 +293,43 @@ const ParticleMorph = () => {
         scrollVelocity = Math.max(-3, Math.min(3, scrollVelocity + e.deltaY * 0.01));
       };
 
+      const onTouchStart = (e) => {
+        if (e.touches.length > 0) {
+          isHovering = true;
+          targetScale = HOVER_SCALE;
+          const rect = container.getBoundingClientRect();
+          mouse.x = ((e.touches[0].clientX - rect.left) / rect.width) * 2 - 1;
+          mouse.y = -(((e.touches[0].clientY - rect.top) / rect.height) * 2 - 1);
+          targetRotation.y = mouse.x * 0.35;
+          targetRotation.x = mouse.y * 0.2;
+        }
+      };
+
+      const onTouchMove = (e) => {
+        if (e.touches.length > 0) {
+          const rect = container.getBoundingClientRect();
+          mouse.x = ((e.touches[0].clientX - rect.left) / rect.width) * 2 - 1;
+          mouse.y = -(((e.touches[0].clientY - rect.top) / rect.height) * 2 - 1);
+          targetRotation.y = mouse.x * 0.35;
+          targetRotation.x = mouse.y * 0.2;
+        }
+      };
+
+      const onTouchEnd = () => {
+        isHovering = false;
+        targetRotation.x = 0;
+        targetRotation.y = 0;
+        targetScale = 1;
+      };
+
       container.addEventListener('mouseenter', onMouseEnter);
       container.addEventListener('mousemove', onMouseMove);
       container.addEventListener('mouseleave', onMouseLeave);
       container.addEventListener('wheel', onWheel, { passive: true });
+      container.addEventListener('touchstart', onTouchStart, { passive: true });
+      container.addEventListener('touchmove', onTouchMove, { passive: true });
+      container.addEventListener('touchend', onTouchEnd, { passive: true });
+      container.addEventListener('touchcancel', onTouchEnd, { passive: true });
 
       const _cursorWorld = new THREE.Vector3();
       const _raycaster = new THREE.Raycaster();
@@ -531,6 +564,10 @@ const ParticleMorph = () => {
         container.removeEventListener('mousemove', onMouseMove);
         container.removeEventListener('mouseleave', onMouseLeave);
         container.removeEventListener('wheel', onWheel);
+        container.removeEventListener('touchstart', onTouchStart);
+        container.removeEventListener('touchmove', onTouchMove);
+        container.removeEventListener('touchend', onTouchEnd);
+        container.removeEventListener('touchcancel', onTouchEnd);
         container.removeEventListener('click', onClick);
         window.removeEventListener('resize', onResize);
         geometry.dispose();

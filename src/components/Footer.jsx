@@ -52,7 +52,7 @@ const Footer = () => {
                 href={social.link} 
                 target="_blank" 
                 rel="noreferrer" 
-                className="w-10 h-10 flex items-center justify-center text-lg cursor-none transition-colors" 
+                className="w-11 h-11 flex items-center justify-center text-lg cursor-none transition-colors" 
                 style={{ backgroundColor: 'transparent', color: 'var(--color-paper)', border: '2px solid var(--color-paper)' }}
                 onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-paper)'; e.currentTarget.style.color = 'var(--color-ink)'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--color-paper)'; }}
