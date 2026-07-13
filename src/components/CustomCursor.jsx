@@ -112,6 +112,7 @@ const CustomCursor = () => {
             backgroundColor: `rgba(52, 211, 153, ${isHovering ? 0 : 0.3 - i * 0.06})`,
             zIndex: 9998,
             transition: 'background-color 0.3s ease',
+            mixBlendMode: 'difference'
           }}
         />
       ))}
@@ -129,6 +130,7 @@ const CustomCursor = () => {
           borderRadius: '50%',
           background: 'radial-gradient(circle, rgba(52, 211, 153, 0.15) 0%, rgba(52, 211, 153, 0) 70%)',
           zIndex: 9997,
+          mixBlendMode: 'difference'
         }}
         animate={{
           scale: isHovering ? 3 : 0,
@@ -148,6 +150,7 @@ const CustomCursor = () => {
           marginLeft: -ringSize / 2,
           marginTop: -ringSize / 2,
           zIndex: 9999,
+          mixBlendMode: 'difference'
         }}
         animate={{
           scale: isClicking ? 0.7 : isHovering ? hoverScale : 1,
@@ -213,6 +216,7 @@ const CustomCursor = () => {
         style={{
           x: dotX, y: dotY, width: 7, height: 7, marginLeft: -3.5, marginTop: -3.5,
           borderRadius: '50%', backgroundColor: '#34D399', zIndex: 9999,
+          mixBlendMode: 'difference'
         }}
         animate={{ scale: isHovering ? 0 : 1 }}
         transition={{ type: 'spring', stiffness: 400, damping: 20 }}

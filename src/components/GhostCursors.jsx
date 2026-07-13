@@ -18,7 +18,8 @@ const GhostCursors = () => {
               left: `${user.x}vw`,
               top: `${user.y}vh`,
               zIndex: 9000,
-              transition: 'left 0.1s linear, top 0.1s linear'
+              transition: 'left 0.1s linear, top 0.1s linear',
+              mixBlendMode: 'difference'
             }}
           >
             {/* Main Diamond Cursor */}
