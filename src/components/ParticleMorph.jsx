@@ -586,7 +586,7 @@ const ParticleMorph = () => {
   }, []);
 
   return (
-    <div ref={stageRef} id="particle-stage" style={{ position: 'relative', width: '100%', height: '100%', minHeight: '500px' }}>
+    <div ref={stageRef} id="particle-stage" className="relative w-full h-full min-h-[400px] lg:min-h-[500px]">
       <svg width="0" height="0" style={{ position: 'absolute' }}>
         <filter id="glass-refraction" x="-20%" y="-20%" width="140%" height="140%">
           <feTurbulence type="fractalNoise" baseFrequency="0.008 0.012" numOctaves="2" seed="7" result="noise" />
@@ -603,7 +603,7 @@ const ParticleMorph = () => {
       {/* MODEL NAME LABEL */}
       <div 
         id="particle-model-label" 
-        className="absolute top-0 lg:top-2 left-1/2 px-5 py-2 rounded-full text-xs sm:text-sm font-bold tracking-[0.2em] pointer-events-none z-10 transition-colors duration-300 backdrop-blur-md whitespace-nowrap"
+        className="absolute top-4 lg:top-8 left-1/2 px-5 py-2 rounded-full text-xs sm:text-sm font-bold tracking-[0.2em] pointer-events-none z-10 transition-colors duration-300 backdrop-blur-md whitespace-nowrap"
         style={{ 
           color: 'var(--color-ink)', 
           backgroundColor: 'color-mix(in srgb, var(--color-paper) 80%, transparent)',
