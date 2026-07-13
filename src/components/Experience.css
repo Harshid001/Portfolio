@@ -1,0 +1,25 @@
+.exp-section {
+  overflow: hidden;
+  border-top: 2px solid var(--color-ink);
+}
+
+.word-wrapper {
+  display: inline-block;
+  white-space: pre; /* Preserves the space entity correctly */
+}
+
+.word {
+  display: inline-block;
+  will-change: transform, opacity, filter;
+  /* Optional: Adds a premium slight glowing accent */
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+}
+
+.exp-parallax-bg {
+  background: radial-gradient(circle at 80% 20%, rgba(120, 120, 120, 0.08) 0%, transparent 40%),
+              radial-gradient(circle at 20% 80%, rgba(120, 120, 120, 0.08) 0%, transparent 40%);
+}
+
+.exp-paragraph {
+  font-family: var(--font-body), sans-serif;
+}

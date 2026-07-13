@@ -1,89 +1,153 @@
-import { motion } from 'framer-motion';
+import React, { useLayoutEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SectionPresence from './SectionPresence';
+import './Experience.css';
 
-const experiences = [
-  { year: "2025", title: "Learning Full Stack Development", description: "Started my journey with HTML, CSS, and JavaScript. Explored the fundamentals of web architecture and responsive design." },
-  { year: "2025", title: "Building Real-World Projects", description: "Built real-world projects including StudyBuddy (AI study assistant) and e-commerce platforms. Mastered React.js and started working with Node.js and MongoDB." },
-  { year: "2026", title: "Debugging & Performance Optimization", description: "Focused on writing clean, efficient code and optimizing web performance. Learned advanced state management and API integration." },
-  { year: "2026", title: "Open to Opportunities", description: "Currently looking for internships, freelance projects, and full-time roles to apply my skills and grow as a developer." }
-];
+gsap.registerPlugin(ScrollTrigger);
+
+const paragraphText = "In 2025, I started my journey with HTML, CSS, and JavaScript, exploring the fundamentals of web architecture and responsive design. I quickly moved on to building real-world projects like StudyBuddy (an AI study assistant) and e-commerce platforms, mastering React.js and incorporating Node.js and MongoDB. Moving into 2026, my focus shifted toward writing clean, efficient code and optimizing web performance, while learning advanced state management and API integration. Currently, I am actively looking for internships, freelance projects, and full-time roles to apply my skills and continue growing as a developer.";
+
+// Deterministic pseudo-random for scattering
+const seededRandom = (seed) => {
+  const x = Math.sin(seed * 9999) * 10000;
+  return x - Math.floor(x);
+};
 
 const Experience = () => {
+  const containerRef = useRef(null);
+  
+  useLayoutEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    let ctx = gsap.context(() => {
+      
+      if (prefersReducedMotion) {
+        gsap.set('.word', { opacity: 1, filter: 'blur(0px)' });
+        gsap.set(['.exp-heading', '.exp-breadcrumb', '.exp-progress-line'], { opacity: 1, y: 0 });
+        return;
+      }
+
+      const words = gsap.utils.toArray('.word');
+      
+      // 1. "Let the text already be there and nothing to do with starting"
+      // The text sits in its normal paragraph flow, just hidden initially.
+      gsap.set(words, { 
+        opacity: 0,
+        filter: 'blur(8px)',
+        y: 10 
+      });
+
+      gsap.set('.exp-progress-line', { scaleY: 0, transformOrigin: "top" });
+      gsap.set(['.exp-breadcrumb', '.exp-heading'], { opacity: 0, y: 40 });
+
+      // -- Pin Section & Scroll Control --
+      ScrollTrigger.create({
+        trigger: containerRef.current,
+        start: 'top top',
+        end: '+=2500', 
+        pin: true,
+        pinSpacing: true, 
+      });
+
+      // -- Header Reveal Animation --
+      gsap.to(['.exp-breadcrumb', '.exp-heading'], {
+        opacity: 1,
+        y: 0,
+        duration: 1.2,
+        stagger: 0.2,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 80%', 
+          end: 'top 30%',
+          scrub: 1,
+        }
+      });
+
+      // -- Master Timeline --
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top top',
+          end: '+=2500', 
+          scrub: 1, 
+        }
+      });
+
+      tl.to('.exp-parallax-bg', {
+        y: '15%',
+        ease: 'none'
+      }, 0);
+
+      tl.to('.exp-progress-line', {
+        scaleY: 1,
+        ease: 'none'
+      }, 0);
+
+      // 2. "Just let text slowly appeared"
+      // Fade in the words one by one in their normal paragraph positions.
+      // We'll use 80% of the timeline for the fade-in, leaving 20% for the break effect at the end.
+      tl.to(words, {
+        opacity: 1,
+        y: 0,
+        filter: 'blur(0px)',
+        stagger: {
+          each: 0.05,
+          from: "start"
+        },
+        duration: 0.5,
+        ease: 'power2.out',
+      }, 0);
+
+      // The paragraph remains fully assembled and readable.
+
+    }, containerRef); 
+
+    return () => ctx.revert();
+  }, []);
+
+  const splitText = (text) => {
+    return text.split(' ').map((word, i) => (
+      <span key={i} className="word-wrapper" style={{ perspective: 400 }}>
+        <span className="word inline-block">{word}</span>
+        <span className="space">&nbsp;</span>
+      </span>
+    ));
+  };
+
   return (
-    <section id="experience" className="py-24 relative border-t-2" style={{ backgroundColor: 'var(--color-paper)', borderColor: 'var(--color-ink)' }}>
+    <section 
+      id="experience" 
+      ref={containerRef}
+      className="exp-section relative w-full flex flex-col justify-start overflow-hidden pt-16 pb-24"
+      style={{ backgroundColor: 'var(--color-paper)' }}
+    >
       <SectionPresence sectionId="experience" />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} className="mb-20">
-          <span className="section-label mb-4 block">04 / MY JOURNEY</span>
-          <h2 style={{ fontSize: 'clamp(32px, 10vw, 80px)', lineHeight: 0.9 }}>
+      <div className="exp-parallax-bg absolute inset-0 pointer-events-none opacity-40 z-0" />
+
+      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[var(--color-ink-3)] z-10 hidden md:block opacity-20">
+        <div className="exp-progress-line absolute top-0 left-0 w-full h-full bg-[var(--color-red)]" style={{ boxShadow: '0 0 12px var(--color-red)' }} />
+      </div>
+
+      <div className="max-w-7xl w-full mx-auto px-6 sm:px-12 lg:px-20 relative z-20">
+        
+        <div className="mb-12 md:mb-20 flex flex-col items-start">
+          <span className="exp-breadcrumb section-label mb-4 block text-[var(--color-ink-2)]" style={{ letterSpacing: '0.2em' }}>
+            04 / MY JOURNEY
+          </span>
+          <h2 className="exp-heading" style={{ fontSize: 'clamp(36px, 8vw, 80px)', lineHeight: 0.9, letterSpacing: '-0.02em', color: 'var(--color-ink)' }}>
             EXPERIENCE<br/>& GROWTH
           </h2>
-        </motion.div>
-
-        <div className="relative max-w-3xl pl-8 sm:pl-12 md:pl-16">
-          {/* Vertical Line */}
-          <motion.div 
-            initial={{ scaleY: 0 }}
-            whileInView={{ scaleY: 1 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 1, ease: "easeInOut" }}
-            className="absolute left-[7px] top-0 bottom-0"
-            style={{ width: '2px', backgroundColor: 'var(--color-ink)', transformOrigin: 'top' }} 
-          />
-
-          <div className="space-y-16">
-            {experiences.map((exp, idx) => (
-              <motion.div 
-                key={idx} 
-                initial={{ opacity: 0, x: -40 }} 
-                whileInView={{ opacity: 1, x: 0 }} 
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }} 
-                className="relative"
-              >
-                {/* Node */}
-                <div 
-                  className="absolute -left-8 sm:-left-12 md:-left-16 top-1 z-10 transition-colors cursor-none"
-                  style={{ 
-                    width: '16px', height: '16px', 
-                    backgroundColor: 'var(--color-ink)', 
-                    border: '2px solid var(--color-ink)',
-                    marginLeft: '-1px'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-red)'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-ink)'}
-                />
-
-                <div className="relative group cursor-none">
-                  {/* GPU-accelerated brutalist shadow */}
-                  <div 
-                    className="absolute inset-0 bg-[var(--color-ink)] transition-transform duration-150 pointer-events-none"
-                    style={{ willChange: 'transform' }}
-                  />
-                  {/* Foreground Content */}
-                  <div 
-                    className="relative z-10 h-full brutal-card p-6 transition-transform duration-150 group-hover:-translate-y-1 group-hover:-translate-x-1"
-                    style={{ willChange: 'transform' }}
-                  >
-                    <span 
-                      className="inline-block mb-4 tag" 
-                      style={{ backgroundColor: 'transparent', color: 'var(--color-ink)' }}
-                    >
-                      {exp.year}
-                    </span>
-                    <h3 className="mb-3" style={{ fontFamily: 'var(--font-body)', fontWeight: 800, fontSize: '18px', color: 'var(--color-ink)' }}>
-                      {exp.title}
-                    </h3>
-                    <p style={{ color: 'var(--color-ink-2)', fontSize: '14px', lineHeight: 1.6 }}>
-                      {exp.description}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
         </div>
+
+        <div className="relative w-full">
+          <p className="exp-paragraph" style={{ color: 'var(--color-ink-2)', fontSize: 'clamp(20px, 3vw, 32px)', fontWeight: 300, lineHeight: 1.6 }}>
+            {splitText(paragraphText)}
+          </p>
+        </div>
+
       </div>
     </section>
   );
