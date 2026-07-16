@@ -139,8 +139,11 @@ const ProjectNavigation = ({ projects, activeIndex, setActiveIndex }) => {
         className="flex flex-col flex-grow w-full py-4 space-y-1 dark-section overflow-y-auto dark-scrollbar max-h-[250px] md:max-h-[300px] lg:max-h-[550px]"
         role="tablist"
         aria-label="Project selection"
+        data-lenis-prevent="true"
         style={{
-          backgroundColor: 'var(--color-ink)'
+          backgroundColor: 'var(--color-ink)',
+          overscrollBehavior: 'contain',
+          scrollBehavior: 'smooth'
         }}
       >
         {activeTab === 'APPLICATIONS' 

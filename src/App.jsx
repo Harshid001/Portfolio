@@ -24,20 +24,8 @@ function App() {
     checkMobile();
     window.addEventListener('resize', checkMobile);
 
-    // Fullscreen on first click
-    const handleFirstClick = () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch((err) => {
-          console.warn(`Fullscreen not supported or blocked: ${err.message}`);
-        });
-      }
-      document.removeEventListener('click', handleFirstClick);
-    };
-    document.addEventListener('click', handleFirstClick);
-
     return () => {
       window.removeEventListener('resize', checkMobile);
-      document.removeEventListener('click', handleFirstClick);
     };
   }, []);
 

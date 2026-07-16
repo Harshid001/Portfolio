@@ -5,9 +5,11 @@ import { SiTailwindcss, SiExpress } from 'react-icons/si';
 import SectionPresence from './SectionPresence';
 
 const skills = [
+  // ── Frontend ───────────────────────────────────────────
   { name: 'React', category: 'Frontend', description: 'Component-driven UI architecture with hooks, context, and state management', icon: FaReact },
-  { name: 'React-JS', category: 'Frontend', description: 'ES6+ features, async patterns, DOM manipulation, and event-driven programming', icon: DiJavascript1 },
+  { name: 'JavaScript', category: 'Frontend', description: 'ES6+ features, async patterns, DOM manipulation, and event-driven programming', icon: DiJavascript1 },
   { name: 'Tailwind CSS', category: 'Frontend', description: 'Utility-first CSS framework for rapid, responsive UI development', icon: SiTailwindcss },
+  { name: 'HTML / CSS', category: 'Frontend', description: 'Semantic markup, Flexbox, Grid, animations, and responsive design', icon: FaHtml5 },
 
   // ── Backend ────────────────────────────────────────────
   { name: 'Node.js', category: 'Backend', description: 'Server-side JavaScript runtime for scalable network applications', icon: FaNodeJs },
