@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
-
-const THREE_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+import * as THREE from 'three';
 
 const ParticleMorph = () => {
   const stageRef = useRef(null);
@@ -10,34 +9,11 @@ const ParticleMorph = () => {
     const stage = stageRef.current;
     if (!stage) return;
 
-    // Load Three.js from CDN if not already present
-    const loadThree = () => {
-      return new Promise((resolve, reject) => {
-        if (window.THREE) { resolve(); return; }
-        const existing = document.querySelector(`script[src="${THREE_CDN}"]`);
-        if (existing) {
-          if (window.THREE) { resolve(); return; }
-          existing.addEventListener('load', resolve);
-          existing.addEventListener('error', reject);
-          return;
-        }
-        const s = document.createElement('script');
-        s.src = THREE_CDN;
-        s.onload = resolve;
-        s.onerror = reject;
-        document.head.appendChild(s);
-      });
-    };
-
     let disposed = false;
 
-    loadThree().then(() => {
-      if (disposed) return;
+    const container = stage;
 
-      const THREE = window.THREE;
-      const container = stage;
-
-      // ---------- Renderer / Scene / Camera ----------
+    // ---------- Renderer / Scene / Camera ----------
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
       camera.position.z = window.innerWidth < 768 ? 320 : 270;
@@ -578,7 +554,6 @@ const ParticleMorph = () => {
           renderer.domElement.parentNode.removeChild(renderer.domElement);
         }
       };
-    });
 
     return () => {
       if (cleanupRef.current) cleanupRef.current();

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { CollabProvider } from './context/CollabContext';
 import CollabCursor from './components/CollabCursor';
 import GhostCursors from './components/GhostCursors';
@@ -7,15 +8,11 @@ import LiveBar from './components/LiveBar';
 import ReactionBurst from './components/ReactionBurst';
 import IntroAnimation from './components/IntroAnimation';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import About from './components/About';
-import Skills from './components/Skills';
-import SkillsMarquee from './components/SkillsMarquee';
-import Projects from './components/Projects';
-import Experience from './components/Experience';
-import Achievements from './components/Achievements';
-import Contact from './components/Contact';
 import Footer from './components/Footer';
+import MainPortfolio from './MainPortfolio';
+import PortalTransitionProvider from './components/transition/PortalTransitionProvider';
+import { GridTransitionProvider } from './components/transition/GridTransitionContext';
+import GridOverlay from './components/transition/GridOverlay';
 
 
 function App() {
@@ -67,20 +64,20 @@ function App() {
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
               className="w-full"
             >
-              <Navbar />
+              <BrowserRouter>
+                <PortalTransitionProvider>
+                  <GridTransitionProvider>
+                    <Navbar />
+                    <GridOverlay />
+                    
+                    <Routes>
+                      <Route path="/" element={<MainPortfolio />} />
+                    </Routes>
 
-              <main>
-                <Hero />
-                <About />
-                <SkillsMarquee />
-                <Skills />
-                <Projects />
-                <Experience />
-                <Achievements />
-                <Contact />
-              </main>
-
-              <Footer />
+                    <Footer />
+                  </GridTransitionProvider>
+                </PortalTransitionProvider>
+              </BrowserRouter>
             </motion.div>
           )}
         </AnimatePresence>

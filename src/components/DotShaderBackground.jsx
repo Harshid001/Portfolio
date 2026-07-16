@@ -211,20 +211,19 @@ export default function DotShaderBackground() {
 
   return (
     <div ref={containerRef} className="absolute inset-0 w-full h-full" style={{ overflow: 'hidden' }}>
-      {isVisible && (
-        <Canvas
-          gl={{
-            antialias: false,
-            powerPreference: 'high-performance',
-            outputColorSpace: THREE.SRGBColorSpace,
-            toneMapping: THREE.NoToneMapping,
-          }}
-          dpr={[1, 1.5]}
-          style={{ position: 'absolute', inset: 0 }}
-        >
-          <Scene />
-        </Canvas>
-      )}
+      <Canvas
+        frameloop={isVisible ? "always" : "demand"}
+        gl={{
+          antialias: false,
+          powerPreference: 'high-performance',
+          outputColorSpace: THREE.SRGBColorSpace,
+          toneMapping: THREE.NoToneMapping,
+        }}
+        dpr={[1, 1.5]}
+        style={{ position: 'absolute', inset: 0 }}
+      >
+        <Scene />
+      </Canvas>
     </div>
   )
 }

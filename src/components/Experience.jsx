@@ -30,77 +30,70 @@ const Experience = () => {
 
       const words = gsap.utils.toArray('.word');
       
-      // 1. "Let the text already be there and nothing to do with starting"
-      // The text sits in its normal paragraph flow, just hidden initially.
+      // Hide initially
       gsap.set(words, { 
         opacity: 0,
         filter: 'blur(8px)',
-        y: 10 
+        y: 15 
       });
 
       gsap.set('.exp-progress-line', { scaleY: 0, transformOrigin: "top" });
       gsap.set(['.exp-breadcrumb', '.exp-heading'], { opacity: 0, y: 40 });
 
-      // -- Pin Section & Scroll Control --
-      ScrollTrigger.create({
-        trigger: containerRef.current,
-        start: 'top top',
-        end: '+=2500', 
-        pin: true,
-        pinSpacing: true, 
-      });
-
       // -- Header Reveal Animation --
       gsap.to(['.exp-breadcrumb', '.exp-heading'], {
         opacity: 1,
         y: 0,
-        duration: 1.2,
-        stagger: 0.2,
+        duration: 1.0,
+        stagger: 0.15,
         ease: 'power3.out',
         scrollTrigger: {
           trigger: containerRef.current,
-          start: 'top 80%', 
+          start: 'top 75%', 
           end: 'top 30%',
           scrub: 1,
         }
       });
 
-      // -- Master Timeline --
-      const tl = gsap.timeline({
+      // -- Progress Line Animation --
+      gsap.to('.exp-progress-line', {
+        scaleY: 1,
+        ease: 'none',
         scrollTrigger: {
           trigger: containerRef.current,
-          start: 'top top',
-          end: '+=2500', 
-          scrub: 1, 
+          start: 'top 50%',
+          end: 'bottom 50%',
+          scrub: 1,
         }
       });
 
-      tl.to('.exp-parallax-bg', {
-        y: '15%',
-        ease: 'none'
-      }, 0);
+      // -- Parallax Background --
+      gsap.to('.exp-parallax-bg', {
+        y: '20%',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1,
+        }
+      });
 
-      tl.to('.exp-progress-line', {
-        scaleY: 1,
-        ease: 'none'
-      }, 0);
-
-      // 2. "Just let text slowly appeared"
-      // Fade in the words one by one in their normal paragraph positions.
-      // We'll use 80% of the timeline for the fade-in, leaving 20% for the break effect at the end.
-      tl.to(words, {
+      // -- Paragraph Reveal Animation --
+      // Just let text slowly appear as the user scrolls into the section
+      gsap.to(words, {
         opacity: 1,
         y: 0,
         filter: 'blur(0px)',
-        stagger: {
-          each: 0.05,
-          from: "start"
-        },
-        duration: 0.5,
+        stagger: 0.015,
+        duration: 0.8,
         ease: 'power2.out',
-      }, 0);
-
-      // The paragraph remains fully assembled and readable.
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 50%', // Triggers when the section reaches the middle of the viewport
+          toggleActions: 'play none none reverse', // Plays on enter, reverses on leave back up
+        }
+      });
 
     }, containerRef); 
 
