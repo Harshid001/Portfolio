@@ -1,23 +1,21 @@
 import { motion } from 'framer-motion';
-import { 
-  SiReact, SiJavascript, SiTailwindcss, SiNodedotjs, 
-  SiMongodb, SiPython, SiHtml5, SiCss3, SiExpress, 
-  SiTypescript, SiGit, SiFigma 
-} from 'react-icons/si';
+import { FaReact, FaNodeJs, FaGitAlt, FaFigma, FaHtml5, FaCss3Alt, FaPython } from 'react-icons/fa';
+import { DiMongodb, DiJavascript1 } from 'react-icons/di';
+import { SiTypescript, SiTailwindcss, SiExpress } from 'react-icons/si';
 
 const skillItems = [
-  { name: 'React', Icon: SiReact },
-  { name: 'JavaScript', Icon: SiJavascript },
+  { name: 'React', Icon: FaReact },
+  { name: 'JavaScript', Icon: DiJavascript1 },
   { name: 'Tailwind CSS', Icon: SiTailwindcss },
-  { name: 'Node.js', Icon: SiNodedotjs },
-  { name: 'MongoDB', Icon: SiMongodb },
-  { name: 'Python', Icon: SiPython },
-  { name: 'HTML5', Icon: SiHtml5 },
-  { name: 'CSS3', Icon: SiCss3 },
+  { name: 'Node.js', Icon: FaNodeJs },
+  { name: 'MongoDB', Icon: DiMongodb },
+  { name: 'Python', Icon: FaPython },
+  { name: 'HTML5', Icon: FaHtml5 },
+  { name: 'CSS3', Icon: FaCss3Alt },
   { name: 'Express', Icon: SiExpress },
   { name: 'TypeScript', Icon: SiTypescript },
-  { name: 'Git', Icon: SiGit },
-  { name: 'Figma', Icon: SiFigma }
+  { name: 'Git', Icon: FaGitAlt },
+  { name: 'Figma', Icon: FaFigma }
 ];
 
 const SkillsMarquee = () => {
