@@ -3,6 +3,7 @@ import { FaReact, FaNodeJs, FaHtml5, FaCss3Alt, FaPython } from 'react-icons/fa'
 import { DiMongodb, DiJavascript1 } from 'react-icons/di';
 import { SiTailwindcss, SiExpress } from 'react-icons/si';
 import SectionPresence from './SectionPresence';
+import GrainText from './GrainText';
 
 const skills = [
   // ── Frontend ───────────────────────────────────────────
@@ -158,9 +159,11 @@ const Skills = () => {
               margin: 0
             }}
           >
-            TOOLS OF
-            <br />
-            THE TRADE
+            <GrainText style={{ display: 'block', width: '100%' }}>
+              TOOLS OF
+              <br />
+              THE TRADE
+            </GrainText>
           </h2>
         </motion.div>
 

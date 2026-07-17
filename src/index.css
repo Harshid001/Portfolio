@@ -29,6 +29,22 @@
   --duration-slow: 500ms;
 }
 
+@layer utilities {
+  @media (prefers-reduced-motion: no-preference) {
+    .animate-grain-drift {
+      animation: grain-drift 8s ease-in-out infinite alternate;
+    }
+  }
+}
+
+@keyframes grain-drift {
+  0% { background-position: 0px 0px; }
+  25% { background-position: -20px 15px; }
+  50% { background-position: 15px -30px; }
+  75% { background-position: -10px -10px; }
+  100% { background-position: 0px 0px; }
+}
+
 @layer base {
   html.dark {
     --color-paper: #0d0d0d;

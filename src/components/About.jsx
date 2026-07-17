@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import heroImg from '../assets/Profile.png';
 import SectionPresence from './SectionPresence';
+import GrainText from './GrainText';
 
 const DotShaderBackground = lazy(() => import('./DotShaderBackground'));
 
@@ -35,9 +36,11 @@ const About = () => {
               margin: 0
             }}
           >
-            MORE THAN
-            <br />
-            JUST CODE
+            <GrainText style={{ display: 'block', width: '100%' }}>
+              MORE THAN
+              <br />
+              JUST CODE
+            </GrainText>
           </h2>
         </motion.div>
 
