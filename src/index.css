@@ -96,13 +96,6 @@
     margin: 0;
     background-image: radial-gradient(color-mix(in srgb, var(--color-ink) 15%, transparent) 0.5px, transparent 0.5px);
     background-size: 24px 24px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-
-  body * {
-    transition-property: background-color, border-color, color, fill, stroke;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 300ms;
   }
 
   ::selection {
