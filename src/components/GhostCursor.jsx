@@ -3,6 +3,10 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 const TRAIL_COUNT = 5;
 
+// Exported so other components (IntroAnimation's eye-box, etc.) can match
+// this cursor's exact size/shape instead of hardcoding a duplicate number.
+export const CURSOR_RING_SIZE = 36;
+
 const HOVER_SELECTORS = [
   'a', 'button', '[role="button"]', 'input', 'textarea', 'select', 'label[for]',
   'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
@@ -114,7 +118,7 @@ const GhostCursor = () => {
   if (isTouchDevice) return null;
 
   // Derive visual states
-  const ringSize = 36;
+  const ringSize = CURSOR_RING_SIZE;
 
   return (
     <div style={{ opacity: isVisible ? 1 : 0, transition: 'opacity 0.3s ease', pointerEvents: 'none' }}>

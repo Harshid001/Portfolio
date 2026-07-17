@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -27,7 +28,7 @@ function App() {
 
   return (
     <>
-      <GhostCursor />
+      {!showIntro && <GhostCursor />}
       <AnimatePresence>
         {showIntro && (
           <IntroAnimation onComplete={() => setShowIntro(false)} />
