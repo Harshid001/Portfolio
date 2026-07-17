@@ -131,12 +131,29 @@ export default function ShaderBackground() {
     container.addEventListener('mouseenter', onMouseEnter, { passive: true })
     container.addEventListener('mouseleave', onMouseLeave, { passive: true })
 
-    let isVisible = true
-    const visObserver = new IntersectionObserver(
-      ([entry]) => { isVisible = entry.isIntersecting },
-      { threshold: 0 }
-    )
-    visObserver.observe(container)
+    let animationId = null;
+
+    const animate = () => {
+      const targetHover = isHovering ? 1.0 : 0.0
+      uniforms.hoverStrength.value += (targetHover - uniforms.hoverStrength.value) * 0.05
+      const speed = 0.005 + uniforms.hoverStrength.value * 0.045
+      uniforms.time.value += speed
+      uniforms.mouse.value.x += (mouseRef.current.x - uniforms.mouse.value.x) * 0.08
+      uniforms.mouse.value.y += (mouseRef.current.y - uniforms.mouse.value.y) * 0.08
+      renderer.render(scene, camera)
+      animationId = requestAnimationFrame(animate)
+      if (sceneRef.current) {
+        sceneRef.current.animationId = animationId
+      }
+    }
+
+    sceneRef.current = {
+      camera,
+      scene,
+      renderer,
+      uniforms,
+      animationId: null,
+    }
 
     const updateColors = () => {
       const rootStyle = getComputedStyle(document.documentElement);
@@ -156,32 +173,23 @@ export default function ShaderBackground() {
     });
     themeObserver.observe(document.documentElement, { attributes: true });
 
-    const animate = () => {
-      const animationId = requestAnimationFrame(animate)
-      if (!isVisible) {
-        if (sceneRef.current) sceneRef.current.animationId = animationId
-        return
-      }
-      const targetHover = isHovering ? 1.0 : 0.0
-      uniforms.hoverStrength.value += (targetHover - uniforms.hoverStrength.value) * 0.05
-      const speed = 0.005 + uniforms.hoverStrength.value * 0.045
-      uniforms.time.value += speed
-      uniforms.mouse.value.x += (mouseRef.current.x - uniforms.mouse.value.x) * 0.08
-      uniforms.mouse.value.y += (mouseRef.current.y - uniforms.mouse.value.y) * 0.08
-      renderer.render(scene, camera)
-      if (sceneRef.current) {
-        sceneRef.current.animationId = animationId
-      }
-    }
-
-    sceneRef.current = {
-      camera,
-      scene,
-      renderer,
-      uniforms,
-      animationId: 0,
-    }
-    animate()
+    let isVisible = true
+    const visObserver = new IntersectionObserver(
+      ([entry]) => { 
+        isVisible = entry.isIntersecting
+        if (isVisible && animationId === null) {
+          animate()
+        } else if (!isVisible && animationId !== null) {
+          cancelAnimationFrame(animationId)
+          animationId = null
+          if (sceneRef.current) {
+            sceneRef.current.animationId = null
+          }
+        }
+      },
+      { threshold: 0 }
+    )
+    visObserver.observe(container)
 
     return () => {
       visObserver.disconnect()

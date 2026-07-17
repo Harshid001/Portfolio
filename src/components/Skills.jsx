@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { FaReact, FaNodeJs, FaPython } from 'react-icons/fa';
 import { DiJavascript1 } from 'react-icons/di';
-import { SiTailwindcss, SiExpress, SiNextdotjs, SiRedis } from 'react-icons/si';
+import { SiTailwindcss, SiExpress } from 'react-icons/si';
 import GrainText from './GrainText';
 
 const skills = [
@@ -9,12 +9,10 @@ const skills = [
   { name: 'React', category: 'Frontend', description: 'Component-driven UI architecture with hooks, context, and state management', icon: FaReact },
   { name: 'JavaScript', category: 'Frontend', description: 'ES6+ features, async patterns, DOM manipulation, and event-driven programming', icon: DiJavascript1 },
   { name: 'Tailwind CSS', category: 'Frontend', description: 'Utility-first CSS framework for rapid, responsive UI development', icon: SiTailwindcss },
-  { name: 'Next.js', category: 'Frontend', description: 'Server-side rendering, static site generation, and file-based routing', icon: SiNextdotjs },
 
   // ── Backend ────────────────────────────────────────────
   { name: 'Node.js', category: 'Backend', description: 'Server-side JavaScript runtime for scalable network applications', icon: FaNodeJs },
   { name: 'Express', category: 'Backend', description: 'RESTful API design, middleware patterns, and route architecture', icon: SiExpress },
-  { name: 'Redis', category: 'Backend', description: 'In-memory data structure store, high-performance cache, and message broker', icon: SiRedis },
   { name: 'Python', category: 'Backend', description: 'General-purpose scripting, data processing, and AI/ML integration', icon: FaPython },
 ];
 
@@ -22,10 +20,11 @@ const SkillItem = ({ skill }) => {
   const Icon = skill.icon;
   return (
     <motion.div
+      tabIndex="0"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
-      className="group relative z-10 hover:z-20"
+      className="group relative z-10 hover:z-20 focus:z-20 outline-none cursor-pointer"
       style={{ height: '240px' }}
     >
       {/* Static Brutalist Shadow */}
@@ -37,8 +36,8 @@ const SkillItem = ({ skill }) => {
         }}
       />
 
-      <div className="absolute inset-0 w-full h-full [perspective:1000px] transition-transform duration-500 group-hover:-translate-y-1">
-        <div className="relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateX(180deg)]">
+      <div className="absolute inset-0 w-full h-full [perspective:1000px] transition-transform duration-500 group-hover:-translate-y-1 group-focus:-translate-y-1">
+        <div className="relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateX(180deg)] group-focus:[transform:rotateX(180deg)]">
           
           {/* Front Face */}
           <div 

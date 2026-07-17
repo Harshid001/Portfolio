@@ -1,15 +1,13 @@
 import { motion } from 'framer-motion';
 import { FaReact, FaNodeJs, FaGitAlt, FaFigma, FaPython } from 'react-icons/fa';
 import { DiJavascript1 } from 'react-icons/di';
-import { SiTypescript, SiTailwindcss, SiExpress, SiNextdotjs, SiRedis } from 'react-icons/si';
+import { SiTypescript, SiTailwindcss, SiExpress } from 'react-icons/si';
 
 const skillItems = [
   { name: 'React', Icon: FaReact },
   { name: 'JavaScript', Icon: DiJavascript1 },
   { name: 'Tailwind CSS', Icon: SiTailwindcss },
-  { name: 'Next.js', Icon: SiNextdotjs },
   { name: 'Node.js', Icon: FaNodeJs },
-  { name: 'Redis', Icon: SiRedis },
   { name: 'Python', Icon: FaPython },
   { name: 'Express', Icon: SiExpress },
   { name: 'TypeScript', Icon: SiTypescript },
@@ -48,10 +46,11 @@ const SkillsMarquee = () => {
         {[...Array(2)].map((_, repeatIdx) => (
           <div
             key={repeatIdx}
+            aria-hidden={repeatIdx === 1 ? 'true' : undefined}
+            className="skills-marquee-track"
             style={{
               display: 'flex',
               alignItems: 'center',
-              animation: 'skillsMarquee 45s linear infinite',
               whiteSpace: 'nowrap',
               flexShrink: 0,
               gap: '48px',
@@ -86,9 +85,17 @@ const SkillsMarquee = () => {
       </div>
 
       <style>{`
+        .skills-marquee-track {
+          animation: skillsMarquee 45s linear infinite;
+        }
         @keyframes skillsMarquee {
           from { transform: translateX(0); }
           to   { transform: translateX(-100%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .skills-marquee-track {
+            animation-play-state: paused;
+          }
         }
       `}</style>
     </div>
