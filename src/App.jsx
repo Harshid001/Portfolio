@@ -12,6 +12,7 @@ import MainPortfolio from './MainPortfolio';
 import PortalTransitionProvider from './components/transition/PortalTransitionProvider';
 import { GridTransitionProvider } from './components/transition/GridTransitionContext';
 import GridOverlay from './components/transition/GridOverlay';
+import GhostCursor from './components/GhostCursor';
 
 
 function App() {
@@ -30,7 +31,7 @@ function App() {
 
   return (
     <CollabProvider>
-
+      <GhostCursor />
       <ReactionBurst />
 
 

@@ -79,6 +79,13 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /* Hide default cursor on desktop to use custom GhostCursor */
+  @media (min-width: 768px) {
+    * {
+      cursor: none !important;
+    }
+  }
   
   /* Hide scrollbar globally for Chrome, Safari and Opera */
   ::-webkit-scrollbar {
