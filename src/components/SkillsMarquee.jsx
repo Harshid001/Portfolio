@@ -44,16 +44,21 @@ const SkillsMarquee = () => {
         zIndex: 2, pointerEvents: 'none',
       }} />
 
-      {/* Track — duplicate the list 3× so it seamlessly loops */}
-      <div style={{
-        display: 'inline-flex',
-        animation: 'skillsMarquee 28s linear infinite',
-        whiteSpace: 'nowrap',
-        gap: '48px',
-        paddingRight: '48px',
-      }}>
-        {[...Array(3)].map((_, repeatIdx) => (
-          <span key={repeatIdx} style={{ display: 'inline-flex', alignItems: 'center', gap: '48px' }}>
+      {/* Seamless Infinite Marquee Track */}
+      <div style={{ display: 'flex', width: '100%', overflow: 'hidden' }}>
+        {[...Array(2)].map((_, repeatIdx) => (
+          <div
+            key={repeatIdx}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              animation: 'skillsMarquee 45s linear infinite',
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+              gap: '48px',
+              paddingRight: '48px', // Match the gap spacing for the seamless loop
+            }}
+          >
             {skillItems.map((item, idx) => (
               <span key={`${repeatIdx}-${idx}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '48px' }}>
                 <span
@@ -77,7 +82,7 @@ const SkillsMarquee = () => {
                 <span style={{ color: 'var(--color-paper)', opacity: 0.3, fontSize: '24px' }}>•</span>
               </span>
             ))}
-          </span>
+          </div>
         ))}
       </div>
 
