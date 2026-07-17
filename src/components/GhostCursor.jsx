@@ -115,11 +115,10 @@ const GhostCursor = () => {
 
   // Derive visual states
   const ringSize = 36;
-  const hoverScale = 2.5;
 
   return (
     <div style={{ opacity: isVisible ? 1 : 0, transition: 'opacity 0.3s ease', pointerEvents: 'none' }}>
-      {/* Trails — fade out on hover */}
+      {/* Trails */}
       {Array.from({ length: TRAIL_COUNT }).map((_, i) => (
         <div
           key={`trail-${i}`}
@@ -128,38 +127,16 @@ const GhostCursor = () => {
           style={{
             width: 4,
             height: 4,
-            borderRadius: '50%',
-            backgroundColor: `rgba(52, 211, 153, ${isHovering ? 0 : 0.3 - i * 0.06})`,
-            zIndex: 9998,
+            borderRadius: '0px',
+            backgroundColor: `rgba(255, 255, 255, ${0.4 - i * 0.08})`,
+            zIndex: 99998,
             transition: 'background-color 0.3s ease',
             mixBlendMode: 'difference'
           }}
         />
       ))}
 
-      {/* Radial glow ΓÇö appears on hover, emerges from cursor center */}
-      <motion.div
-        className="fixed top-0 left-0 pointer-events-none"
-        style={{
-          x: ringX,
-          y: ringY,
-          width: 80,
-          height: 80,
-          marginLeft: -40,
-          marginTop: -40,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(52, 211, 153, 0.15) 0%, rgba(52, 211, 153, 0) 70%)',
-          zIndex: 9997,
-          mixBlendMode: 'difference'
-        }}
-        animate={{
-          scale: isHovering ? 3 : 0,
-          opacity: isHovering ? 1 : 0,
-        }}
-        transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-      />
-
-      {/* Main ring cursor ΓÇö morphs circle ΓåÆ square on hover */}
+      {/* Main ring cursor — static size, shrinks on click */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none"
         style={{
@@ -169,76 +146,35 @@ const GhostCursor = () => {
           height: ringSize,
           marginLeft: -ringSize / 2,
           marginTop: -ringSize / 2,
-          zIndex: 9999,
+          zIndex: 99999,
           mixBlendMode: 'difference'
         }}
         animate={{
-          scale: isClicking ? 0.7 : isHovering ? hoverScale : 1,
-          borderRadius: isHovering ? '4px' : '50%',
-          borderColor: isHovering ? 'rgba(52, 211, 153, 0.6)' : 'rgba(52, 211, 153, 0.5)',
-          borderWidth: isHovering ? '1.5px' : '1.5px',
-          backgroundColor: isHovering ? 'rgba(52, 211, 153, 0.08)' : 'rgba(52, 211, 153, 0)',
-          boxShadow: isHovering
-            ? '0 0 20px rgba(52, 211, 153, 0.2), inset 0 0 15px rgba(52, 211, 153, 0.05)'
-            : '0 0 0px rgba(52, 211, 153, 0), inset 0 0 0px rgba(52, 211, 153, 0)',
+          scale: isClicking ? 0.7 : 1,
+          rotate: 45,
+          borderRadius: '0px',
+          borderColor: 'transparent',
+          borderWidth: '0px',
+          backgroundColor: '#FFFFFF',
+          boxShadow: 'none',
         }}
         transition={{
           type: 'spring',
           stiffness: 260,
           damping: 18,
-          borderRadius: { duration: 0.25, ease: 'easeInOut' },
-          backgroundColor: { duration: 0.2 },
-          boxShadow: { duration: 0.3 },
+          borderRadius: { duration: 0.25, ease: 'easeInOut' }
         }}
-      >
-        {/* Corner accents ΓÇö visible only on hover, emerge with scale */}
-        {isHovering && (
-          <>
-            <motion.span
-              className="absolute pointer-events-none"
-              style={{ top: -1, left: -1, width: 6, height: 6, borderTop: '2px solid rgba(52,211,153,0.8)', borderLeft: '2px solid rgba(52,211,153,0.8)' }}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0 }}
-              transition={{ duration: 0.2, delay: 0.05 }}
-            />
-            <motion.span
-              className="absolute pointer-events-none"
-              style={{ top: -1, right: -1, width: 6, height: 6, borderTop: '2px solid rgba(52,211,153,0.8)', borderRight: '2px solid rgba(52,211,153,0.8)' }}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0 }}
-              transition={{ duration: 0.2, delay: 0.1 }}
-            />
-            <motion.span
-              className="absolute pointer-events-none"
-              style={{ bottom: -1, left: -1, width: 6, height: 6, borderBottom: '2px solid rgba(52,211,153,0.8)', borderLeft: '2px solid rgba(52,211,153,0.8)' }}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0 }}
-              transition={{ duration: 0.2, delay: 0.1 }}
-            />
-            <motion.span
-              className="absolute pointer-events-none"
-              style={{ bottom: -1, right: -1, width: 6, height: 6, borderBottom: '2px solid rgba(52,211,153,0.8)', borderRight: '2px solid rgba(52,211,153,0.8)' }}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0 }}
-              transition={{ duration: 0.2, delay: 0.15 }}
-            />
-          </>
-        )}
-      </motion.div>
+      />
 
-      {/* Center dot ΓÇö hides on hover */}
+      {/* Center dot — remains visible */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none"
         style={{
           x: dotX, y: dotY, width: 7, height: 7, marginLeft: -3.5, marginTop: -3.5,
-          borderRadius: '50%', backgroundColor: '#34D399', zIndex: 9999,
+          borderRadius: '0px', backgroundColor: '#FFFFFF', zIndex: 99999,
           mixBlendMode: 'difference'
         }}
-        animate={{ scale: isHovering ? 0 : 1 }}
+        animate={{ scale: 1, rotate: 45 }}
         transition={{ type: 'spring', stiffness: 400, damping: 20 }}
       />
     </div>
