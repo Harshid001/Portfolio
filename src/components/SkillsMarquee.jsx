@@ -1,21 +1,23 @@
 import { motion } from 'framer-motion';
-import { FaReact, FaNodeJs, FaGitAlt, FaFigma, FaHtml5, FaCss3Alt, FaPython } from 'react-icons/fa';
-import { DiMongodb, DiJavascript1 } from 'react-icons/di';
-import { SiTypescript, SiTailwindcss, SiPostgresql, SiExpress, SiBlender, SiC, SiCplusplus } from 'react-icons/si';
+import { 
+  SiReact, SiJavascript, SiTailwindcss, SiNodedotjs, 
+  SiMongodb, SiPython, SiHtml5, SiCss3, SiExpress, 
+  SiTypescript, SiGit, SiFigma 
+} from 'react-icons/si';
 
 const skillItems = [
-  { name: 'React', Icon: FaReact },
-  { name: 'JavaScript', Icon: DiJavascript1 },
+  { name: 'React', Icon: SiReact },
+  { name: 'JavaScript', Icon: SiJavascript },
   { name: 'Tailwind CSS', Icon: SiTailwindcss },
-  { name: 'Node.js', Icon: FaNodeJs },
-  { name: 'MongoDB', Icon: DiMongodb },
-  { name: 'Python', Icon: FaPython },
-  { name: 'HTML5', Icon: FaHtml5 },
-  { name: 'CSS3', Icon: FaCss3Alt },
+  { name: 'Node.js', Icon: SiNodedotjs },
+  { name: 'MongoDB', Icon: SiMongodb },
+  { name: 'Python', Icon: SiPython },
+  { name: 'HTML5', Icon: SiHtml5 },
+  { name: 'CSS3', Icon: SiCss3 },
   { name: 'Express', Icon: SiExpress },
   { name: 'TypeScript', Icon: SiTypescript },
-  { name: 'Git', Icon: FaGitAlt },
-  { name: 'Figma', Icon: FaFigma }
+  { name: 'Git', Icon: SiGit },
+  { name: 'Figma', Icon: SiFigma }
 ];
 
 const SkillsMarquee = () => {
@@ -49,29 +51,32 @@ const SkillsMarquee = () => {
         display: 'inline-flex',
         animation: 'skillsMarquee 28s linear infinite',
         whiteSpace: 'nowrap',
-        gap: 0,
+        gap: '48px',
+        paddingRight: '48px',
       }}>
         {[...Array(3)].map((_, repeatIdx) => (
-          <span key={repeatIdx} style={{ display: 'inline-flex', alignItems: 'center', gap: 0 }}>
+          <span key={repeatIdx} style={{ display: 'inline-flex', alignItems: 'center', gap: '48px' }}>
             {skillItems.map((item, idx) => (
-              <span
-                key={`${repeatIdx}-${idx}`}
-                className="hover:scale-110 transition-transform duration-300"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  padding: '0 32px',
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '22px',
-                  fontWeight: 700,
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  color: idx % 3 === 0 ? 'var(--color-paper)' : 'var(--color-ink-3)',
-                }}
-              >
-                <item.Icon size={32} />
-                {item.name}
+              <span key={`${repeatIdx}-${idx}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '48px' }}>
+                <span
+                  className="hover:scale-110 transition-transform duration-300"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: '22px',
+                    fontWeight: 700,
+                    letterSpacing: '0.1em',
+                    textTransform: 'uppercase',
+                    color: 'var(--color-paper)',
+                  }}
+                >
+                  <item.Icon size={28} />
+                  {item.name}
+                </span>
+                {/* Visual Separator */}
+                <span style={{ color: 'var(--color-paper)', opacity: 0.3, fontSize: '24px' }}>•</span>
               </span>
             ))}
           </span>
@@ -81,7 +86,7 @@ const SkillsMarquee = () => {
       <style>{`
         @keyframes skillsMarquee {
           from { transform: translateX(0); }
-          to   { transform: translateX(-33.333%); }
+          to   { transform: translateX(-100%); }
         }
       `}</style>
     </div>
