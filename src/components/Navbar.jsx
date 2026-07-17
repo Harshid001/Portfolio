@@ -171,7 +171,14 @@ const Navbar = () => {
               alignItems: 'center'
             }}
           >
-            <span style={{ fontSize: '1.25em', display: 'flex', alignItems: 'center' }}>&lt;</span>
+            <motion.span 
+              initial={false}
+              animate={{ fontSize: isScrolledLogo ? '1em' : '1.25em' }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              style={{ display: 'flex', alignItems: 'center' }}
+            >
+              &lt;
+            </motion.span>
             <span>H</span>
             <motion.span
               initial={false}
@@ -196,7 +203,14 @@ const Navbar = () => {
             >
               {"oni"}
             </motion.span>
-            <span style={{ fontSize: '1.25em', display: 'flex', alignItems: 'center' }}>/&gt;</span>
+            <motion.span 
+              initial={false}
+              animate={{ fontSize: isScrolledLogo ? '1em' : '1.25em' }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              style={{ display: 'flex', alignItems: 'center' }}
+            >
+              /&gt;
+            </motion.span>
           </div>
         </div>
 
