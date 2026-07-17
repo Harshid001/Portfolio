@@ -84,25 +84,27 @@ const DotMaterialImpl = shaderMaterial(
 )
 extend({ DotMaterialImpl })
 
+const easeInOutCirc = (x) =>
+  x < 0.5
+    ? (1 - Math.sqrt(1 - Math.pow(2 * x, 2))) / 2
+    : (Math.sqrt(1 - Math.pow(-2 * x + 2, 2)) + 1) / 2
+
 function Scene() {
   const size = useThree((s) => s.size)
   const viewport = useThree((s) => s.viewport)
   const materialRef = useRef(null)
-  const camera = useThree((s) => s.camera)
-  const raycaster = useThree((s) => s.raycaster)
+  
   const rotation = 0
-  const gridSize = 80
+  
+  const isMobile = window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const gridSize = isMobile ? 40 : 80
 
   const [trail, onMove] = useTrailTexture({
     size: 512,
     radius: 0.25, // Increased radius to make it more responsive and visible
     maxAge: 400, // Make trail last a bit longer
     interpolate: 1,
-    ease: function easeInOutCirc(x) {
-      return x < 0.5
-        ? (1 - Math.sqrt(1 - Math.pow(2 * x, 2))) / 2
-        : (Math.sqrt(1 - Math.pow(-2 * x + 2, 2)) + 1) / 2
-    },
+    ease: easeInOutCirc,
   })
 
   const meshRef = useRef(null)
@@ -141,6 +143,8 @@ function Scene() {
   }, []);
 
   useEffect(() => {
+    if (isMobile) return;
+
     const el = document.getElementById('about')
     if (!el || !meshRef.current) return
 
@@ -175,7 +179,7 @@ function Scene() {
       el.removeEventListener('touchmove', handleMove)
       el.removeEventListener('touchstart', handleMove)
     }
-  }, [onMove, camera, raycaster])
+  }, [onMove, isMobile])
 
   const scale = Math.max(viewport.width, viewport.height) / 2
   return (
