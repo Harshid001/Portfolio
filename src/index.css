@@ -80,9 +80,9 @@
     scrollbar-width: none;
   }
 
-  /* Hide default cursor on desktop to use custom GhostCursor */
+  /* Hide default cursor only when the custom cursor is active */
   @media (min-width: 768px) {
-    * {
+    body.hide-cursor * {
       cursor: none !important;
     }
   }

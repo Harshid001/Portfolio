@@ -16,6 +16,7 @@ const GhostCursor = () => {
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const trailRefs = useRef([]);
 
   const dotX = useMotionValue(0);
@@ -38,12 +39,26 @@ const GhostCursor = () => {
     const mouse = { x: 0, y: 0 };
 
     const onMouseMove = (e) => {
+      if (!isVisible) {
+        setIsVisible(true);
+        document.body.classList.add('hide-cursor');
+      }
       mouse.x = e.clientX;
       mouse.y = e.clientY;
       dotX.set(e.clientX);
       dotY.set(e.clientY);
       ringX.set(e.clientX);
       ringY.set(e.clientY);
+    };
+
+    const handleMouseLeave = () => {
+      setIsVisible(false);
+      document.body.classList.remove('hide-cursor');
+    };
+
+    const handleMouseEnter = () => {
+      setIsVisible(true);
+      document.body.classList.add('hide-cursor');
     };
 
     const onMouseDown = () => {
@@ -80,6 +95,8 @@ const GhostCursor = () => {
     document.addEventListener('mouseover', handleMouseOver);
     document.addEventListener('mouseout', handleMouseOut);
     document.addEventListener('mousedown', onMouseDown);
+    document.documentElement.addEventListener('mouseleave', handleMouseLeave);
+    document.documentElement.addEventListener('mouseenter', handleMouseEnter);
     animFrame = requestAnimationFrame(animateTrail);
 
     return () => {
@@ -87,6 +104,9 @@ const GhostCursor = () => {
       document.removeEventListener('mouseover', handleMouseOver);
       document.removeEventListener('mouseout', handleMouseOut);
       document.removeEventListener('mousedown', onMouseDown);
+      document.documentElement.removeEventListener('mouseleave', handleMouseLeave);
+      document.documentElement.removeEventListener('mouseenter', handleMouseEnter);
+      document.body.classList.remove('hide-cursor');
       cancelAnimationFrame(animFrame);
     };
   }, [isTouchDevice, dotX, dotY, ringX, ringY]);
@@ -98,8 +118,8 @@ const GhostCursor = () => {
   const hoverScale = 2.5;
 
   return (
-    <>
-      {/* Trails ΓÇö fade out on hover */}
+    <div style={{ opacity: isVisible ? 1 : 0, transition: 'opacity 0.3s ease', pointerEvents: 'none' }}>
+      {/* Trails — fade out on hover */}
       {Array.from({ length: TRAIL_COUNT }).map((_, i) => (
         <div
           key={`trail-${i}`}
@@ -221,7 +241,7 @@ const GhostCursor = () => {
         animate={{ scale: isHovering ? 0 : 1 }}
         transition={{ type: 'spring', stiffness: 400, damping: 20 }}
       />
-    </>
+    </div>
   );
 };
 
