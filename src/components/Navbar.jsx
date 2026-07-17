@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
-import { HiMenuAlt3, HiX, HiMoon, HiSun } from 'react-icons/hi';
+import { HiMenuAlt3, HiX, HiOutlineMoon, HiOutlineSun } from 'react-icons/hi';
 // CHANGED: wire the logo into the cinematic portal transition.
 import { usePortalTransition } from './transition/PortalTransitionProvider';
 import { useGridTransition } from './transition/GridTransitionContext';
@@ -300,7 +300,7 @@ const Navbar = () => {
               transition={{ duration: 0.5, ease: "easeInOut" }}
               className="flex items-center justify-center"
             >
-              {isDark ? <HiMoon size={18} /> : <HiSun size={18} />}
+              {isDark ? <HiOutlineMoon size={20} strokeWidth={1.5} /> : <HiOutlineSun size={20} strokeWidth={1.5} />}
             </motion.div>
           </motion.button>
 

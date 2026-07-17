@@ -3,9 +3,19 @@ import { FaReact, FaNodeJs, FaGitAlt, FaFigma, FaHtml5, FaCss3Alt, FaPython } fr
 import { DiMongodb, DiJavascript1 } from 'react-icons/di';
 import { SiTypescript, SiTailwindcss, SiPostgresql, SiExpress, SiBlender, SiC, SiCplusplus } from 'react-icons/si';
 
-const skillNames = [
-  'React', 'JavaScript', 'Tailwind CSS', 'Node.js',
-  'MongoDB', 'Python', 'HTML / CSS', 'Express',
+const skillItems = [
+  { name: 'React', Icon: FaReact },
+  { name: 'JavaScript', Icon: DiJavascript1 },
+  { name: 'Tailwind CSS', Icon: SiTailwindcss },
+  { name: 'Node.js', Icon: FaNodeJs },
+  { name: 'MongoDB', Icon: DiMongodb },
+  { name: 'Python', Icon: FaPython },
+  { name: 'HTML5', Icon: FaHtml5 },
+  { name: 'CSS3', Icon: FaCss3Alt },
+  { name: 'Express', Icon: SiExpress },
+  { name: 'TypeScript', Icon: SiTypescript },
+  { name: 'Git', Icon: FaGitAlt },
+  { name: 'Figma', Icon: FaFigma }
 ];
 
 const SkillsMarquee = () => {
@@ -43,23 +53,25 @@ const SkillsMarquee = () => {
       }}>
         {[...Array(3)].map((_, repeatIdx) => (
           <span key={repeatIdx} style={{ display: 'inline-flex', alignItems: 'center', gap: 0 }}>
-            {skillNames.map((name, idx) => (
+            {skillItems.map((item, idx) => (
               <span
                 key={`${repeatIdx}-${idx}`}
+                className="hover:scale-110 transition-transform duration-300"
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '10px',
-                  padding: '0 16px',
+                  gap: '12px',
+                  padding: '0 32px',
                   fontFamily: 'var(--font-heading)',
                   fontSize: '22px',
                   fontWeight: 700,
-                  letterSpacing: '0.18em',
+                  letterSpacing: '0.1em',
                   textTransform: 'uppercase',
                   color: idx % 3 === 0 ? 'var(--color-paper)' : 'var(--color-ink-3)',
                 }}
               >
-                {name}
+                <item.Icon size={32} />
+                {item.name}
               </span>
             ))}
           </span>
