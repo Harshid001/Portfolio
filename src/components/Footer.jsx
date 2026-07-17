@@ -6,20 +6,27 @@ const Footer = () => {
       
       {/* Marquee Strip Top */}
       <div 
-        className="w-full overflow-hidden whitespace-nowrap py-3"
+        className="w-full overflow-hidden whitespace-nowrap py-3 flex"
         style={{ 
           borderBottom: '2px solid var(--color-ink)',
           backgroundColor: 'var(--color-paper)',
           color: 'var(--color-ink-3)'
         }}
       >
-        <div style={{ display: 'inline-block', animation: 'marquee 25s linear infinite' }}>
-          {[...Array(3)].map((_, i) => (
-            <span key={i} style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(14px, 4vw, 20px)', paddingRight: '12px' }}>
-              AVAILABLE FOR WORK · FULL STACK DEVELOPER · REACT · NODE.JS · 
-            </span>
-          ))}
-        </div>
+        {[...Array(2)].map((_, repeatIdx) => (
+          <div 
+            key={repeatIdx}
+            aria-hidden={repeatIdx === 1 ? 'true' : undefined}
+            className="skills-marquee-track"
+            style={{ display: 'flex', whiteSpace: 'nowrap', flexShrink: 0 }}
+          >
+            {[...Array(4)].map((_, i) => (
+              <span key={i} style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(14px, 4vw, 20px)', paddingRight: '12px' }}>
+                AVAILABLE FOR WORK · FULL STACK DEVELOPER · REACT · NODE.JS · 
+              </span>
+            ))}
+          </div>
+        ))}
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
