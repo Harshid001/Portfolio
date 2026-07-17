@@ -122,7 +122,7 @@ const Contact = () => {
                   href={social.link}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex justify-between items-center py-4 cursor-none transition-colors px-2"
+                  className="flex justify-between items-center py-4 transition-colors px-2"
                   style={{ borderBottom: '1px solid var(--color-ink-3)', fontFamily: 'var(--font-mono)', fontSize: '14px', fontWeight: 'bold' }}
                   onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-ink)'; e.currentTarget.style.color = 'var(--color-paper)'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--color-ink)'; }}
@@ -188,7 +188,7 @@ const Contact = () => {
                     type="submit"
                     disabled={isSubmitting}
                     aria-busy={isSubmitting}
-                    className={`w-full flex items-center justify-center gap-3 transition-colors ${isSubmitting ? 'cursor-not-allowed opacity-70' : 'cursor-none btn-primary'}`}
+                    className={`w-full flex items-center justify-center gap-3 transition-colors ${isSubmitting ? 'cursor-not-allowed opacity-70' : 'btn-primary'}`}
                     style={{
                       padding: '16px',
                       fontFamily: 'var(--font-mono)',

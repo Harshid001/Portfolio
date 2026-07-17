@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { CollabProvider } from './context/CollabContext';
-import CollabCursor from './components/CollabCursor';
-import GhostCursors from './components/GhostCursors';
+
 import LiveBar from './components/LiveBar';
 import ReactionBurst from './components/ReactionBurst';
 import IntroAnimation from './components/IntroAnimation';
@@ -31,8 +30,7 @@ function App() {
 
   return (
     <CollabProvider>
-      <CollabCursor />
-      {!isMobile && <GhostCursors />}
+
       <ReactionBurst />
 
 

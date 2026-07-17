@@ -52,7 +52,7 @@ const About = () => {
               whileTap={{ scale: 0.98 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.6 }}
-              className="relative w-full max-w-sm lg:max-w-[420px] aspect-[4/5] group cursor-crosshair"
+              className="relative w-full max-w-sm lg:max-w-[420px] aspect-[4/5] group"
             >
               {/* GPU-accelerated brutalist shadow */}
               <div 

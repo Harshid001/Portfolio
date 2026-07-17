@@ -207,7 +207,7 @@ const HackathonSection = () => {
           {hackathonDetails.map((hack, i) => (
             <div 
               key={i}
-              className="flex flex-col sm:flex-row sm:items-center justify-between p-6 brutal-border transition-colors duration-300 group cursor-crosshair"
+              className="flex flex-col sm:flex-row sm:items-center justify-between p-6 brutal-border transition-colors duration-300 group"
               style={{ backgroundColor: 'var(--color-paper-3)', color: 'var(--color-ink)' }}
               onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-ink)'; e.currentTarget.style.color = 'var(--color-paper)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-paper-3)'; e.currentTarget.style.color = 'var(--color-ink)'; }}
@@ -244,7 +244,7 @@ const HackathonSection = () => {
                 borderBottom: i < 3 ? '2px solid var(--color-ink)' : 'none',
                 position: 'relative',
                 overflow: 'hidden',
-                cursor: 'crosshair',
+
                 backgroundColor: 'var(--color-paper-2)',
               }}
               initial={{ opacity: 0, y: 40 }}
@@ -322,7 +322,7 @@ const HackathonSection = () => {
             return (
               <motion.div
                 key={i}
-                className="relative group cursor-crosshair"
+                className="relative group"
                 style={{ aspectRatio: '1/1' }}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -369,7 +369,7 @@ const CertificateCard = ({ cert, index }) => {
       transition={{ duration: 0.6, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -8, rotate: 0, transition: { duration: 0.2 } }}
       style={{
-        cursor: 'crosshair',
+
         position: 'relative',
       }}
     >

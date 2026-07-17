@@ -43,7 +43,7 @@ const ProjectShowcase = ({ project, index }) => {
                        href={project.live} 
                        target="_blank" 
                        rel="noreferrer" 
-                       className="flex items-center gap-2 px-6 py-3 cursor-none transition-all duration-300"
+                       className="flex items-center gap-2 px-6 py-3 transition-all duration-300"
                        style={{
                          border: '1px solid var(--color-paper)',
                          backgroundColor: 'var(--color-paper)',
@@ -71,7 +71,7 @@ const ProjectShowcase = ({ project, index }) => {
                        href={project.github} 
                        target="_blank" 
                        rel="noreferrer" 
-                       className="flex items-center gap-2 px-6 py-3 cursor-none transition-all duration-300"
+                       className="flex items-center gap-2 px-6 py-3 transition-all duration-300"
                        style={{
                          border: '1px solid var(--color-paper)',
                          backgroundColor: 'var(--color-paper)',

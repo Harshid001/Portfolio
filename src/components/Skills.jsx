@@ -25,7 +25,7 @@ const SkillItem = ({ skill }) => {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
-      className="group relative cursor-none z-10 hover:z-20"
+      className="group relative z-10 hover:z-20"
       style={{ height: '240px' }}
     >
       {/* Static Brutalist Shadow */}

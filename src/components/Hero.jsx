@@ -61,8 +61,12 @@
             <motion.div variants={fadeUp} className="mb-8">
               <span className="section-label flex items-center gap-3">
                 <span 
-                  className="w-2.5 h-2.5 bg-red-600 block rounded-full" 
-                  style={{ backgroundColor: 'var(--color-red)', animation: 'pulse-dot 1.5s infinite' }} 
+                  className="w-2.5 h-2.5 block rounded-full" 
+                  style={{ 
+                    backgroundColor: '#22C55E', 
+                    boxShadow: '0 0 12px 2px rgba(34, 197, 94, 0.4)',
+                    animation: 'pulse-dot 2s infinite ease-in-out' 
+                  }} 
                 />
                 AVAILABLE FOR WORK
               </span>
@@ -104,14 +108,14 @@
                 href="#projects" 
                 onClick={(e) => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView(); }}
                 whileTap={{ scale: 0.95 }}
-                className="btn-primary cursor-none h-[56px] w-full lg:w-auto flex items-center justify-center">
+                className="btn-primary h-[56px] w-full lg:w-auto flex items-center justify-center">
                 VIEW PROJECTS
               </motion.a>
               <motion.a 
                 href="#contact" 
                 onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView(); }}
                 whileTap={{ scale: 0.95 }}
-                className="btn-secondary cursor-none h-[56px] w-full lg:w-auto flex items-center justify-center lg:-ml-[2px]">
+                className="btn-secondary h-[56px] w-full lg:w-auto flex items-center justify-center lg:-ml-[2px]">
                 CONTACT ME
               </motion.a>
               <motion.a 
@@ -119,7 +123,7 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 whileTap={{ scale: 0.95 }}
-                className="btn-secondary cursor-none h-[56px] w-full lg:w-auto flex items-center justify-center lg:-ml-[2px]">
+                className="btn-secondary h-[56px] w-full lg:w-auto flex items-center justify-center lg:-ml-[2px]">
                 DOWNLOAD RESUME
               </motion.a>
             </motion.div>
@@ -137,7 +141,7 @@
                   target="_blank" 
                   rel="noreferrer"
                   whileTap={{ scale: 0.9, rotate: 5 }}
-                  className="w-[44px] h-[44px] flex items-center justify-center text-xl cursor-none transition-all brutal-border" 
+                  className="w-[44px] h-[44px] flex items-center justify-center text-xl transition-all brutal-border" 
                   style={{ backgroundColor: 'var(--color-paper)', color: 'var(--color-ink)' }}
                   onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-ink)'; e.currentTarget.style.color = 'var(--color-white)'; e.currentTarget.style.transform = 'translateY(-4px)'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-paper)'; e.currentTarget.style.color = 'var(--color-ink)'; e.currentTarget.style.transform = 'translateY(0)'; }}

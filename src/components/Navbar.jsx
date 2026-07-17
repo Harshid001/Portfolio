@@ -36,18 +36,10 @@ const Navbar = () => {
   });
   const { scrollY } = useScroll();
 
-  // ---- Logo: one-time boot-up typewriter on route change ----
-  const [logoText, setLogoText] = useState('');
-  useEffect(() => {
-    setLogoText('');
-    let i = 0;
-    const interval = setInterval(() => {
-      i++;
-      setLogoText(HOME_LABEL.slice(0, i));
-      if (i >= HOME_LABEL.length) clearInterval(interval);
-    }, 45);
-    return () => clearInterval(interval);
-  }, [location.pathname]);
+  // ---- Logo: scroll-triggered morph animation ----
+  const [isScrolledLogo, setIsScrolledLogo] = useState(false);
+  // ---- Nav slider state ----
+  const [hoveredNav, setHoveredNav] = useState(null);
 
   // ---- Logo: pointer-driven parallax for the hover caption ----
   // Written directly to CSS custom properties via the ref (not React state)
@@ -82,13 +74,11 @@ const Navbar = () => {
   const logoCaption = 'Click to Level Up';
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    const prev = scrollY.getPrevious();
-    if (latest < 80) {
-      setNavY(0);
-    } else if (latest > prev && latest > 150) {
-      setNavY(-100);
-    } else {
-      setNavY(0);
+    // Keep nav visible at all times by keeping navY at 0
+    setNavY(0);
+    // Anthropic-style logo shrink at ~25% of viewport height
+    if (typeof window !== 'undefined') {
+      setIsScrolledLogo(latest > window.innerHeight * 0.25);
     }
   });
 
@@ -160,137 +150,155 @@ const Navbar = () => {
     <motion.nav
       animate={{ y: isTransitioning ? -100 : navY }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
-      className="fixed top-0 left-0 w-full z-50 flex items-center nav-dots"
+      className="fixed top-0 left-0 w-full z-50 flex items-center backdrop-blur-md"
       style={{
-        height: '60px',
-        backgroundColor: 'var(--color-paper)',
-        borderBottom: `${isScrolled ? '3px' : '2px'} solid var(--color-ink)`
+        height: '75px',
+        backgroundColor: 'color-mix(in srgb, var(--color-paper) 85%, transparent)',
+        borderBottom: `${isScrolled ? '1px' : '0px'} solid var(--color-ink-3)`
       }}
     >
-      <div className="w-full max-w-7xl mx-auto pl-4 sm:pl-6 lg:pl-8 pr-20 md:pr-28 flex justify-between items-center h-full">
-        <div
-          className="logo-base select-none" 
-          style={{ 
-            fontFamily: 'var(--font-display)', 
-            fontSize: '1.5rem', 
-            color: 'var(--color-ink)',
-            display: 'inline-flex',
-            alignItems: 'center'
-          }}
-        >
-          {logoText}
-          <span className="logo-cursor" style={{ marginLeft: '2px', animation: 'blink 1s steps(1) infinite' }}>|</span>
-        </div>
-
-        <div className="hidden md:flex items-center h-full">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              onClick={(e) => scrollTo(e, link.href)}
-              className="h-full flex items-center px-5 cursor-none transition-all duration-100"
-              style={{
-                fontFamily: 'var(--font-body)',
-                fontWeight: 700,
-                fontSize: '13px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                color: activeSection === link.href.slice(1) ? 'var(--color-ink)' : 'var(--color-ink-2)',
-                borderBottom: activeSection === link.href.slice(1) ? '2px solid var(--color-ink)' : '2px solid transparent',
-                transform: clickedLink === link.href ? 'scale(0.92)' : 'scale(1)',
-                opacity: clickedLink === link.href ? 0.8 : 1
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-full relative">
+        {/* LEFT SECTION: LOGO */}
+        <div className="flex-1 flex justify-start items-center">
+          <div
+            className="logo-base select-none" 
+            style={{ 
+              fontFamily: 'var(--font-display)', 
+              fontSize: '1.3rem', 
+              fontWeight: 600,
+              color: 'var(--color-ink)',
+              display: 'inline-flex',
+              alignItems: 'center'
+            }}
+          >
+            <span style={{ fontSize: '1.25em', display: 'flex', alignItems: 'center' }}>&lt;</span>
+            <span>H</span>
+            <motion.span
+              initial={false}
+              animate={{ 
+                width: isScrolledLogo ? 0 : "auto", 
+                opacity: isScrolledLogo ? 0 : 1
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-red)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = activeSection === link.href.slice(1) ? 'var(--color-ink)' : 'var(--color-ink-2)'; }}
+              style={{ overflow: "hidden", display: "inline-flex", whiteSpace: "pre" }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
-              {link.name}
-            </a>
-          ))}
-          <a
-            href="/resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-secondary cursor-none ml-4 h-[40px] flex items-center"
-            style={{ padding: '0 24px' }}
-          >
-            RESUME
-          </a>
-          <a
-            href="#contact"
-            onClick={(e) => scrollTo(e, '#contact')}
-            className="btn-primary cursor-none ml-4 h-[40px] flex items-center"
-            style={{ padding: '0 24px' }}
-          >
-            CONTACT
-          </a>
+              {"arshid "}
+            </motion.span>
+            <span>S</span>
+            <motion.span
+              initial={false}
+              animate={{ 
+                width: isScrolledLogo ? 0 : "auto", 
+                opacity: isScrolledLogo ? 0 : 1
+              }}
+              style={{ overflow: "hidden", display: "inline-flex", whiteSpace: "pre" }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {"oni"}
+            </motion.span>
+            <span style={{ fontSize: '1.25em', display: 'flex', alignItems: 'center' }}>/&gt;</span>
+          </div>
         </div>
 
-        <div className="flex items-center md:hidden gap-4">
+        {/* CENTER SECTION: NAVIGATION LINKS */}
+        <div 
+          className="hidden lg:flex justify-center items-center h-full gap-2 xl:gap-4 shrink-0"
+          onMouseLeave={() => setHoveredNav(null)}
+        >
+          {navLinks.map((link) => {
+            const isActive = activeSection === link.href.slice(1);
+            const isHovered = hoveredNav === link.name;
+            const showSlider = hoveredNav ? isHovered : isActive;
+
+            return (
+              <a
+                key={link.name}
+                href={link.href}
+                onClick={(e) => scrollTo(e, link.href)}
+                onMouseEnter={() => setHoveredNav(link.name)}
+                className="relative flex items-center justify-center transition-all duration-100"
+                style={{
+                  padding: '8px 16px',
+                  fontFamily: 'var(--font-body)',
+                  fontWeight: 600,
+                  fontSize: '13px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                  color: (isActive || isHovered) ? 'var(--color-ink)' : 'var(--color-ink-2)',
+                  transform: clickedLink === link.href ? 'scale(0.92)' : 'scale(1)',
+                }}
+              >
+                {showSlider && (
+                  <motion.div
+                    layoutId="navSlider"
+                    className="absolute inset-0 z-[-1]"
+                    style={{ 
+                      backgroundColor: 'var(--color-ink)', 
+                      opacity: 0.08,
+                      borderRadius: '0px' /* Square box as requested */
+                    }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10 transition-colors duration-200" style={{ color: isHovered ? 'var(--color-red)' : (isActive ? 'var(--color-ink)' : 'var(--color-ink-2)') }}>{link.name}</span>
+              </a>
+            );
+          })}
+        </div>
+
+        {/* RIGHT SECTION: ACTIONS */}
+        <div className="flex-1 flex justify-end items-center gap-6 sm:gap-8 translate-x-2 lg:translate-x-6">
+          <div className="hidden md:flex items-center gap-6 sm:gap-8">
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-secondary h-[40px] flex items-center justify-center transition-transform hover:scale-[1.02]"
+              style={{ padding: '0 32px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px', letterSpacing: '0.1em' }}
+            >
+              RESUME
+            </a>
+            <a
+              href="#contact"
+              onClick={(e) => scrollTo(e, '#contact')}
+              className="btn-primary h-[40px] flex items-center justify-center transition-transform hover:scale-[1.02]"
+              style={{ padding: '0 32px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px', letterSpacing: '0.1em' }}
+            >
+              CONTACT
+            </a>
+          </div>
+
+          {/* THEME TOGGLE (Visible everywhere) */}
+          <motion.button
+            onClick={toggleTheme}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-[40px] h-[40px] rounded-full flex items-center justify-center border-2 transition-colors"
+            style={{ 
+              borderColor: 'var(--color-ink)', 
+              backgroundColor: 'var(--color-paper-2)',
+              color: 'var(--color-ink)' 
+            }}
+            aria-label="Toggle Dark Mode"
+          >
+            <motion.div
+              animate={{ rotate: isDark ? 180 : 0 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+              className="flex items-center justify-center"
+            >
+              {isDark ? <HiMoon size={18} /> : <HiSun size={18} />}
+            </motion.div>
+          </motion.button>
+
+          {/* MOBILE HAMBURGER MENU */}
           <button
-            className="w-11 h-11 flex items-center justify-center text-3xl cursor-none"
+            className="w-10 h-10 flex md:hidden items-center justify-end text-3xl transition-transform active:scale-95"
             style={{ color: 'var(--color-ink)' }}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <HiX /> : <HiMenuAlt3 />}
           </button>
         </div>
-      </div>
-
-      {/* Theme Toggle - unchanged, present on every page */}
-      <div className="absolute right-4 md:right-8 lg:right-10 top-0 h-full flex items-center z-50">
-        <button
-          onClick={toggleTheme}
-          className="hidden md:block relative cursor-none transition-colors border-2"
-          style={{
-            width: '56px',
-            height: '28px',
-            borderRadius: '14px',
-            backgroundColor: 'var(--color-paper-2)',
-            borderColor: 'var(--color-ink)'
-          }}
-          aria-label="Toggle Dark Mode"
-        >
-          <motion.div
-            className="absolute z-0 w-[22px] h-[22px] rounded-full"
-            style={{ backgroundColor: 'var(--color-ink)', top: '1px', left: '1px' }}
-            initial={false}
-            animate={{ x: isDark ? 28 : 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          />
-          <div className="absolute left-0 top-0 w-[24px] h-[24px] flex items-center justify-center z-10 pointer-events-none">
-            <HiSun className="text-[13px] transition-colors duration-300" style={{ color: !isDark ? 'var(--color-paper)' : 'var(--color-ink)' }} />
-          </div>
-          <div className="absolute right-0 top-0 w-[24px] h-[24px] flex items-center justify-center z-10 pointer-events-none">
-            <HiMoon className="text-[13px] transition-colors duration-300" style={{ color: isDark ? 'var(--color-paper)' : 'var(--color-ink)' }} />
-          </div>
-        </button>
-
-        <button
-          onClick={toggleTheme}
-          className="md:hidden relative cursor-none transition-colors border-2"
-          style={{
-            width: '52px',
-            height: '26px',
-            borderRadius: '13px',
-            backgroundColor: 'var(--color-paper-2)',
-            borderColor: 'var(--color-ink)'
-          }}
-          aria-label="Toggle Dark Mode"
-        >
-          <motion.div
-            className="absolute z-0 w-5 h-5 rounded-full"
-            style={{ backgroundColor: 'var(--color-ink)', top: '1px', left: '1px' }}
-            initial={false}
-            animate={{ x: isDark ? 26 : 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          />
-          <div className="absolute left-0 top-0 w-[22px] h-[22px] flex items-center justify-center z-10 pointer-events-none">
-            <HiSun className="text-[12px] transition-colors duration-300" style={{ color: !isDark ? 'var(--color-paper)' : 'var(--color-ink)' }} />
-          </div>
-          <div className="absolute right-0 top-0 w-[22px] h-[22px] flex items-center justify-center z-10 pointer-events-none">
-            <HiMoon className="text-[12px] transition-colors duration-300" style={{ color: isDark ? 'var(--color-paper)' : 'var(--color-ink)' }} />
-          </div>
-        </button>
       </div>
 
       <AnimatePresence>
@@ -300,12 +308,12 @@ const Navbar = () => {
             animate={{ clipPath: "inset(0 0 0% 0)" }}
             exit={{ clipPath: "inset(0 0 100% 0)" }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="fixed inset-0 flex flex-col p-10 z-[100] md:hidden cursor-none"
+            className="fixed inset-0 flex flex-col p-10 z-[100] md:hidden"
             style={{ backgroundColor: 'var(--color-ink)' }}
           >
             <div className="flex justify-end mb-12">
               <button
-                className="text-4xl cursor-none"
+                className="text-4xl"
                 style={{ color: 'var(--color-paper)' }}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
@@ -321,7 +329,7 @@ const Navbar = () => {
                   whileTap={{ scale: 0.9, x: 10 }}
                   href={link.href}
                   onClick={(e) => scrollTo(e, link.href)}
-                  className="text-4xl sm:text-5xl cursor-none transition-all duration-100"
+                  className="text-4xl sm:text-5xl transition-all duration-100"
                   style={{
                     fontFamily: 'var(--font-display)',
                     color: activeSection === link.href.slice(1) ? 'var(--color-red)' : 'var(--color-paper)',
@@ -341,7 +349,7 @@ const Navbar = () => {
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-4xl sm:text-5xl cursor-none transition-colors mt-4"
+                className="text-4xl sm:text-5xl transition-colors mt-4"
                 style={{
                   fontFamily: 'var(--font-display)',
                   color: 'var(--color-ink)',
@@ -397,17 +405,7 @@ const Navbar = () => {
           opacity: 1;
           transform: translate3d(calc(var(--mx) * 10px), 0, 0);
         }
-        .logo-cursor {
-          display: inline-block;
-          margin-left: 2px;
-          animation: blink 1s steps(1) infinite;
-        }
-        @keyframes blink {
-          0%, 50% { opacity: 1; }
-          50.01%, 100% { opacity: 0; }
-        }
         @media (prefers-reduced-motion: reduce) {
-          .logo-cursor { animation: none; opacity: 1; }
           .logo-base, .logo-caption { transition: none; }
         }
       `}</style>

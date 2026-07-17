@@ -27,8 +27,8 @@ const projects = [
   },
   { 
     title: "PINCODE", 
-    description: "Finding accurate Indian postal data requires navigating outdated government portals. Built a full-stack pincode directory with search, state/district/taluk filtering, and dashboard analytics powered by MongoDB aggregation pipelines. Serves 150,000+ pincode records with sub-200ms search response times.", 
-    tech: ["React", "Node.js", "MongoDB", "Express"], 
+    description: "Finding accurate Indian postal data requires navigating outdated government portals. Built a full-stack pincode directory with bulk processing, geolocation services, and RESTful APIs using Python, Flask, and PostgreSQL. Features a React frontend and Docker containerization for reliable deployment.", 
+    tech: ["React", "Python", "Flask", "PostgreSQL", "Docker"], 
     github: "https://github.com/Harshid001/PINCODE", 
     live: "https://pincode-delta.vercel.app", 
     image: pincodeImg,
