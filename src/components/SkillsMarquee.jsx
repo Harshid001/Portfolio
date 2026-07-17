@@ -1,17 +1,16 @@
 import { motion } from 'framer-motion';
-import { FaReact, FaNodeJs, FaGitAlt, FaFigma, FaHtml5, FaCss3Alt, FaPython } from 'react-icons/fa';
-import { DiMongodb, DiJavascript1 } from 'react-icons/di';
-import { SiTypescript, SiTailwindcss, SiExpress } from 'react-icons/si';
+import { FaReact, FaNodeJs, FaGitAlt, FaFigma, FaPython } from 'react-icons/fa';
+import { DiJavascript1 } from 'react-icons/di';
+import { SiTypescript, SiTailwindcss, SiExpress, SiNextdotjs, SiRedis } from 'react-icons/si';
 
 const skillItems = [
   { name: 'React', Icon: FaReact },
   { name: 'JavaScript', Icon: DiJavascript1 },
   { name: 'Tailwind CSS', Icon: SiTailwindcss },
+  { name: 'Next.js', Icon: SiNextdotjs },
   { name: 'Node.js', Icon: FaNodeJs },
-  { name: 'MongoDB', Icon: DiMongodb },
+  { name: 'Redis', Icon: SiRedis },
   { name: 'Python', Icon: FaPython },
-  { name: 'HTML5', Icon: FaHtml5 },
-  { name: 'CSS3', Icon: FaCss3Alt },
   { name: 'Express', Icon: SiExpress },
   { name: 'TypeScript', Icon: SiTypescript },
   { name: 'Git', Icon: FaGitAlt },
