@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import SectionPresence from './SectionPresence';
 
 const MotionDiv = motion.div;
 
@@ -91,7 +90,6 @@ const Contact = () => {
 
   return (
     <section id="contact" className="py-24 relative border-t-2" style={{ backgroundColor: 'var(--color-paper-2)', borderColor: 'var(--color-ink)' }}>
-      <SectionPresence sectionId="contact" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">

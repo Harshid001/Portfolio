@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import SectionPresence from './SectionPresence';
 
 import hackathon1 from '../assets/hackathon/hackathon1.jpg';
 import hackathon2 from '../assets/hackathon/hackathon2.jpg';
@@ -522,7 +521,6 @@ const CertificatesSection = () => (
 /* ─── Main Export ─── */
 const Achievements = () => (
   <>
-    <SectionPresence sectionId="hackathons" />
     <HackathonSection />
     <CertificatesSection />
   </>

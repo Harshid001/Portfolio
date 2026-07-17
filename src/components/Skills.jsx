@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import { FaReact, FaNodeJs, FaPython } from 'react-icons/fa';
 import { DiJavascript1 } from 'react-icons/di';
 import { SiTailwindcss, SiExpress, SiNextdotjs, SiRedis } from 'react-icons/si';
-import SectionPresence from './SectionPresence';
 import GrainText from './GrainText';
 
 const skills = [
@@ -139,7 +138,6 @@ const Skills = () => {
       className="py-24 relative border-t-2"
       style={{ backgroundColor: 'var(--color-paper)', borderColor: 'var(--color-ink)' }}
     >
-      <SectionPresence sectionId="skills" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div

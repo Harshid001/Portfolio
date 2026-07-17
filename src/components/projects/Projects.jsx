@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import SectionPresence from '../SectionPresence';
 import ProjectShowcase from './ProjectShowcase';
 import ProjectNavigation from './ProjectNavigation';
 import './projects.css';

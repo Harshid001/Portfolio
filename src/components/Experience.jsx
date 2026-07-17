@@ -1,7 +1,6 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import SectionPresence from './SectionPresence';
 import './Experience.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -116,7 +115,6 @@ const Experience = () => {
       className="exp-section relative w-full flex flex-col justify-start overflow-hidden pt-16 pb-24"
       style={{ backgroundColor: 'var(--color-paper)' }}
     >
-      <SectionPresence sectionId="experience" />
       
       <div className="exp-parallax-bg absolute inset-0 pointer-events-none opacity-40 z-0" />
 

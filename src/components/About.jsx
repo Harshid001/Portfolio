@@ -1,7 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import heroImg from '../assets/Profile.png';
-import SectionPresence from './SectionPresence';
 import GrainText from './GrainText';
 
 const DotShaderBackground = lazy(() => import('./DotShaderBackground'));
@@ -9,7 +8,6 @@ const DotShaderBackground = lazy(() => import('./DotShaderBackground'));
 const About = () => {
   return (
     <section id="about" className="relative py-24 border-t-2" style={{ backgroundColor: 'var(--color-paper)', borderColor: 'var(--color-ink)' }}>
-      <SectionPresence sectionId="about" />
 
       {/* 3D DOT SHADER BACKGROUND */}
       <Suspense fallback={null}>

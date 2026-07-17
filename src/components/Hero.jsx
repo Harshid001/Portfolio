@@ -1,7 +1,6 @@
   import { useState, useEffect, lazy, Suspense } from 'react';
   import { motion } from 'framer-motion';
   import { FaGithub, FaLinkedin, FaYoutube, FaTwitter } from 'react-icons/fa';
-  import SectionPresence from './SectionPresence';
   import ParticleMorph from './ParticleMorph';
 
   const ShaderBackground = lazy(() => import('./ShaderBackground'));
@@ -31,7 +30,6 @@
 
     return (
       <section id="home" className="relative min-h-screen flex items-center pt-16 overflow-hidden">
-        <SectionPresence sectionId="home" />
 
         {/* 3D SHADER BACKGROUND */}
         <Suspense fallback={null}>
