@@ -1,5 +1,3 @@
-'use client';
-
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import SectionPresence from './SectionPresence';
@@ -32,7 +30,6 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('[Frontend] Form submission initiated.');
 
     const payload = {
       name: formData.name.trim(),
@@ -42,43 +39,35 @@ const Contact = () => {
 
     const validationError = validateForm(payload);
     if (validationError) {
-      console.warn('[Frontend] Form validation failed:', validationError);
       setStatus({ type: "error", message: validationError });
       return;
     }
 
-    console.log('[Frontend] Form validation passed. Payload:', payload);
     setIsSubmitting(true);
     setStatus({ type: "sending", message: "" });
 
     try {
-      console.log('[Frontend] Sending fetch request to /api/contact...');
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
 
-      console.log('[Frontend] Received response with status:', response.status);
       const result = await response.json().catch(() => ({}));
-      console.log('[Frontend] Response body parsed:', result);
 
       if (!response.ok || !result.success) {
         throw new Error(result.error || "Failed to send message.");
       }
 
-      console.log('[Frontend] Message successfully sent!');
       setFormData(initialFormData);
       setStatus({ type: "sent", message: "Message sent successfully!" });
     } catch (error) {
-      console.error('[Frontend] Error caught during form submission:', error);
       setStatus({
         type: "error",
         message: error instanceof Error ? error.message : "Failed to send message."
       });
     } finally {
       setIsSubmitting(false);
-      console.log('[Frontend] Form submission process completed.');
     }
   };
 

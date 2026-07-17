@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { CollabProvider } from './context/CollabContext';
-
-import LiveBar from './components/LiveBar';
-import ReactionBurst from './components/ReactionBurst';
 import IntroAnimation from './components/IntroAnimation';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -30,11 +26,8 @@ function App() {
   }, []);
 
   return (
-    <CollabProvider>
+    <>
       <GhostCursor />
-      <ReactionBurst />
-
-
       <AnimatePresence>
         {showIntro && (
           <IntroAnimation onComplete={() => setShowIntro(false)} />
@@ -69,7 +62,7 @@ function App() {
           )}
         </AnimatePresence>
       </div>
-    </CollabProvider>
+    </>
   );
 }
 
