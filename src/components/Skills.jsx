@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion';
 import { FaReact, FaNodeJs, FaPython } from 'react-icons/fa';
 import { DiJavascript1 } from 'react-icons/di';
-import { SiTailwindcss, SiExpress } from 'react-icons/si';
+import { SiTailwindcss, SiExpress, SiNextdotjs, SiRedis } from 'react-icons/si';
 import GrainText from './GrainText';
 
 const skills = [
   // ── Frontend ───────────────────────────────────────────
   { name: 'React', category: 'Frontend', description: 'Component-driven UI architecture with hooks, context, and state management', icon: FaReact },
+  { name: 'Next.js', category: 'Frontend', description: 'React framework for production with server-side rendering and static generation', icon: SiNextdotjs },
   { name: 'JavaScript', category: 'Frontend', description: 'ES6+ features, async patterns, DOM manipulation, and event-driven programming', icon: DiJavascript1 },
   { name: 'Tailwind CSS', category: 'Frontend', description: 'Utility-first CSS framework for rapid, responsive UI development', icon: SiTailwindcss },
 
@@ -14,6 +15,7 @@ const skills = [
   { name: 'Node.js', category: 'Backend', description: 'Server-side JavaScript runtime for scalable network applications', icon: FaNodeJs },
   { name: 'Express', category: 'Backend', description: 'RESTful API design, middleware patterns, and route architecture', icon: SiExpress },
   { name: 'Python', category: 'Backend', description: 'General-purpose scripting, data processing, and AI/ML integration', icon: FaPython },
+  { name: 'Redis', category: 'Backend', description: 'In-memory data structure store, used as a database, cache, and message broker', icon: SiRedis },
 ];
 
 const SkillItem = ({ skill }) => {
