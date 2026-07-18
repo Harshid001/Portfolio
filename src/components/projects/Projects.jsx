@@ -25,15 +25,6 @@ const projects = [
     category: "APPLICATIONS"
   },
   { 
-    title: "PINCODE", 
-    description: "Finding accurate Indian postal data requires navigating outdated government portals. Built a full-stack pincode directory with bulk processing, geolocation services, and RESTful APIs using Python, Flask, and PostgreSQL. Features a React frontend and Docker containerization for reliable deployment.", 
-    tech: ["React", "Python", "Flask", "PostgreSQL", "Docker"], 
-    github: "https://github.com/Harshid001/PINCODE", 
-    live: "https://pincode-delta.vercel.app", 
-    image: pincodeImg,
-    category: "APPLICATIONS"
-  },
-  { 
     title: "Smart Factory AI", 
     description: "Manufacturing facilities lack real-time visibility into production line anomalies. Built an AI-based monitoring system using Python and ML models to detect inefficiencies and predict maintenance needs via REST APIs. Processes real-time sensor data streams to flag anomalies before they cause downtime.", 
     tech: ["Python", "AI/ML", "REST API", "Web"], 
@@ -57,15 +48,6 @@ const projects = [
     github: "https://github.com/Harshid001/traveloop",
     live: "https://traveloop-wheat.vercel.app/onboarding",
     image: "https://res.cloudinary.com/dxvggspmi/image/upload/v1781610545/Screenshot_2026-06-16_171746_oub72r.png",
-    category: "WEBSITES"
-  },
-  {
-    title: "Website Maker",
-    description: "Non-technical users need an intuitive way to build web pages without writing code. Built a drag-and-drop website builder with real-time layout customization, element styling, and live preview using React state management. Supports real-time editing with instant visual feedback across all viewport sizes.",
-    tech: ["React", "Vite", "Tailwind CSS", "State Management"],
-    github: "https://github.com/Harshid001/Website-maker",
-    live: "https://website-maker-gevx.vercel.app/",
-    image: websiteMakerImg,
     category: "WEBSITES"
   },
   {
@@ -96,6 +78,15 @@ const projects = [
     category: "WEBSITES"
   },
   {
+    title: "Website Maker",
+    description: "Non-technical users need an intuitive way to build web pages without writing code. Built a drag-and-drop website builder with real-time layout customization, element styling, and live preview using React state management. Supports real-time editing with instant visual feedback across all viewport sizes.",
+    tech: ["React", "Vite", "Tailwind CSS", "State Management"],
+    github: "https://github.com/Harshid001/Website-maker",
+    live: "https://website-maker-gevx.vercel.app/",
+    image: websiteMakerImg,
+    category: "WEBSITES"
+  },
+  {
     title: "Radhe Jewellers",
     description: "Jewelry businesses need elegant digital storefronts to showcase premium collections online. Built a responsive e-commerce frontend with interactive catalog, smooth animations, and mobile-first navigation using React and Framer Motion. Achieved 95+ Lighthouse performance score with optimized image loading.",
     tech: ["React", "Vite", "Tailwind CSS", "Framer Motion"],
@@ -111,6 +102,15 @@ const projects = [
     github: "https://github.com/Harshid001/fund_hunters",
     live: "https://fund-hunters.vercel.app/",
     image: fundHuntersImg,
+    category: "WEBSITES"
+  },
+  { 
+    title: "PINCODE", 
+    description: "Finding accurate Indian postal data requires navigating outdated government portals. Built a full-stack pincode directory with bulk processing, geolocation services, and RESTful APIs using Python, Flask, and PostgreSQL. Features a React frontend and Docker containerization for reliable deployment.", 
+    tech: ["React", "Python", "Flask", "PostgreSQL", "Docker"], 
+    github: "https://github.com/Harshid001/PINCODE", 
+    live: "https://pincode-delta.vercel.app", 
+    image: pincodeImg,
     category: "WEBSITES"
   }
 ];
