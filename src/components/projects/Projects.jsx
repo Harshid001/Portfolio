@@ -25,14 +25,6 @@ const projects = [
     category: "APPLICATIONS"
   },
   { 
-    title: "Smart Factory AI", 
-    description: "Manufacturing facilities lack real-time visibility into production line anomalies. Built an AI-based monitoring system using Python and ML models to detect inefficiencies and predict maintenance needs via REST APIs. Processes real-time sensor data streams to flag anomalies before they cause downtime.", 
-    tech: ["Python", "AI/ML", "REST API", "Web"], 
-    github: "https://github.com/Harshid001/smartfactoryAIsystem", 
-    image: smartfactoryImg,
-    category: "APPLICATIONS"
-  },
-  { 
     title: "MF-advisor", 
     description: "Investors find traditional mutual fund platforms complex and unintuitive. Built a voice-first mutual-fund advisory platform enabling real-time conversational interfaces using OpenAI STT and WebSocket streaming. Streamlined the investment discovery process by automating personalized report generation.", 
     tech: ["React", "Vite", "Express", "TypeScript"], 
@@ -93,6 +85,14 @@ const projects = [
     github: "https://github.com/Harshid001/PINCODE", 
     live: "https://pincode-delta.vercel.app", 
     image: pincodeImg,
+    category: "WEBSITES"
+  },
+  { 
+    title: "Smart Factory AI", 
+    description: "Manufacturing facilities lack real-time visibility into production line anomalies. Built an AI-based monitoring system using Python and ML models to detect inefficiencies and predict maintenance needs via REST APIs. Processes real-time sensor data streams to flag anomalies before they cause downtime.", 
+    tech: ["Python", "AI/ML", "REST API", "Web"], 
+    github: "https://github.com/Harshid001/smartfactoryAIsystem", 
+    image: smartfactoryImg,
     category: "WEBSITES"
   }
 ];
