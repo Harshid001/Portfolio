@@ -56,26 +56,20 @@ const DotMaterialImpl = shaderMaterial(
       vec2 gridUvCenterInScreenCoords = rotate((floor(rotatedUv * gridSize) + 0.5) / gridSize, -rotation);
 
       float baseDot = sdfCircle(gridUv, 0.25);
-      float screenMask = smoothstep(0.0, 1.0, 1.0 - uv.y * 0.3);
-      vec2 centerDisplace = vec2(0.5, 0.5);
-      float circleMaskCenter = length(uv - centerDisplace);
-      float circleMaskFromCenter = smoothstep(0.2, 0.9, circleMaskCenter);
-      float combinedMask = max(screenMask * 0.6, circleMaskFromCenter * 0.8);
-
-      float circleAnimatedMask = sin(time * 1.5 + circleMaskCenter * 8.0);
-
+      
       // Enhanced mouse influence — more lively cursor response
       float mouseInfluence = texture2D(mouseTrail, gridUvCenterInScreenCoords).r;
-      float scaleInfluence = max(mouseInfluence * 0.9, circleAnimatedMask * 0.25);
+      float scaleInfluence = mouseInfluence * 0.9;
 
-      float dotSize = min(pow(circleMaskCenter, 1.5) * 0.35 + 0.05, 0.35);
-      float sdfDot = sdfCircle(gridUv, dotSize * (1.0 + scaleInfluence * 0.6));
+      float dotSize = 0.15; // fixed base size for uniform grid
+      float sdfDot = sdfCircle(gridUv, dotSize * (1.0 + scaleInfluence * 1.5));
       float smoothDot = smoothstep(0.05, 0.0, sdfDot);
 
       // Boosted opacity influence for dramatic cursor-following effect
-      float opacityInfluence = max(mouseInfluence * 80.0, circleAnimatedMask * 0.4);
+      float opacityInfluence = mouseInfluence * 5.0;
 
-      vec3 composition = mix(bgColor, dotColor, smoothDot * combinedMask * dotOpacity * (1.0 + opacityInfluence));
+      // Make dots fully visible everywhere initially
+      vec3 composition = mix(bgColor, dotColor, smoothDot * dotOpacity * (1.0 + opacityInfluence));
       gl_FragColor = vec4(composition, 1.0);
       #include <tonemapping_fragment>
       #include <colorspace_fragment>

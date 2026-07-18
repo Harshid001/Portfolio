@@ -32,8 +32,8 @@ const nameTextStyle = {
 const FLY_DELAY = 0.4;
 const FLY_DURATION = 1.2;       // slightly longer for a smoother arc
 const ROLL_TURNS = 720;
-const LOOK_DURATION = 1.6;
-const CENTER_DURATION = 0.3;
+const LOOK_DURATION = 2.4;
+const CENTER_DURATION = 0.4;
 const MORPH_DURATION = 0.5;     // slightly longer for a visible morph beat
 const SETTLE_PAUSE = 0.15;     // beat between landing and looking
 
@@ -41,11 +41,11 @@ const EYE_WIDTH = 8;
 const EYE_HEIGHT = 12;
 const EYE_GAP = 5;
 
-// How the whole eye squares shift during the "looking" stage
+// Gentle sweeping looks for elegant movement
 const LOOK_KEYFRAMES = {
-  x: [0, -2.5, 3, -2, 2.5, -1.2, 0],
-  y: [0, 2, -2.5, -1.2, 2, -2, 0],
-  times: [0, 0.14, 0.32, 0.48, 0.66, 0.84, 1],
+  x: [0, -1.8, 2.2, -0.8, 0],
+  y: [0, 1.2, -1.6, 0.6, 0],
+  times: [0, 0.25, 0.6, 0.85, 1],
 };
 
 // Smooth deceleration curve for the roll (fast start, gentle land)
