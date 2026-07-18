@@ -142,7 +142,7 @@ const ProjectNavigation = ({ projects, activeIndex, setActiveIndex }) => {
         data-lenis-prevent="true"
         style={{
           backgroundColor: 'var(--color-ink)',
-          overscrollBehavior: 'contain',
+          overscrollBehavior: 'auto',
           scrollBehavior: 'smooth'
         }}
       >
