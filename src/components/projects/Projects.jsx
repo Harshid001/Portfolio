@@ -86,24 +86,6 @@ const projects = [
     image: websiteMakerImg,
     category: "WEBSITES"
   },
-  {
-    title: "Radhe Jewellers",
-    description: "Jewelry businesses need elegant digital storefronts to showcase premium collections online. Built a responsive e-commerce frontend with interactive catalog, smooth animations, and mobile-first navigation using React and Framer Motion. Achieved 95+ Lighthouse performance score with optimized image loading.",
-    tech: ["React", "Vite", "Tailwind CSS", "Framer Motion"],
-    github: "https://github.com/Harshid001/Radhe-Jwellers",
-    live: "https://frontend-three-black-sifmjuce7w.vercel.app/",
-    image: radheJewellersImg,
-    category: "WEBSITES"
-  },
-  {
-    title: "Fund Hunters",
-    description: "Digital banking interfaces often feel dated and unintuitive for everyday transactions. Designed a modern fintech platform UI with secure transaction flows and responsive dashboard using vanilla HTML/CSS/JS. Built fully responsive layouts that adapt seamlessly from 320px mobile to 4K desktop screens.",
-    tech: ["HTML", "CSS", "JavaScript", "Responsive Design"],
-    github: "https://github.com/Harshid001/fund_hunters",
-    live: "https://fund-hunters.vercel.app/",
-    image: fundHuntersImg,
-    category: "WEBSITES"
-  },
   { 
     title: "PINCODE", 
     description: "Finding accurate Indian postal data requires navigating outdated government portals. Built a full-stack pincode directory with bulk processing, geolocation services, and RESTful APIs using Python, Flask, and PostgreSQL. Features a React frontend and Docker containerization for reliable deployment.", 
