@@ -1,12 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
-
-const TRAIL_COUNT = 5;
 
 // Exported so other components (IntroAnimation's eye-box, etc.) can match
 // this cursor's exact size/shape instead of hardcoding a duplicate number.
 export const CURSOR_RING_SIZE = 36;
 
+const TRAIL_COUNT = 3;
+const DOT_SIZE = 7;
+const TRAIL_SIZE = 4;
+
+/**
+ * Only genuinely interactive elements get the hover state. The old list
+ * included `p`, `span`, `li`, `h1`-`h6`, `img` and `svg`, which meant almost
+ * every pixel of the page fired a React state update on `mouseover` — the
+ * single largest source of cursor lag on this site.
+ */
 const HOVER_SELECTORS = [
   'a',
   'button',
@@ -15,223 +22,218 @@ const HOVER_SELECTORS = [
   'textarea',
   'select',
   'label[for]',
-  'h1',
-  'h2',
-  'h3',
-  'h4',
-  'h5',
-  'h6',
-  'img',
-  'video',
-  'svg',
   '.brutal-card',
   '.tag',
   '.btn-primary',
   '.btn-secondary',
   '.skill-item',
   '[data-hoverable]',
-  'li',
-  'p',
-  'span',
 ].join(', ');
 
 const GhostCursor = () => {
-  const [isHovering, setIsHovering] = useState(false);
-  const [isClicking, setIsClicking] = useState(false);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const trailRefs = useRef([]);
-
-  const dotX = useMotionValue(0);
-  const dotY = useMotionValue(0);
-  const ringX = useSpring(0, { stiffness: 120, damping: 18 });
-  const ringY = useSpring(0, { stiffness: 120, damping: 18 });
-  const trailPositions = useRef(
-    Array.from({ length: TRAIL_COUNT }, () => ({ x: 0, y: 0 })),
+  // `isTouchDevice` is the only piece of React state left. Everything else is
+  // written straight to the DOM from a single rAF loop, so moving the mouse
+  // never re-renders this component (or its parents) again.
+  const [isTouchDevice, setIsTouchDevice] = useState(
+    () =>
+      typeof window !== 'undefined' &&
+      (('ontouchstart' in window && navigator.maxTouchPoints > 0) ||
+        window.matchMedia('(pointer: coarse)').matches),
   );
 
+  const rootRef = useRef(null);
+  const ringRef = useRef(null);
+  const dotRef = useRef(null);
+  const trailRefs = useRef([]);
+
   useEffect(() => {
-    const checkTouch = () => {
-      setIsTouchDevice(
-        'ontouchstart' in window ||
-          navigator.maxTouchPoints > 0 ||
-          window.matchMedia('(pointer: coarse)').matches,
-      );
-    };
-    checkTouch();
-    window.addEventListener('touchstart', () => setIsTouchDevice(true), {
-      once: true,
-    });
     if (isTouchDevice) return;
 
-    let animFrame;
-    const mouse = { x: 0, y: 0 };
+    const onFirstTouch = () => setIsTouchDevice(true);
+    window.addEventListener('touchstart', onFirstTouch, { once: true });
 
-    const onMouseMove = (e) => {
-      if (!isVisible) {
-        setIsVisible(true);
-        document.body.classList.add('hide-cursor');
-      }
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-      dotX.set(e.clientX);
-      dotY.set(e.clientY);
-      ringX.set(e.clientX);
-      ringY.set(e.clientY);
-    };
+    const root = rootRef.current;
+    const ring = ringRef.current;
+    const dot = dotRef.current;
+    if (!root || !ring || !dot) return;
 
-    const handleMouseLeave = () => {
-      setIsVisible(false);
-      document.body.classList.remove('hide-cursor');
-    };
+    const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    const ringPos = { x: mouse.x, y: mouse.y };
+    const trail = Array.from({ length: TRAIL_COUNT }, () => ({
+      x: mouse.x,
+      y: mouse.y,
+    }));
 
-    const handleMouseEnter = () => {
-      setIsVisible(true);
+    let visible = false;
+    let hovering = false;
+    let clicking = false;
+    let clickTimer = null;
+    let frame = null;
+    // Only paint when something actually changed. Once the pointer settles the
+    // loop idles instead of burning a GPU composite every 16ms.
+    let dirty = true;
+
+    const show = () => {
+      if (visible) return;
+      visible = true;
+      dirty = true;
+      root.style.opacity = '1';
       document.body.classList.add('hide-cursor');
     };
 
+    const hide = () => {
+      if (!visible) return;
+      visible = false;
+      root.style.opacity = '0';
+      document.body.classList.remove('hide-cursor');
+    };
+
+    const onMouseMove = (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      dirty = true;
+      show();
+    };
+
     const onMouseDown = () => {
-      setIsClicking(true);
-      setTimeout(() => setIsClicking(false), 150);
+      clicking = true;
+      dirty = true;
+      if (clickTimer) clearTimeout(clickTimer);
+      clickTimer = setTimeout(() => {
+        clicking = false;
+        dirty = true;
+      }, 150);
     };
 
-    const handleMouseOver = (e) => {
-      if (e.target.closest && e.target.closest(HOVER_SELECTORS)) {
-        setIsHovering(true);
+    const onMouseOver = (e) => {
+      const next = !!e.target.closest?.(HOVER_SELECTORS);
+      if (next !== hovering) {
+        hovering = next;
+        dirty = true;
       }
     };
 
-    const handleMouseOut = (e) => {
-      if (
-        !e.relatedTarget ||
-        (e.relatedTarget.closest && !e.relatedTarget.closest(HOVER_SELECTORS))
-      ) {
-        setIsHovering(false);
+    const render = () => {
+      frame = requestAnimationFrame(render);
+      if (!dirty) return;
+
+      // Spring-ish follow for the ring, cascading lag for the trail.
+      ringPos.x += (mouse.x - ringPos.x) * 0.18;
+      ringPos.y += (mouse.y - ringPos.y) * 0.18;
+
+      trail[0].x += (mouse.x - trail[0].x) * 0.5;
+      trail[0].y += (mouse.y - trail[0].y) * 0.5;
+      for (let i = 1; i < TRAIL_COUNT; i++) {
+        trail[i].x += (trail[i - 1].x - trail[i].x) * 0.3;
+        trail[i].y += (trail[i - 1].y - trail[i].y) * 0.3;
       }
+
+      const scale = clicking ? 0.7 : hovering ? 1.35 : 1;
+
+      // translate3d keeps every node on its own GPU layer; no layout, no paint.
+      ring.style.transform = `translate3d(${ringPos.x - CURSOR_RING_SIZE / 2}px, ${
+        ringPos.y - CURSOR_RING_SIZE / 2
+      }px, 0) rotate(45deg) scale(${scale})`;
+
+      dot.style.transform = `translate3d(${mouse.x - DOT_SIZE / 2}px, ${
+        mouse.y - DOT_SIZE / 2
+      }px, 0) rotate(45deg)`;
+
+      for (let i = 0; i < TRAIL_COUNT; i++) {
+        const el = trailRefs.current[i];
+        if (el) {
+          el.style.transform = `translate3d(${trail[i].x - TRAIL_SIZE / 2}px, ${
+            trail[i].y - TRAIL_SIZE / 2
+          }px, 0)`;
+        }
+      }
+
+      // Settle check: stop redrawing once everything has caught up.
+      const settled =
+        Math.abs(mouse.x - ringPos.x) < 0.1 &&
+        Math.abs(mouse.y - ringPos.y) < 0.1 &&
+        Math.abs(trail[TRAIL_COUNT - 1].x - mouse.x) < 0.1 &&
+        Math.abs(trail[TRAIL_COUNT - 1].y - mouse.y) < 0.1;
+      if (settled) dirty = false;
     };
 
-    const animateTrail = () => {
-      for (let i = TRAIL_COUNT - 1; i > 0; i--) {
-        trailPositions.current[i].x +=
-          (trailPositions.current[i - 1].x - trailPositions.current[i].x) * 0.3;
-        trailPositions.current[i].y +=
-          (trailPositions.current[i - 1].y - trailPositions.current[i].y) * 0.3;
-      }
-      trailPositions.current[0].x +=
-        (mouse.x - trailPositions.current[0].x) * 0.5;
-      trailPositions.current[0].y +=
-        (mouse.y - trailPositions.current[0].y) * 0.5;
-      trailRefs.current.forEach((el, i) => {
-        if (el)
-          el.style.transform = `translate(${trailPositions.current[i].x - 2}px, ${trailPositions.current[i].y - 2}px)`;
-      });
-      animFrame = requestAnimationFrame(animateTrail);
-    };
+    document.addEventListener('mousemove', onMouseMove, { passive: true });
+    document.addEventListener('mousedown', onMouseDown, { passive: true });
+    document.addEventListener('mouseover', onMouseOver, { passive: true });
+    document.documentElement.addEventListener('mouseleave', hide);
+    document.documentElement.addEventListener('mouseenter', show);
 
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseover', handleMouseOver);
-    document.addEventListener('mouseout', handleMouseOut);
-    document.addEventListener('mousedown', onMouseDown);
-    document.documentElement.addEventListener('mouseleave', handleMouseLeave);
-    document.documentElement.addEventListener('mouseenter', handleMouseEnter);
-    animFrame = requestAnimationFrame(animateTrail);
+    frame = requestAnimationFrame(render);
 
     return () => {
+      window.removeEventListener('touchstart', onFirstTouch);
       document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseover', handleMouseOver);
-      document.removeEventListener('mouseout', handleMouseOut);
       document.removeEventListener('mousedown', onMouseDown);
-      document.documentElement.removeEventListener(
-        'mouseleave',
-        handleMouseLeave,
-      );
-      document.documentElement.removeEventListener(
-        'mouseenter',
-        handleMouseEnter,
-      );
+      document.removeEventListener('mouseover', onMouseOver);
+      document.documentElement.removeEventListener('mouseleave', hide);
+      document.documentElement.removeEventListener('mouseenter', show);
       document.body.classList.remove('hide-cursor');
-      cancelAnimationFrame(animFrame);
+      if (clickTimer) clearTimeout(clickTimer);
+      if (frame) cancelAnimationFrame(frame);
     };
-  }, [isTouchDevice, dotX, dotY, ringX, ringY]);
+  }, [isTouchDevice]);
 
   if (isTouchDevice) return null;
 
-  // Derive visual states
-  const ringSize = CURSOR_RING_SIZE;
+  const base = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    pointerEvents: 'none',
+    mixBlendMode: 'difference',
+    backgroundColor: '#FFFFFF',
+    willChange: 'transform',
+  };
 
   return (
     <div
+      ref={rootRef}
       style={{
-        opacity: isVisible ? 1 : 0,
+        opacity: 0,
         transition: 'opacity 0.3s ease',
         pointerEvents: 'none',
       }}
     >
-      {/* Trails */}
       {Array.from({ length: TRAIL_COUNT }).map((_, i) => (
         <div
           key={`trail-${i}`}
-          ref={(el) => (trailRefs.current[i] = el)}
-          className="fixed top-0 left-0 pointer-events-none"
+          ref={(el) => {
+            trailRefs.current[i] = el;
+          }}
           style={{
-            width: 4,
-            height: 4,
-            borderRadius: '0px',
-            backgroundColor: `rgba(255, 255, 255, ${0.4 - i * 0.08})`,
+            ...base,
+            width: TRAIL_SIZE,
+            height: TRAIL_SIZE,
+            backgroundColor: `rgba(255, 255, 255, ${0.4 - i * 0.1})`,
             zIndex: 99998,
-            transition: 'background-color 0.3s ease',
-            mixBlendMode: 'difference',
           }}
         />
       ))}
 
-      {/* Main ring cursor — static size, shrinks on click */}
-      <motion.div
-        className="fixed top-0 left-0 pointer-events-none"
+      <div
+        ref={ringRef}
         style={{
-          x: ringX,
-          y: ringY,
-          width: ringSize,
-          height: ringSize,
-          marginLeft: -ringSize / 2,
-          marginTop: -ringSize / 2,
+          ...base,
+          width: CURSOR_RING_SIZE,
+          height: CURSOR_RING_SIZE,
           zIndex: 99999,
-          mixBlendMode: 'difference',
-        }}
-        animate={{
-          scale: isClicking ? 0.7 : 1,
-          rotate: 45,
-          borderRadius: '0px',
-          borderColor: 'transparent',
-          borderWidth: '0px',
-          backgroundColor: '#FFFFFF',
-          boxShadow: 'none',
-        }}
-        transition={{
-          type: 'spring',
-          stiffness: 260,
-          damping: 18,
-          borderRadius: { duration: 0.25, ease: 'easeInOut' },
+          transition: 'transform 0.05s linear',
         }}
       />
 
-      {/* Center dot — remains visible */}
-      <motion.div
-        className="fixed top-0 left-0 pointer-events-none"
+      <div
+        ref={dotRef}
         style={{
-          x: dotX,
-          y: dotY,
-          width: 7,
-          height: 7,
-          marginLeft: -3.5,
-          marginTop: -3.5,
-          borderRadius: '0px',
-          backgroundColor: '#FFFFFF',
+          ...base,
+          width: DOT_SIZE,
+          height: DOT_SIZE,
           zIndex: 99999,
-          mixBlendMode: 'difference',
         }}
-        animate={{ scale: 1, rotate: 45 }}
-        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
       />
     </div>
   );

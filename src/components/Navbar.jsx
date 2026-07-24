@@ -35,7 +35,10 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [clickedLink, setClickedLink] = useState(null);
-  const [navY, setNavY] = useState(0);
+  // `navY` used to be React state that was re-set to 0 on *every* scroll frame,
+  // re-rendering this 498-line component continuously while scrolling. The nav
+  // is always pinned at 0, so it is a constant now.
+  const NAV_Y = 0;
   const [isDark, setIsDark] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.theme !== 'light';
@@ -82,11 +85,11 @@ const Navbar = () => {
   const logoCaption = 'Click to Level Up';
 
   useMotionValueEvent(scrollY, 'change', (latest) => {
-    // Keep nav visible at all times by keeping navY at 0
-    setNavY(0);
-    // Anthropic-style logo shrink at ~25% of viewport height
+    // Anthropic-style logo shrink at ~25% of viewport height.
+    // Guarded so React only re-renders when the boolean actually flips.
     if (typeof window !== 'undefined') {
-      setIsScrolledLogo(latest > window.innerHeight * 0.25);
+      const next = latest > window.innerHeight * 0.25;
+      setIsScrolledLogo((prev) => (prev === next ? prev : next));
     }
   });
 
@@ -158,7 +161,7 @@ const Navbar = () => {
 
   return (
     <motion.nav
-      animate={{ y: isTransitioning ? -100 : navY }}
+      animate={{ y: isTransitioning ? -100 : NAV_Y }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
       className="fixed top-0 left-0 w-full z-50 flex items-center backdrop-blur-md"
       style={{

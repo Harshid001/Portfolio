@@ -1,9 +1,11 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaYoutube, FaTwitter } from 'react-icons/fa';
-import ParticleMorph from './ParticleMorph';
 
+// Both of these pull in `three`. Keeping them lazy means the hero text and
+// buttons are interactive long before the WebGL bundle finishes downloading.
 const ShaderBackground = lazy(() => import('./ShaderBackground'));
+const ParticleMorph = lazy(() => import('./ParticleMorph'));
 
 const staggerContainer = {
   hidden: {},
@@ -25,13 +27,9 @@ const textSlam = {
 };
 
 const Hero = () => {
-  const [showCursor, setShowCursor] = useState(true);
-
-  useEffect(() => {
-    const interval = setInterval(() => setShowCursor((c) => !c), 500);
-    return () => clearInterval(interval);
-  }, []);
-
+  // The blinking caret used to be a 500ms setInterval driving React state,
+  // which re-rendered the entire hero (WebGL widget included) twice a second
+  // forever. It is now a pure CSS animation that runs off the main thread.
   return (
     <section
       id="home"
@@ -124,8 +122,9 @@ const Hero = () => {
             >
               [ FULL STACK DEVELOPER ]
               <span
+                className="caret-blink"
+                aria-hidden="true"
                 style={{
-                  opacity: showCursor ? 1 : 0,
                   color: 'var(--color-ink)',
                   fontWeight: 'bold',
                 }}
@@ -227,7 +226,9 @@ const Hero = () => {
           variants={fadeUp}
           className="hero-right flex items-center justify-center relative w-full lg:w-auto h-[400px] lg:h-[500px] xl:h-[600px] mt-12 lg:mt-0"
         >
-          <ParticleMorph />
+          <Suspense fallback={null}>
+            <ParticleMorph />
+          </Suspense>
         </motion.div>
       </div>
 

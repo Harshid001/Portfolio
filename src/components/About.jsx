@@ -83,6 +83,10 @@ const About = () => {
                 <img
                   src={heroImg}
                   alt="Harshid Soni — Full Stack Developer portrait"
+                  loading="lazy"
+                  decoding="async"
+                  width="800"
+                  height="1000"
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   style={{ objectPosition: 'center top' }}
                 />
