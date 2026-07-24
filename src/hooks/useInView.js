@@ -19,7 +19,7 @@ export function useInView(options = {}) {
         threshold: options.threshold || 0.15,
         rootMargin: options.rootMargin || '0px',
         ...options,
-      }
+      },
     );
 
     observer.observe(element);

@@ -1,6 +1,11 @@
 /* eslint-disable */
 import { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion';
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  animate,
+} from 'framer-motion';
 import { CURSOR_RING_SIZE } from './GhostCursor';
 
 const NAME = 'HARSHID SONI';
@@ -30,12 +35,12 @@ const nameTextStyle = {
 // Scripted timeline for the eye-box.
 // ---------------------------------------------------------------------------
 const FLY_DELAY = 0.4;
-const FLY_DURATION = 1.2;       // slightly longer for a smoother arc
+const FLY_DURATION = 1.2; // slightly longer for a smoother arc
 const ROLL_TURNS = 720;
 const LOOK_DURATION = 2.4;
 const CENTER_DURATION = 0.4;
-const MORPH_DURATION = 0.5;     // slightly longer for a visible morph beat
-const SETTLE_PAUSE = 0.15;     // beat between landing and looking
+const MORPH_DURATION = 0.5; // slightly longer for a visible morph beat
+const SETTLE_PAUSE = 0.15; // beat between landing and looking
 
 const EYE_WIDTH = 8;
 const EYE_HEIGHT = 12;
@@ -49,8 +54,8 @@ const LOOK_KEYFRAMES = {
 };
 
 // Smooth deceleration curve for the roll (fast start, gentle land)
-const FLY_EASE = [0.22, 1, 0.36, 1];       // cubic-bezier: aggressive out-expo feel
-const ROLL_EASE = [0.16, 1, 0.3, 1];       // even softer for the spin deceleration
+const FLY_EASE = [0.22, 1, 0.36, 1]; // cubic-bezier: aggressive out-expo feel
+const ROLL_EASE = [0.16, 1, 0.3, 1]; // even softer for the spin deceleration
 const MORPH_EASE = [0.25, 0.46, 0.45, 0.94]; // subtle ease-out for the 45° snap
 
 const Eye = ({ visible, scale, lookAnimate, lookTransition }) => (
@@ -90,7 +95,7 @@ const EyeBox = ({ isTouchDevice, onSequenceDone, restPos }) => {
   const boxX = useMotionValue(-120);
   const boxY = useMotionValue(0);
   const rotateMV = useMotionValue(0);
-  const glowMV = useMotionValue(0);   // morph flash intensity
+  const glowMV = useMotionValue(0); // morph flash intensity
 
   useEffect(() => {
     stageRef.current = stage;
@@ -106,8 +111,16 @@ const EyeBox = ({ isTouchDevice, onSequenceDone, restPos }) => {
     const handleMove = (e) => {
       mouseRef.current = { x: e.clientX, y: e.clientY };
       if (stageRef.current === 'tracking') {
-        animate(boxX, e.clientX, { type: 'spring', stiffness: 120, damping: 18 });
-        animate(boxY, e.clientY, { type: 'spring', stiffness: 120, damping: 18 });
+        animate(boxX, e.clientX, {
+          type: 'spring',
+          stiffness: 120,
+          damping: 18,
+        });
+        animate(boxY, e.clientY, {
+          type: 'spring',
+          stiffness: 120,
+          damping: 18,
+        });
       }
     };
     window.addEventListener('mousemove', handleMove);
@@ -131,14 +144,21 @@ const EyeBox = ({ isTouchDevice, onSequenceDone, restPos }) => {
         // Horizontal: smooth deceleration
         animate(boxX, target.x, { duration: FLY_DURATION, ease: FLY_EASE });
         // Vertical: subtle arc — rise then settle with a micro-bounce
-        animate(boxY, [target.y, target.y - 24, target.y + 6, target.y - 2, target.y], {
-          duration: FLY_DURATION,
-          times: [0, 0.35, 0.7, 0.88, 1],
-          ease: FLY_EASE,
-        });
+        animate(
+          boxY,
+          [target.y, target.y - 24, target.y + 6, target.y - 2, target.y],
+          {
+            duration: FLY_DURATION,
+            times: [0, 0.35, 0.7, 0.88, 1],
+            ease: FLY_EASE,
+          },
+        );
         // Roll: decelerates separately so the spin feels heavy/natural
-        animate(rotateMV, ROLL_TURNS, { duration: FLY_DURATION, ease: ROLL_EASE });
-      }, FLY_DELAY * 1000)
+        animate(rotateMV, ROLL_TURNS, {
+          duration: FLY_DURATION,
+          ease: ROLL_EASE,
+        });
+      }, FLY_DELAY * 1000),
     );
 
     // ── Small pause after landing before eyes start looking ──
@@ -149,10 +169,13 @@ const EyeBox = ({ isTouchDevice, onSequenceDone, restPos }) => {
       const fadeStart = lookStart + LOOK_DURATION * 1000;
       timers.push(setTimeout(() => setStage('centering'), fadeStart));
       timers.push(
-        setTimeout(() => {
-          setStage('fading');
-          onSequenceDone();
-        }, fadeStart + CENTER_DURATION * 1000)
+        setTimeout(
+          () => {
+            setStage('fading');
+            onSequenceDone();
+          },
+          fadeStart + CENTER_DURATION * 1000,
+        ),
       );
       return () => timers.forEach(clearTimeout);
     }
@@ -188,7 +211,7 @@ const EyeBox = ({ isTouchDevice, onSequenceDone, restPos }) => {
           stiffness: 260,
           damping: 20,
         });
-      }, morphStart)
+      }, morphStart),
     );
 
     const trackStart = morphStart + MORPH_DURATION * 1000;
@@ -196,7 +219,7 @@ const EyeBox = ({ isTouchDevice, onSequenceDone, restPos }) => {
       setTimeout(() => {
         setStage('tracking');
         onSequenceDone();
-      }, trackStart)
+      }, trackStart),
     );
 
     return () => timers.forEach(clearTimeout);
@@ -205,17 +228,39 @@ const EyeBox = ({ isTouchDevice, onSequenceDone, restPos }) => {
   if (!ready) return null;
 
   const isCursorForm = stage === 'morphing' || stage === 'tracking';
-  const eyesVisible = stage === 'flying' || stage === 'looking' || stage === 'centering';
+  const eyesVisible =
+    stage === 'flying' || stage === 'looking' || stage === 'centering';
   // Eyes scale down during centering→morphing for a smooth disappearance
-  const eyeScale = stage === 'centering' ? 0.6 : stage === 'morphing' || stage === 'tracking' ? 0 : 1;
+  const eyeScale =
+    stage === 'centering'
+      ? 0.6
+      : stage === 'morphing' || stage === 'tracking'
+        ? 0
+        : 1;
 
   // During 'looking', the whole eye square shifts around; otherwise snaps back
-  const lookAnimate = stage === 'looking'
-    ? { x: LOOK_KEYFRAMES.x, y: LOOK_KEYFRAMES.y }
-    : { x: 0, y: 0 };
-  const lookTransition = stage === 'looking'
-    ? { x: { duration: LOOK_DURATION, times: LOOK_KEYFRAMES.times, ease: 'easeInOut' }, y: { duration: LOOK_DURATION, times: LOOK_KEYFRAMES.times, ease: 'easeInOut' } }
-    : { x: { duration: CENTER_DURATION, ease: [0.25, 0.46, 0.45, 0.94] }, y: { duration: CENTER_DURATION, ease: [0.25, 0.46, 0.45, 0.94] } };
+  const lookAnimate =
+    stage === 'looking'
+      ? { x: LOOK_KEYFRAMES.x, y: LOOK_KEYFRAMES.y }
+      : { x: 0, y: 0 };
+  const lookTransition =
+    stage === 'looking'
+      ? {
+          x: {
+            duration: LOOK_DURATION,
+            times: LOOK_KEYFRAMES.times,
+            ease: 'easeInOut',
+          },
+          y: {
+            duration: LOOK_DURATION,
+            times: LOOK_KEYFRAMES.times,
+            ease: 'easeInOut',
+          },
+        }
+      : {
+          x: { duration: CENTER_DURATION, ease: [0.25, 0.46, 0.45, 0.94] },
+          y: { duration: CENTER_DURATION, ease: [0.25, 0.46, 0.45, 0.94] },
+        };
 
   const surfaceAnimate = {
     backgroundColor: isCursorForm ? '#FFFFFF' : '#141414',
@@ -256,7 +301,8 @@ const EyeBox = ({ isTouchDevice, onSequenceDone, restPos }) => {
           inset: -8,
           borderRadius: '50%',
           opacity: glowMV,
-          background: 'radial-gradient(circle, rgba(245,242,237,0.4) 0%, transparent 70%)',
+          background:
+            'radial-gradient(circle, rgba(245,242,237,0.4) 0%, transparent 70%)',
           pointerEvents: 'none',
         }}
       />
@@ -277,8 +323,18 @@ const EyeBox = ({ isTouchDevice, onSequenceDone, restPos }) => {
           overflow: 'hidden',
         }}
       >
-        <Eye visible={eyesVisible} scale={eyeScale} lookAnimate={lookAnimate} lookTransition={lookTransition} />
-        <Eye visible={eyesVisible} scale={eyeScale} lookAnimate={lookAnimate} lookTransition={lookTransition} />
+        <Eye
+          visible={eyesVisible}
+          scale={eyeScale}
+          lookAnimate={lookAnimate}
+          lookTransition={lookTransition}
+        />
+        <Eye
+          visible={eyesVisible}
+          scale={eyeScale}
+          lookAnimate={lookAnimate}
+          lookTransition={lookTransition}
+        />
       </motion.div>
     </motion.div>
   );
@@ -309,7 +365,9 @@ const IntroAnimation = ({ onComplete }) => {
 
   useEffect(() => {
     setIsTouchDevice(
-      'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.matchMedia('(pointer: coarse)').matches
+      'ontouchstart' in window ||
+        navigator.maxTouchPoints > 0 ||
+        window.matchMedia('(pointer: coarse)').matches,
     );
     document.body.classList.add('hide-cursor');
     return () => document.body.classList.remove('hide-cursor');
@@ -358,7 +416,11 @@ const IntroAnimation = ({ onComplete }) => {
           }}
         >
           {/* ── EYE-BOX ── */}
-          <EyeBox isTouchDevice={isTouchDevice} onSequenceDone={() => setSequenceDone(true)} restPos={restPos} />
+          <EyeBox
+            isTouchDevice={isTouchDevice}
+            onSequenceDone={() => setSequenceDone(true)}
+            restPos={restPos}
+          />
 
           {/* ── SKIP BUTTON ── */}
           <motion.button
@@ -406,7 +468,10 @@ const IntroAnimation = ({ onComplete }) => {
               }}
             >
               {/* ghost layer — dim copy holds the box size */}
-              <h1 aria-hidden="true" style={{ ...nameTextStyle, color: 'rgba(245, 242, 237, 0.07)' }}>
+              <h1
+                aria-hidden="true"
+                style={{ ...nameTextStyle, color: 'rgba(245, 242, 237, 0.07)' }}
+              >
                 {NAME}
               </h1>
 
@@ -414,7 +479,11 @@ const IntroAnimation = ({ onComplete }) => {
               <motion.div
                 initial={{ clipPath: 'inset(0 100% 0 0)' }}
                 animate={{ clipPath: 'inset(0 0% 0 0)' }}
-                transition={{ duration: REVEAL_DURATION, delay: REVEAL_DELAY, ease: REVEAL_EASE }}
+                transition={{
+                  duration: REVEAL_DURATION,
+                  delay: REVEAL_DELAY,
+                  ease: REVEAL_EASE,
+                }}
                 style={{ position: 'absolute', inset: 0 }}
               >
                 <motion.h1
@@ -454,7 +523,8 @@ const IntroAnimation = ({ onComplete }) => {
                   top: 0,
                   bottom: 0,
                   width: 3,
-                  background: 'linear-gradient(180deg, transparent, #f5f2ed 40%, #f5f2ed 60%, transparent)',
+                  background:
+                    'linear-gradient(180deg, transparent, #f5f2ed 40%, #f5f2ed 60%, transparent)',
                   boxShadow: '0 0 24px 6px rgba(245, 242, 237, 0.85)',
                   mixBlendMode: 'screen',
                   pointerEvents: 'none',
@@ -470,7 +540,11 @@ const IntroAnimation = ({ onComplete }) => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
-                  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                  }}
                 >
                   <motion.p
                     custom={0}
@@ -493,7 +567,11 @@ const IntroAnimation = ({ onComplete }) => {
                   <motion.div
                     initial={{ scaleX: 0, opacity: 0 }}
                     animate={{ scaleX: 1, opacity: 1 }}
-                    transition={{ delay: 0.25, duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    transition={{
+                      delay: 0.25,
+                      duration: 1,
+                      ease: [0.25, 0.46, 0.45, 0.94],
+                    }}
                     style={{
                       width: '100%',
                       maxWidth: '320px',
@@ -542,7 +620,8 @@ const IntroAnimation = ({ onComplete }) => {
                           backgroundColor: '#f5f2ed',
                           transform: hovered ? 'scaleX(1)' : 'scaleX(0)',
                           transformOrigin: 'left center',
-                          transition: 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                          transition:
+                            'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                           zIndex: -1,
                         }}
                       />

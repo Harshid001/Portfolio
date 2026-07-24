@@ -6,11 +6,8 @@ import IntroAnimation from './components/IntroAnimation';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import MainPortfolio from './MainPortfolio';
-import PortalTransitionProvider from './components/transition/PortalTransitionProvider';
-import { GridTransitionProvider } from './components/transition/GridTransitionContext';
-import GridOverlay from './components/transition/GridOverlay';
-import GhostCursor from './components/GhostCursor';
 
+import GhostCursor from './components/GhostCursor';
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -30,12 +27,16 @@ function App() {
     <>
       {!showIntro && <GhostCursor />}
       <AnimatePresence>
-        {showIntro && (
-          <IntroAnimation onComplete={() => setShowIntro(false)} />
-        )}
+        {showIntro && <IntroAnimation onComplete={() => setShowIntro(false)} />}
       </AnimatePresence>
 
-      <div className="min-h-screen overflow-x-hidden custom-scrollbar" style={{ backgroundColor: 'var(--color-paper)', color: 'var(--color-ink)' }}>
+      <div
+        className="min-h-screen overflow-x-hidden custom-scrollbar"
+        style={{
+          backgroundColor: 'var(--color-paper)',
+          color: 'var(--color-ink)',
+        }}
+      >
         <AnimatePresence>
           {!showIntro && (
             <motion.div
@@ -46,18 +47,13 @@ function App() {
               className="w-full"
             >
               <BrowserRouter>
-                <PortalTransitionProvider>
-                  <GridTransitionProvider>
                     <Navbar />
-                    <GridOverlay />
-                    
+
                     <Routes>
                       <Route path="/" element={<MainPortfolio />} />
                     </Routes>
 
                     <Footer />
-                  </GridTransitionProvider>
-                </PortalTransitionProvider>
               </BrowserRouter>
             </motion.div>
           )}

@@ -1,25 +1,25 @@
-import { useEffect, useRef, useState } from 'react'
-import * as THREE from 'three'
+import { useEffect, useRef, useState } from 'react';
+import * as THREE from 'three';
 
 export default function ShaderBackground() {
-  const containerRef = useRef(null)
-  const sceneRef = useRef(null)
-  const mouseRef = useRef({ x: 0.5, y: 0.5 })
-  const [isMobile, setIsMobile] = useState(false)
+  const containerRef = useRef(null);
+  const sceneRef = useRef(null);
+  const mouseRef = useRef({ x: 0.5, y: 0.5 });
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768)
-  }, [])
+    setIsMobile(window.innerWidth < 768);
+  }, []);
 
   useEffect(() => {
-    if (isMobile || !containerRef.current) return
-    const container = containerRef.current
+    if (isMobile || !containerRef.current) return;
+    const container = containerRef.current;
 
     const vertexShader = `
       void main() {
         gl_Position = vec4(position, 1.0);
       }
-    `
+    `;
 
     // Neo-brutal B&W adaptation of the example's golden shader
     const fragmentShader = `
@@ -71,12 +71,12 @@ export default function ShaderBackground() {
 
         gl_FragColor = vec4(finalColor, 1.0);
       }
-    `
+    `;
 
-    const camera = new THREE.Camera()
-    camera.position.z = 1
-    const scene = new THREE.Scene()
-    const geometry = new THREE.PlaneGeometry(2, 2)
+    const camera = new THREE.Camera();
+    camera.position.z = 1;
+    const scene = new THREE.Scene();
+    const geometry = new THREE.PlaneGeometry(2, 2);
 
     const uniforms = {
       time: { value: 1.0 },
@@ -85,67 +85,74 @@ export default function ShaderBackground() {
       hoverStrength: { value: 0.0 },
       uBgColor: { value: new THREE.Color('#f5f2ed') },
       uRayColor: { value: new THREE.Color('#0d0d0d') },
-    }
+    };
 
     const material = new THREE.ShaderMaterial({
       uniforms,
       vertexShader,
       fragmentShader,
-    })
+    });
 
-    const mesh = new THREE.Mesh(geometry, material)
-    scene.add(mesh)
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
 
     const renderer = new THREE.WebGLRenderer({
       antialias: false,
       powerPreference: 'high-performance',
       alpha: false,
-    })
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
-    container.appendChild(renderer.domElement)
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
+    container.appendChild(renderer.domElement);
 
     const onResize = () => {
-      const width = container.clientWidth
-      const height = container.clientHeight
-      renderer.setSize(width, height)
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      renderer.setSize(width, height);
       uniforms.resolution.value.set(
         renderer.domElement.width,
-        renderer.domElement.height
-      )
-    }
-    onResize()
-    window.addEventListener('resize', onResize, false)
+        renderer.domElement.height,
+      );
+    };
+    onResize();
+    window.addEventListener('resize', onResize, false);
 
-    let isHovering = false
+    let isHovering = false;
 
     const onMouseMove = (e) => {
-      const rect = container.getBoundingClientRect()
-      mouseRef.current.x = (e.clientX - rect.left) / rect.width
-      mouseRef.current.y = 1.0 - (e.clientY - rect.top) / rect.height
-      isHovering = true
-    }
-    const onMouseEnter = () => { isHovering = true }
-    const onMouseLeave = () => { isHovering = false }
+      const rect = container.getBoundingClientRect();
+      mouseRef.current.x = (e.clientX - rect.left) / rect.width;
+      mouseRef.current.y = 1.0 - (e.clientY - rect.top) / rect.height;
+      isHovering = true;
+    };
+    const onMouseEnter = () => {
+      isHovering = true;
+    };
+    const onMouseLeave = () => {
+      isHovering = false;
+    };
 
-    container.addEventListener('mousemove', onMouseMove, { passive: true })
-    container.addEventListener('mouseenter', onMouseEnter, { passive: true })
-    container.addEventListener('mouseleave', onMouseLeave, { passive: true })
+    container.addEventListener('mousemove', onMouseMove, { passive: true });
+    container.addEventListener('mouseenter', onMouseEnter, { passive: true });
+    container.addEventListener('mouseleave', onMouseLeave, { passive: true });
 
     let animationId = null;
 
     const animate = () => {
-      const targetHover = isHovering ? 1.0 : 0.0
-      uniforms.hoverStrength.value += (targetHover - uniforms.hoverStrength.value) * 0.05
-      const speed = 0.005 + uniforms.hoverStrength.value * 0.045
-      uniforms.time.value += speed
-      uniforms.mouse.value.x += (mouseRef.current.x - uniforms.mouse.value.x) * 0.08
-      uniforms.mouse.value.y += (mouseRef.current.y - uniforms.mouse.value.y) * 0.08
-      renderer.render(scene, camera)
-      animationId = requestAnimationFrame(animate)
+      const targetHover = isHovering ? 1.0 : 0.0;
+      uniforms.hoverStrength.value +=
+        (targetHover - uniforms.hoverStrength.value) * 0.05;
+      const speed = 0.005 + uniforms.hoverStrength.value * 0.045;
+      uniforms.time.value += speed;
+      uniforms.mouse.value.x +=
+        (mouseRef.current.x - uniforms.mouse.value.x) * 0.08;
+      uniforms.mouse.value.y +=
+        (mouseRef.current.y - uniforms.mouse.value.y) * 0.08;
+      renderer.render(scene, camera);
+      animationId = requestAnimationFrame(animate);
       if (sceneRef.current) {
-        sceneRef.current.animationId = animationId
+        sceneRef.current.animationId = animationId;
       }
-    }
+    };
 
     sceneRef.current = {
       camera,
@@ -153,12 +160,14 @@ export default function ShaderBackground() {
       renderer,
       uniforms,
       animationId: null,
-    }
+    };
 
     const updateColors = () => {
       const rootStyle = getComputedStyle(document.documentElement);
-      const paperColor = rootStyle.getPropertyValue('--color-paper').trim() || '#f5f2ed';
-      const inkColor = rootStyle.getPropertyValue('--color-ink').trim() || '#0d0d0d';
+      const paperColor =
+        rootStyle.getPropertyValue('--color-paper').trim() || '#f5f2ed';
+      const inkColor =
+        rootStyle.getPropertyValue('--color-ink').trim() || '#0d0d0d';
       uniforms.uBgColor.value.set(paperColor);
       uniforms.uRayColor.value.set(inkColor);
     };
@@ -173,42 +182,42 @@ export default function ShaderBackground() {
     });
     themeObserver.observe(document.documentElement, { attributes: true });
 
-    let isVisible = true
+    let isVisible = true;
     const visObserver = new IntersectionObserver(
-      ([entry]) => { 
-        isVisible = entry.isIntersecting
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
         if (isVisible && animationId === null) {
-          animate()
+          animate();
         } else if (!isVisible && animationId !== null) {
-          cancelAnimationFrame(animationId)
-          animationId = null
+          cancelAnimationFrame(animationId);
+          animationId = null;
           if (sceneRef.current) {
-            sceneRef.current.animationId = null
+            sceneRef.current.animationId = null;
           }
         }
       },
-      { threshold: 0 }
-    )
-    visObserver.observe(container)
+      { threshold: 0 },
+    );
+    visObserver.observe(container);
 
     return () => {
-      visObserver.disconnect()
-      themeObserver.disconnect()
-      window.removeEventListener('resize', onResize)
-      container.removeEventListener('mousemove', onMouseMove)
-      container.removeEventListener('mouseenter', onMouseEnter)
-      container.removeEventListener('mouseleave', onMouseLeave)
+      visObserver.disconnect();
+      themeObserver.disconnect();
+      window.removeEventListener('resize', onResize);
+      container.removeEventListener('mousemove', onMouseMove);
+      container.removeEventListener('mouseenter', onMouseEnter);
+      container.removeEventListener('mouseleave', onMouseLeave);
       if (sceneRef.current) {
-        cancelAnimationFrame(sceneRef.current.animationId)
+        cancelAnimationFrame(sceneRef.current.animationId);
         if (container && sceneRef.current.renderer.domElement) {
-          container.removeChild(sceneRef.current.renderer.domElement)
+          container.removeChild(sceneRef.current.renderer.domElement);
         }
-        sceneRef.current.renderer.dispose()
-        geometry.dispose()
-        material.dispose()
+        sceneRef.current.renderer.dispose();
+        geometry.dispose();
+        material.dispose();
       }
-    }
-  }, [])
+    };
+  }, []);
 
   if (isMobile) return null;
 
@@ -218,5 +227,5 @@ export default function ShaderBackground() {
       className="absolute inset-0 w-full h-full"
       style={{ overflow: 'hidden' }}
     />
-  )
+  );
 }

@@ -1,7 +1,13 @@
 import { motion } from 'framer-motion';
 import { FaReact, FaNodeJs, FaGitAlt, FaFigma, FaPython } from 'react-icons/fa';
 import { DiJavascript1 } from 'react-icons/di';
-import { SiTypescript, SiTailwindcss, SiExpress, SiNextdotjs, SiRedis } from 'react-icons/si';
+import {
+  SiTypescript,
+  SiTailwindcss,
+  SiExpress,
+  SiNextdotjs,
+  SiRedis,
+} from 'react-icons/si';
 
 const skillItems = [
   { name: 'React', Icon: FaReact },
@@ -14,7 +20,7 @@ const skillItems = [
   { name: 'Redis', Icon: SiRedis },
   { name: 'TypeScript', Icon: SiTypescript },
   { name: 'Git', Icon: FaGitAlt },
-  { name: 'Figma', Icon: FaFigma }
+  { name: 'Figma', Icon: FaFigma },
 ];
 
 const SkillsMarquee = () => {
@@ -32,16 +38,31 @@ const SkillsMarquee = () => {
       }}
     >
       {/* Fade masks left and right */}
-      <div style={{
-        position: 'absolute', top: 0, left: 0, bottom: 0, width: '80px',
-        background: 'linear-gradient(to right, var(--color-ink), transparent)',
-        zIndex: 2, pointerEvents: 'none',
-      }} />
-      <div style={{
-        position: 'absolute', top: 0, right: 0, bottom: 0, width: '80px',
-        background: 'linear-gradient(to left, var(--color-ink), transparent)',
-        zIndex: 2, pointerEvents: 'none',
-      }} />
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          width: '80px',
+          background:
+            'linear-gradient(to right, var(--color-ink), transparent)',
+          zIndex: 2,
+          pointerEvents: 'none',
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          bottom: 0,
+          width: '80px',
+          background: 'linear-gradient(to left, var(--color-ink), transparent)',
+          zIndex: 2,
+          pointerEvents: 'none',
+        }}
+      />
 
       {/* Seamless Infinite Marquee Track */}
       <div style={{ display: 'flex', width: '100%', overflow: 'hidden' }}>
@@ -60,7 +81,14 @@ const SkillsMarquee = () => {
             }}
           >
             {skillItems.map((item, idx) => (
-              <span key={`${repeatIdx}-${idx}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '48px' }}>
+              <span
+                key={`${repeatIdx}-${idx}`}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '48px',
+                }}
+              >
                 <span
                   className="hover:scale-110 transition-transform duration-300"
                   style={{
@@ -79,7 +107,15 @@ const SkillsMarquee = () => {
                   {item.name}
                 </span>
                 {/* Visual Separator */}
-                <span style={{ color: 'var(--color-paper)', opacity: 0.3, fontSize: '24px' }}>•</span>
+                <span
+                  style={{
+                    color: 'var(--color-paper)',
+                    opacity: 0.3,
+                    fontSize: '24px',
+                  }}
+                >
+                  •
+                </span>
               </span>
             ))}
           </div>

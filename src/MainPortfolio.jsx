@@ -7,37 +7,27 @@ import Projects from './components/Projects';
 import Experience from './components/Experience';
 import Achievements from './components/Achievements';
 import Contact from './components/Contact';
-import { useWorldReveal } from './components/transition/useWorldReveal';
-import { useGridTransition } from './components/transition/GridTransitionContext';
+
 
 const MainPortfolio = () => {
   const rootRef = useRef(null);
-  useWorldReveal(rootRef);
-  const { contentOpacity } = useGridTransition();
 
   return (
-    <main 
-      ref={rootRef} 
-      style={{ 
-        opacity: contentOpacity, 
-        transition: 'opacity 0.2s ease-in-out',
-        willChange: 'opacity'
-      }}
-    >
-      <div data-portal-collapse data-reveal="environment">
+    <main ref={rootRef}>
+      <div>
         <Hero />
       </div>
-      <div data-portal-collapse data-reveal="objects">
+      <div>
         <About />
         <SkillsMarquee />
         <Skills />
       </div>
-      <div data-portal-collapse data-reveal="cards">
+      <div>
         <Projects />
         <Experience />
         <Achievements />
       </div>
-      <div data-portal-collapse data-reveal="ui">
+      <div>
         <Contact />
       </div>
     </main>

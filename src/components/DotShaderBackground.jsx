@@ -1,7 +1,7 @@
-import { useRef, useEffect, useState } from 'react'
-import { Canvas, useFrame, useThree, extend } from '@react-three/fiber'
-import { shaderMaterial, useTrailTexture } from '@react-three/drei'
-import * as THREE from 'three'
+import { useRef, useEffect, useState } from 'react';
+import { Canvas, useFrame, useThree, extend } from '@react-three/fiber';
+import { shaderMaterial, useTrailTexture } from '@react-three/drei';
+import * as THREE from 'three';
 
 const DotMaterialImpl = shaderMaterial(
   {
@@ -74,24 +74,27 @@ const DotMaterialImpl = shaderMaterial(
       #include <tonemapping_fragment>
       #include <colorspace_fragment>
     }
-  `
-)
-extend({ DotMaterialImpl })
+  `,
+);
+extend({ DotMaterialImpl });
 
 const easeInOutCirc = (x) =>
   x < 0.5
     ? (1 - Math.sqrt(1 - Math.pow(2 * x, 2))) / 2
-    : (Math.sqrt(1 - Math.pow(-2 * x + 2, 2)) + 1) / 2
+    : (Math.sqrt(1 - Math.pow(-2 * x + 2, 2)) + 1) / 2;
 
 function Scene() {
-  const size = useThree((s) => s.size)
-  const viewport = useThree((s) => s.viewport)
-  const materialRef = useRef(null)
-  
-  const rotation = 0
-  
-  const isMobile = window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const gridSize = isMobile ? 40 : 80
+  const size = useThree((s) => s.size);
+  const viewport = useThree((s) => s.viewport);
+  const materialRef = useRef(null);
+
+  const rotation = 0;
+
+  const isMobile =
+    window.innerWidth < 768 ||
+    window.matchMedia('(pointer: coarse)').matches ||
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const gridSize = isMobile ? 40 : 80;
 
   const [trail, onMove] = useTrailTexture({
     size: 512,
@@ -99,30 +102,32 @@ function Scene() {
     maxAge: 400, // Make trail last a bit longer
     interpolate: 1,
     ease: easeInOutCirc,
-  })
+  });
 
-  const meshRef = useRef(null)
+  const meshRef = useRef(null);
 
   useFrame((state) => {
     if (materialRef.current) {
-      materialRef.current.uniforms.time.value = state.clock.elapsedTime
+      materialRef.current.uniforms.time.value = state.clock.elapsedTime;
     }
-  })
+  });
 
   useEffect(() => {
     const updateColors = () => {
       const rootStyle = getComputedStyle(document.documentElement);
-      const paperColor = rootStyle.getPropertyValue('--color-paper').trim() || '#f5f2ed';
-      const inkColor = rootStyle.getPropertyValue('--color-ink').trim() || '#0d0d0d';
-      
+      const paperColor =
+        rootStyle.getPropertyValue('--color-paper').trim() || '#f5f2ed';
+      const inkColor =
+        rootStyle.getPropertyValue('--color-ink').trim() || '#0d0d0d';
+
       if (materialRef.current) {
         materialRef.current.uniforms.bgColor.value.set(paperColor);
         materialRef.current.uniforms.dotColor.value.set(inkColor);
       }
     };
-    
+
     updateColors();
-    
+
     const themeObserver = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
         if (mutation.attributeName === 'class') {
@@ -130,17 +135,17 @@ function Scene() {
         }
       }
     });
-    
+
     themeObserver.observe(document.documentElement, { attributes: true });
-    
+
     return () => themeObserver.disconnect();
   }, []);
 
   useEffect(() => {
     if (isMobile) return;
 
-    const el = document.getElementById('about')
-    if (!el || !meshRef.current) return
+    const el = document.getElementById('about');
+    if (!el || !meshRef.current) return;
 
     let ticking = false;
 
@@ -148,15 +153,21 @@ function Scene() {
       if (!ticking) {
         requestAnimationFrame(() => {
           const rect = el.getBoundingClientRect();
-          const clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : e.clientX;
-          const clientY = (e.touches && e.touches.length > 0) ? e.touches[0].clientY : e.clientY;
-          
+          const clientX =
+            e.touches && e.touches.length > 0
+              ? e.touches[0].clientX
+              : e.clientX;
+          const clientY =
+            e.touches && e.touches.length > 0
+              ? e.touches[0].clientY
+              : e.clientY;
+
           // Direct UV calculation is orders of magnitude faster than Three.js raycasting
           const uv = new THREE.Vector2(
             (clientX - rect.left) / rect.width,
-            1.0 - ((clientY - rect.top) / rect.height)
+            1.0 - (clientY - rect.top) / rect.height,
           );
-          
+
           onMove({ uv });
           ticking = false;
         });
@@ -164,18 +175,18 @@ function Scene() {
       }
     };
 
-    el.addEventListener('mousemove', handleMove, { passive: true })
-    el.addEventListener('touchmove', handleMove, { passive: true })
-    el.addEventListener('touchstart', handleMove, { passive: true })
+    el.addEventListener('mousemove', handleMove, { passive: true });
+    el.addEventListener('touchmove', handleMove, { passive: true });
+    el.addEventListener('touchstart', handleMove, { passive: true });
 
     return () => {
-      el.removeEventListener('mousemove', handleMove)
-      el.removeEventListener('touchmove', handleMove)
-      el.removeEventListener('touchstart', handleMove)
-    }
-  }, [onMove, isMobile])
+      el.removeEventListener('mousemove', handleMove);
+      el.removeEventListener('touchmove', handleMove);
+      el.removeEventListener('touchstart', handleMove);
+    };
+  }, [onMove, isMobile]);
 
-  const scale = Math.max(viewport.width, viewport.height) / 2
+  const scale = Math.max(viewport.width, viewport.height) / 2;
   return (
     <mesh ref={meshRef} scale={[scale, scale, 1]}>
       <planeGeometry args={[2, 2]} />
@@ -189,28 +200,32 @@ function Scene() {
         render={0}
       />
     </mesh>
-  )
+  );
 }
 
 export default function DotShaderBackground() {
-  const containerRef = useRef(null)
-  const [isVisible, setIsVisible] = useState(false)
+  const containerRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const el = containerRef.current
-    if (!el) return
+    const el = containerRef.current;
+    if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => setIsVisible(entry.isIntersecting),
-      { threshold: 0 }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
+      { threshold: 0 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div ref={containerRef} className="absolute inset-0 w-full h-full" style={{ overflow: 'hidden' }}>
+    <div
+      ref={containerRef}
+      className="absolute inset-0 w-full h-full"
+      style={{ overflow: 'hidden' }}
+    >
       <Canvas
-        frameloop={isVisible ? "always" : "demand"}
+        frameloop={isVisible ? 'always' : 'demand'}
         gl={{
           antialias: false,
           powerPreference: 'high-performance',
@@ -223,5 +238,5 @@ export default function DotShaderBackground() {
         <Scene />
       </Canvas>
     </div>
-  )
+  );
 }

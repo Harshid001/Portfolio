@@ -1,6 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useMotionValueEvent,
+} from 'framer-motion';
 import { HiMenuAlt3, HiX, HiOutlineMoon, HiOutlineSun } from 'react-icons/hi';
 // CHANGED: wire the logo into the cinematic portal transition.
 import { usePortalTransition } from './transition/PortalTransitionProvider';
@@ -21,7 +26,10 @@ const Navbar = () => {
   const isHome = location.pathname === '/';
   // CHANGED: pull in the transition trigger + busy flag.
   const { triggerPortal, isTransitioning } = usePortalTransition();
-  const { triggerTransition: triggerGridTransition, isTransitioning: isGridTransitioning } = useGridTransition();
+  const {
+    triggerTransition: triggerGridTransition,
+    isTransitioning: isGridTransitioning,
+  } = useGridTransition();
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -63,17 +71,17 @@ const Navbar = () => {
   const handleLogoClick = (e) => {
     e.preventDefault();
     if (isTransitioning || isGridTransitioning) return;
-    triggerPortal({ 
-      logoEl: logoRef.current, 
+    triggerPortal({
+      logoEl: logoRef.current,
       targetPath: '/',
       clickX: e.clientX,
-      clickY: e.clientY
+      clickY: e.clientY,
     });
   };
 
   const logoCaption = 'Click to Level Up';
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
+  useMotionValueEvent(scrollY, 'change', (latest) => {
     // Keep nav visible at all times by keeping navY at 0
     setNavY(0);
     // Anthropic-style logo shrink at ~25% of viewport height
@@ -132,8 +140,10 @@ const Navbar = () => {
     setIsMobileMenuOpen(false);
 
     // Calculate direction
-    const currentIdx = navLinks.findIndex(l => l.href.slice(1) === activeSection);
-    const targetIdx = navLinks.findIndex(l => l.href === href);
+    const currentIdx = navLinks.findIndex(
+      (l) => l.href.slice(1) === activeSection,
+    );
+    const targetIdx = navLinks.findIndex((l) => l.href === href);
     const direction = targetIdx > currentIdx ? 'down' : 'up';
 
     setClickedLink(href);
@@ -153,25 +163,26 @@ const Navbar = () => {
       className="fixed top-0 left-0 w-full z-50 flex items-center backdrop-blur-md"
       style={{
         height: '75px',
-        backgroundColor: 'color-mix(in srgb, var(--color-paper) 85%, transparent)',
-        borderBottom: `${isScrolled ? '1px' : '0px'} solid var(--color-ink-3)`
+        backgroundColor:
+          'color-mix(in srgb, var(--color-paper) 85%, transparent)',
+        borderBottom: `${isScrolled ? '1px' : '0px'} solid var(--color-ink-3)`,
       }}
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-full relative">
         {/* LEFT SECTION: LOGO */}
         <div className="flex-1 flex justify-start items-center">
           <div
-            className="logo-base select-none" 
-            style={{ 
-              fontFamily: 'var(--font-display)', 
-              fontSize: '1.3rem', 
+            className="logo-base select-none"
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: '1.3rem',
               fontWeight: 600,
               color: 'var(--color-ink)',
               display: 'inline-flex',
-              alignItems: 'center'
+              alignItems: 'center',
             }}
           >
-            <motion.span 
+            <motion.span
               initial={false}
               animate={{ fontSize: isScrolledLogo ? '1em' : '1.25em' }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
@@ -182,28 +193,36 @@ const Navbar = () => {
             <span>H</span>
             <motion.span
               initial={false}
-              animate={{ 
-                width: isScrolledLogo ? 0 : "auto", 
-                opacity: isScrolledLogo ? 0 : 1
+              animate={{
+                width: isScrolledLogo ? 0 : 'auto',
+                opacity: isScrolledLogo ? 0 : 1,
               }}
-              style={{ overflow: "hidden", display: "inline-flex", whiteSpace: "pre" }}
+              style={{
+                overflow: 'hidden',
+                display: 'inline-flex',
+                whiteSpace: 'pre',
+              }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
-              {"arshid "}
+              {'arshid '}
             </motion.span>
             <span>S</span>
             <motion.span
               initial={false}
-              animate={{ 
-                width: isScrolledLogo ? 0 : "auto", 
-                opacity: isScrolledLogo ? 0 : 1
+              animate={{
+                width: isScrolledLogo ? 0 : 'auto',
+                opacity: isScrolledLogo ? 0 : 1,
               }}
-              style={{ overflow: "hidden", display: "inline-flex", whiteSpace: "pre" }}
+              style={{
+                overflow: 'hidden',
+                display: 'inline-flex',
+                whiteSpace: 'pre',
+              }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
-              {"oni"}
+              {'oni'}
             </motion.span>
-            <motion.span 
+            <motion.span
               initial={false}
               animate={{ fontSize: isScrolledLogo ? '1em' : '1.25em' }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
@@ -215,7 +234,7 @@ const Navbar = () => {
         </div>
 
         {/* CENTER SECTION: NAVIGATION LINKS */}
-        <div 
+        <div
           className="hidden lg:flex justify-center items-center h-full gap-2 xl:gap-4 shrink-0"
           onMouseLeave={() => setHoveredNav(null)}
         >
@@ -238,23 +257,38 @@ const Navbar = () => {
                   fontSize: '13px',
                   textTransform: 'uppercase',
                   letterSpacing: '0.1em',
-                  color: (isActive || isHovered) ? 'var(--color-ink)' : 'var(--color-ink-2)',
-                  transform: clickedLink === link.href ? 'scale(0.92)' : 'scale(1)',
+                  color:
+                    isActive || isHovered
+                      ? 'var(--color-ink)'
+                      : 'var(--color-ink-2)',
+                  transform:
+                    clickedLink === link.href ? 'scale(0.92)' : 'scale(1)',
                 }}
               >
                 {showSlider && (
                   <motion.div
                     layoutId="navSlider"
                     className="absolute inset-0 z-[-1]"
-                    style={{ 
-                      backgroundColor: 'var(--color-ink)', 
+                    style={{
+                      backgroundColor: 'var(--color-ink)',
                       opacity: 0.08,
-                      borderRadius: '0px' /* Square box as requested */
+                      borderRadius: '0px' /* Square box as requested */,
                     }}
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}
-                <span className="relative z-10 transition-colors duration-200" style={{ color: isHovered ? 'var(--color-red)' : (isActive ? 'var(--color-ink)' : 'var(--color-ink-2)') }}>{link.name}</span>
+                <span
+                  className="relative z-10 transition-colors duration-200"
+                  style={{
+                    color: isHovered
+                      ? 'var(--color-red)'
+                      : isActive
+                        ? 'var(--color-ink)'
+                        : 'var(--color-ink-2)',
+                  }}
+                >
+                  {link.name}
+                </span>
               </a>
             );
           })}
@@ -268,7 +302,13 @@ const Navbar = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="btn-secondary h-[40px] flex items-center justify-center transition-transform hover:scale-[1.02]"
-              style={{ padding: '0 32px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px', letterSpacing: '0.1em' }}
+              style={{
+                padding: '0 32px',
+                fontFamily: 'var(--font-body)',
+                fontWeight: 600,
+                fontSize: '13px',
+                letterSpacing: '0.1em',
+              }}
             >
               RESUME
             </a>
@@ -276,7 +316,13 @@ const Navbar = () => {
               href="#contact"
               onClick={(e) => scrollTo(e, '#contact')}
               className="btn-primary h-[40px] flex items-center justify-center transition-transform hover:scale-[1.02]"
-              style={{ padding: '0 32px', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px', letterSpacing: '0.1em' }}
+              style={{
+                padding: '0 32px',
+                fontFamily: 'var(--font-body)',
+                fontWeight: 600,
+                fontSize: '13px',
+                letterSpacing: '0.1em',
+              }}
             >
               CONTACT
             </a>
@@ -288,19 +334,23 @@ const Navbar = () => {
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
             className="w-[40px] h-[40px] rounded-full flex items-center justify-center border-2 transition-colors"
-            style={{ 
-              borderColor: 'var(--color-ink)', 
+            style={{
+              borderColor: 'var(--color-ink)',
               backgroundColor: 'var(--color-paper-2)',
-              color: 'var(--color-ink)' 
+              color: 'var(--color-ink)',
             }}
             aria-label="Toggle Dark Mode"
           >
             <motion.div
               animate={{ rotate: isDark ? 180 : 0 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
+              transition={{ duration: 0.5, ease: 'easeInOut' }}
               className="flex items-center justify-center"
             >
-              {isDark ? <HiOutlineMoon size={20} strokeWidth={1.5} /> : <HiOutlineSun size={20} strokeWidth={1.5} />}
+              {isDark ? (
+                <HiOutlineMoon size={20} strokeWidth={1.5} />
+              ) : (
+                <HiOutlineSun size={20} strokeWidth={1.5} />
+              )}
             </motion.div>
           </motion.button>
 
@@ -318,10 +368,10 @@ const Navbar = () => {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ clipPath: "inset(0 0 100% 0)" }}
-            animate={{ clipPath: "inset(0 0 0% 0)" }}
-            exit={{ clipPath: "inset(0 0 100% 0)" }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
+            initial={{ clipPath: 'inset(0 0 100% 0)' }}
+            animate={{ clipPath: 'inset(0 0 0% 0)' }}
+            exit={{ clipPath: 'inset(0 0 100% 0)' }}
+            transition={{ duration: 0.4, ease: 'easeInOut' }}
             className="fixed inset-0 flex flex-col p-10 z-[100] md:hidden"
             style={{ backgroundColor: 'var(--color-ink)' }}
           >
@@ -346,12 +396,23 @@ const Navbar = () => {
                   className="text-4xl sm:text-5xl transition-all duration-100"
                   style={{
                     fontFamily: 'var(--font-display)',
-                    color: activeSection === link.href.slice(1) ? 'var(--color-red)' : 'var(--color-paper)',
-                    transform: clickedLink === link.href ? 'scale(0.92)' : 'scale(1)',
-                    opacity: clickedLink === link.href ? 0.8 : 1
+                    color:
+                      activeSection === link.href.slice(1)
+                        ? 'var(--color-red)'
+                        : 'var(--color-paper)',
+                    transform:
+                      clickedLink === link.href ? 'scale(0.92)' : 'scale(1)',
+                    opacity: clickedLink === link.href ? 0.8 : 1,
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-red)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.color = activeSection === link.href.slice(1) ? 'var(--color-red)' : 'var(--color-paper)'; }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = 'var(--color-red)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color =
+                      activeSection === link.href.slice(1)
+                        ? 'var(--color-red)'
+                        : 'var(--color-paper)';
+                  }}
                 >
                   {link.name}
                 </motion.a>
@@ -367,10 +428,17 @@ const Navbar = () => {
                 style={{
                   fontFamily: 'var(--font-display)',
                   color: 'var(--color-ink)',
-                  WebkitTextStroke: '1px var(--color-paper)'
+                  WebkitTextStroke: '1px var(--color-paper)',
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-red)'; e.currentTarget.style.WebkitTextStroke = '0px'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--color-ink)'; e.currentTarget.style.WebkitTextStroke = '1px var(--color-paper)'; }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = 'var(--color-red)';
+                  e.currentTarget.style.WebkitTextStroke = '0px';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'var(--color-ink)';
+                  e.currentTarget.style.WebkitTextStroke =
+                    '1px var(--color-paper)';
+                }}
               >
                 RESUME
               </motion.a>

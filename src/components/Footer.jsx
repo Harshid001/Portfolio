@@ -2,27 +2,40 @@ import { FaGithub, FaLinkedin, FaYoutube, FaTwitter } from 'react-icons/fa';
 
 const Footer = () => {
   return (
-    <footer className="dark-section" style={{ backgroundColor: 'var(--color-ink)', color: 'var(--color-paper)', borderTop: '3px solid var(--color-ink)' }}>
-      
+    <footer
+      className="dark-section"
+      style={{
+        backgroundColor: 'var(--color-ink)',
+        color: 'var(--color-paper)',
+        borderTop: '3px solid var(--color-ink)',
+      }}
+    >
       {/* Marquee Strip Top */}
-      <div 
+      <div
         className="w-full overflow-hidden whitespace-nowrap py-3 flex"
-        style={{ 
+        style={{
           borderBottom: '2px solid var(--color-ink)',
           backgroundColor: 'var(--color-paper)',
-          color: 'var(--color-ink-3)'
+          color: 'var(--color-ink-3)',
         }}
       >
         {[...Array(2)].map((_, repeatIdx) => (
-          <div 
+          <div
             key={repeatIdx}
             aria-hidden={repeatIdx === 1 ? 'true' : undefined}
             className="skills-marquee-track"
             style={{ display: 'flex', whiteSpace: 'nowrap', flexShrink: 0 }}
           >
             {[...Array(4)].map((_, i) => (
-              <span key={i} style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(14px, 4vw, 20px)', paddingRight: '12px' }}>
-                AVAILABLE FOR WORK · FULL STACK DEVELOPER · REACT · NODE.JS · 
+              <span
+                key={i}
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 'clamp(14px, 4vw, 20px)',
+                  paddingRight: '12px',
+                }}
+              >
+                AVAILABLE FOR WORK · FULL STACK DEVELOPER · REACT · NODE.JS ·
               </span>
             ))}
           </div>
@@ -30,18 +43,33 @@ const Footer = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-6 items-center border-b-2 pb-10" style={{ borderColor: 'var(--color-ink-2)' }}>
-          
+        <div
+          className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-6 items-center border-b-2 pb-10"
+          style={{ borderColor: 'var(--color-ink-2)' }}
+        >
           {/* Left: Logo */}
           <div className="flex justify-center md:justify-start">
-            <span style={{ fontFamily: 'var(--font-display)', fontSize: '32px', color: 'var(--color-paper)' }}>
+            <span
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: '32px',
+                color: 'var(--color-paper)',
+              }}
+            >
               &lt;HS /&gt;
             </span>
           </div>
-          
+
           {/* Center: Credit */}
           <div className="flex justify-center text-center">
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--color-ink-3)', letterSpacing: '0.1em' }}>
+            <span
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '11px',
+                color: 'var(--color-ink-3)',
+                letterSpacing: '0.1em',
+              }}
+            >
               DESIGNED & BUILT BY HARSHID SONI
             </span>
           </div>
@@ -49,20 +77,36 @@ const Footer = () => {
           {/* Right: Socials */}
           <div className="flex justify-center md:justify-end gap-3">
             {[
-              { icon: <FaGithub />, link: "https://github.com/Harshid001" },
-              { icon: <FaLinkedin />, link: "https://www.linkedin.com/in/harshid-soni-441500385/" },
-              { icon: <FaYoutube />, link: "https://www.youtube.com/@Harshid001" },
-              { icon: <FaTwitter />, link: "https://x.com/HarshidSoni2007" }
+              { icon: <FaGithub />, link: 'https://github.com/Harshid001' },
+              {
+                icon: <FaLinkedin />,
+                link: 'https://www.linkedin.com/in/harshid-soni-441500385/',
+              },
+              {
+                icon: <FaYoutube />,
+                link: 'https://www.youtube.com/@Harshid001',
+              },
+              { icon: <FaTwitter />, link: 'https://x.com/HarshidSoni2007' },
             ].map((social, i) => (
-              <a 
-                key={i} 
-                href={social.link} 
-                target="_blank" 
-                rel="noreferrer" 
-                className="w-11 h-11 flex items-center justify-center text-lg transition-colors" 
-                style={{ backgroundColor: 'transparent', color: 'var(--color-paper)', border: '2px solid var(--color-paper)' }}
-                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--color-paper)'; e.currentTarget.style.color = 'var(--color-ink)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--color-paper)'; }}
+              <a
+                key={i}
+                href={social.link}
+                target="_blank"
+                rel="noreferrer"
+                className="w-11 h-11 flex items-center justify-center text-lg transition-colors"
+                style={{
+                  backgroundColor: 'transparent',
+                  color: 'var(--color-paper)',
+                  border: '2px solid var(--color-paper)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-paper)';
+                  e.currentTarget.style.color = 'var(--color-ink)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = 'var(--color-paper)';
+                }}
               >
                 {social.icon}
               </a>
@@ -71,7 +115,15 @@ const Footer = () => {
         </div>
 
         {/* Bottom Row */}
-        <div className="flex flex-col md:flex-row justify-between items-center mt-6 pt-2" style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#555', letterSpacing: '0.1em' }}>
+        <div
+          className="flex flex-col md:flex-row justify-between items-center mt-6 pt-2"
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '10px',
+            color: '#555',
+            letterSpacing: '0.1em',
+          }}
+        >
           <span>© 2025 HARSHID SONI</span>
           <span className="mt-2 md:mt-0">ALL RIGHTS RESERVED</span>
         </div>
