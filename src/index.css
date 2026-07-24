@@ -463,3 +463,94 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* ==========================================================================
+   Custom cursor — hover reactivity
+   Transform (position/scale/rotation) is driven by the rAF loop in
+   GhostCursor.jsx. Everything here is fill, border and glow only, so these
+   transitions never fight the JS transform.
+   ========================================================================== */
+
+.gc-ring {
+  background-color: #ffffff;
+  border: 0 solid #ffffff;
+  border-radius: 0;
+  transition:
+    background-color 0.2s ease,
+    border-width 0.2s ease,
+    border-radius 0.2s ease;
+}
+
+/* Over a clickable element the solid diamond opens into a hollow outline
+   and breathes gently. */
+.gc-ring.is-hover {
+  background-color: transparent;
+  border-width: 2px;
+  border-radius: 3px;
+  animation: gc-pulse 1.4s ease-in-out infinite;
+}
+
+.gc-dot {
+  transition:
+    opacity 0.2s ease,
+    background-color 0.2s ease;
+}
+
+/* The centre dot recedes so the open outline reads as the primary shape. */
+.gc-dot.is-hover {
+  opacity: 0.45;
+}
+
+/* box-shadow only — safe to animate alongside a JS-driven transform. */
+@keyframes gc-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 7px rgba(255, 255, 255, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gc-ring.is-hover {
+    animation: none;
+  }
+}
+
+/* ==========================================================================
+   Hero social icons — contrast-aware
+   The hero sits on an animated WebGL shader that sweeps between near-white
+   and near-black, so a plain transparent icon disappears whenever a dark band
+   passes behind it. Each icon now carries its own frosted plate in the current
+   theme's paper colour, so the ink glyph always has a guaranteed contrasting
+   backdrop regardless of what the shader is doing.
+   ========================================================================== */
+
+.social-icon {
+  background-color: color-mix(in srgb, var(--color-paper) 90%, transparent);
+  color: var(--color-ink);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+  backdrop-filter: blur(8px) saturate(140%);
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.social-icon:hover,
+.social-icon:focus-visible {
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+}
+
+/* Browsers without backdrop-filter get a fully opaque plate instead, so the
+   icon is never left floating on a dark shader band. */
+@supports not (backdrop-filter: blur(8px)) {
+  .social-icon {
+    background-color: var(--color-paper);
+  }
+}

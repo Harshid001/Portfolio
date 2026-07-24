@@ -110,6 +110,11 @@ const GhostCursor = () => {
       if (next !== hovering) {
         hovering = next;
         dirty = true;
+        // Colour/border/pulse changes are handled by CSS transitions on this
+        // class; only the transform stays in JS. Toggling here (rather than in
+        // the rAF loop) means one class write per hover, not one per frame.
+        ring.classList.toggle('is-hover', hovering);
+        dot.classList.toggle('is-hover', hovering);
       }
     };
 
@@ -128,12 +133,18 @@ const GhostCursor = () => {
         trail[i].y += (trail[i - 1].y - trail[i].y) * 0.3;
       }
 
-      const scale = clicking ? 0.7 : hovering ? 1.35 : 1;
+      // Reactivity on interactive elements: the diamond opens up into a larger
+      // hollow outline (see `.gc-ring.is-hover` in index.css) and punches back
+      // in on click.
+      const scale = clicking ? 0.68 : hovering ? 1.7 : 1;
+      // A little extra rotation on hover makes the state change feel alive
+      // rather than like a plain resize.
+      const spin = hovering ? 135 : 45;
 
       // translate3d keeps every node on its own GPU layer; no layout, no paint.
       ring.style.transform = `translate3d(${ringPos.x - CURSOR_RING_SIZE / 2}px, ${
         ringPos.y - CURSOR_RING_SIZE / 2
-      }px, 0) rotate(45deg) scale(${scale})`;
+      }px, 0) rotate(${spin}deg) scale(${scale})`;
 
       dot.style.transform = `translate3d(${mouse.x - DOT_SIZE / 2}px, ${
         mouse.y - DOT_SIZE / 2
@@ -215,19 +226,29 @@ const GhostCursor = () => {
         />
       ))}
 
+      {/*
+        `backgroundColor` is deliberately NOT set inline here — the `.gc-ring`
+        class owns the fill/border so the hover state can transition smoothly.
+      */}
       <div
         ref={ringRef}
+        className="gc-ring"
         style={{
-          ...base,
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          pointerEvents: 'none',
+          mixBlendMode: 'difference',
+          willChange: 'transform',
           width: CURSOR_RING_SIZE,
           height: CURSOR_RING_SIZE,
           zIndex: 99999,
-          transition: 'transform 0.05s linear',
         }}
       />
 
       <div
         ref={dotRef}
+        className="gc-dot"
         style={{
           ...base,
           width: DOT_SIZE,

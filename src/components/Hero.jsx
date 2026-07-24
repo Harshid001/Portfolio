@@ -182,38 +182,42 @@ const Hero = () => {
 
           <motion.div variants={fadeUp} className="flex gap-4">
             {[
-              { icon: <FaGithub />, link: 'https://github.com/Harshid001' },
+              {
+                icon: <FaGithub />,
+                label: 'GitHub',
+                link: 'https://github.com/Harshid001',
+              },
               {
                 icon: <FaLinkedin />,
+                label: 'LinkedIn',
                 link: 'https://www.linkedin.com/in/harshid-soni-441500385/',
               },
               {
                 icon: <FaYoutube />,
+                label: 'YouTube',
                 link: 'https://www.youtube.com/@Harshid001',
               },
-              { icon: <FaTwitter />, link: 'https://x.com/HarshidSoni2007' },
-            ].map((social, i) => (
+              {
+                icon: <FaTwitter />,
+                label: 'Twitter',
+                link: 'https://x.com/HarshidSoni2007',
+              },
+            ].map((social) => (
               <motion.a
-                key={i}
+                key={social.label}
                 href={social.link}
                 target="_blank"
                 rel="noreferrer"
+                aria-label={social.label}
                 whileTap={{ scale: 0.9, rotate: 5 }}
-                className="w-[44px] h-[44px] flex items-center justify-center text-xl transition-all brutal-border"
-                style={{
-                  backgroundColor: 'var(--color-paper)',
-                  color: 'var(--color-ink)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-ink)';
-                  e.currentTarget.style.color = 'var(--color-white)';
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-paper)';
-                  e.currentTarget.style.color = 'var(--color-ink)';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
+                /*
+                  Hover/colour is handled by the `.social-icon` class now.
+                  The old inline onMouseEnter/onMouseLeave handlers wrote three
+                  inline styles per event, forcing a style recalc on every
+                  pointer pass, and their hardcoded paper background vanished
+                  against the dark bands of the hero shader.
+                */
+                className="social-icon w-[44px] h-[44px] flex items-center justify-center text-xl brutal-border"
               >
                 {social.icon}
               </motion.a>

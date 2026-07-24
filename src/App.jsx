@@ -18,7 +18,14 @@ function App() {
 
   return (
     <>
-      {!showIntro && <GhostCursor />}
+      {/*
+        Mounted from the very first frame, including during the intro.
+        Previously it only mounted after the intro finished, so the cursor had
+        to boot up mid-interaction — that was the "slight delay" on entry.
+        The intro's skip button is a normal button, so it picks up the cursor's
+        hover state for free.
+      */}
+      <GhostCursor />
 
       <AnimatePresence>
         {showIntro && (
