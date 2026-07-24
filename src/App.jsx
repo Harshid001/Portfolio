@@ -6,7 +6,9 @@ import IntroAnimation from './components/IntroAnimation';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import MainPortfolio from './MainPortfolio';
-
+import PortalTransitionProvider from './components/transition/PortalTransitionProvider';
+import { GridTransitionProvider } from './components/transition/GridTransitionContext';
+import GridOverlay from './components/transition/GridOverlay';
 import GhostCursor from './components/GhostCursor';
 
 function App() {
@@ -47,13 +49,18 @@ function App() {
               className="w-full"
             >
               <BrowserRouter>
+                <PortalTransitionProvider>
+                  <GridTransitionProvider>
                     <Navbar />
+                    <GridOverlay />
 
                     <Routes>
                       <Route path="/" element={<MainPortfolio />} />
                     </Routes>
 
                     <Footer />
+                  </GridTransitionProvider>
+                </PortalTransitionProvider>
               </BrowserRouter>
             </motion.div>
           )}
