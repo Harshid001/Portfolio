@@ -67,6 +67,11 @@
     </script>
   </head>
   <body>
+    <script>
+      if (!('ontouchstart' in window) && !window.matchMedia('(pointer: coarse)').matches) {
+        document.body.classList.add('hide-cursor');
+      }
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
