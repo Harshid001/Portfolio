@@ -3,12 +3,40 @@ import {
   motion,
   useScroll,
   useTransform,
+  useInView,
+  useReducedMotion,
   AnimatePresence,
 } from 'framer-motion';
+
+import ScrambleText from './motion/ScrambleText';
+import RevealText from './motion/RevealText';
+import MagneticCard from './motion/MagneticCard';
+import { useCountUp, parseStat } from '../hooks/useCountUp';
+import { useIsMobile } from '../hooks/useIsMobile';
+import {
+  blurSlideIn,
+  cardRise,
+  photoReveal,
+  badgePop,
+  reducedVariants,
+  EASE_WIPE,
+} from '../lib/motionVariants';
 
 import hackathon1 from '../assets/hackathon/hackathon1.jpg';
 import hackathon2 from '../assets/hackathon/hackathon2.jpg';
 import hackathon3 from '../assets/hackathon/hackathon3.jpg';
+import hackathon1Webp from '../assets/hackathon/hackathon1.webp';
+import hackathon2Webp from '../assets/hackathon/hackathon2.webp';
+import hackathon3Webp from '../assets/hackathon/hackathon3.webp';
+
+// Paired so the gallery can serve WebP with a JPEG fallback. Intrinsic sizes
+// are recorded here purely to set width/height and kill layout shift - the
+// rendered box is still driven by the 1/1 aspect-ratio wrapper.
+const hackathonGallery = [
+  { webp: hackathon1Webp, fallback: hackathon1, width: 1024, height: 768 },
+  { webp: hackathon2Webp, fallback: hackathon2, width: 1024, height: 768 },
+  { webp: hackathon3Webp, fallback: hackathon3, width: 576, height: 1024 },
+];
 
 const hackathonStats = [
   { value: '5+', label: 'HACKATHONS ENTERED' },
@@ -145,6 +173,274 @@ const DoodleCircle = ({ style }) => (
   </svg>
 );
 
+/* ─── Animated pieces of the hackathon block ─── */
+
+/**
+ * One cell of the stat strip.
+ *
+ * - the 2px divider "draws" (scaleY 0 to 1) instead of fading in
+ * - numeric stats count up, the non-numeric one (infinity) scrambles
+ * - hover inverts via a scaleY wipe from the bottom instead of a hard colour cut
+ *
+ * Palette is untouched: the wipe paints the exact same --color-ink the previous
+ * whileHover set, and the resting state renders identically.
+ */
+const StatCell = ({ stat, index, inView, reduced, isLast }) => {
+  const [hovered, setHovered] = useState(false);
+  const parsed = parseStat(stat.value);
+  const count = useCountUp(parsed ? parsed.number : 0, {
+    active: inView,
+    duration: 1200 + index * 120,
+    reduced,
+  });
+  const counting = Boolean(parsed) && !reduced && inView && count < parsed.number;
+
+  return (
+    <motion.div
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      initial={reduced ? { opacity: 0 } : { opacity: 0, y: 12 }}
+      animate={inView ? { opacity: 1, y: 0 } : false}
+      transition={{ duration: 0.45, delay: index * 0.1, ease: EASE_WIPE }}
+      style={{
+        padding: '24px 20px',
+        // The border stays in the box model but transparent, so swapping the
+        // painted line for an animated element cannot shift the 2px of layout
+        // it occupies.
+        borderRight: isLast ? 'none' : '2px solid transparent',
+        textAlign: 'center',
+        backgroundColor: 'var(--color-paper)',
+        color: hovered ? 'var(--color-paper)' : 'var(--color-ink)',
+        position: 'relative',
+        overflow: 'hidden',
+        transition: 'color 0.25s',
+      }}
+    >
+      {/* Hover inversion, wiped up from the bottom edge. */}
+      <motion.span
+        aria-hidden
+        initial={false}
+        animate={{ scaleY: hovered ? 1 : 0 }}
+        transition={{ duration: reduced ? 0 : 0.25, ease: EASE_WIPE }}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          transformOrigin: 'bottom',
+          backgroundColor: 'var(--color-ink)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      />
+
+      {/* The divider, drawn top-down, then pulsed while its counter runs. */}
+      {!isLast && (
+        <motion.span
+          aria-hidden
+          initial={{ scaleY: 0 }}
+          animate={{
+            scaleY: inView ? 1 : 0,
+            opacity: counting ? [0.45, 1, 0.45] : 1,
+          }}
+          transition={{
+            scaleY: { duration: 0.5, delay: index * 0.1, ease: EASE_WIPE },
+            opacity: counting
+              ? { duration: 0.9, repeat: Infinity, ease: 'easeInOut' }
+              : { duration: 0.2 },
+          }}
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            right: -2,
+            width: 2,
+            backgroundColor: 'var(--color-ink)',
+            transformOrigin: 'top',
+            pointerEvents: 'none',
+            zIndex: 2,
+          }}
+        />
+      )}
+
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <p
+          style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: 'clamp(32px, 5vw, 52px)',
+            fontWeight: 900,
+            lineHeight: 1,
+            color: 'inherit',
+          }}
+        >
+          {parsed ? (
+            `${count}${parsed.suffix}`
+          ) : (
+            <ScrambleText
+              text={stat.value}
+              active={inView}
+              reduced={reduced}
+              duration={800}
+            />
+          )}
+        </p>
+        <p
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '10px',
+            letterSpacing: '0.18em',
+            color: 'inherit',
+            opacity: 0.7,
+            marginTop: '6px',
+            textTransform: 'uppercase',
+          }}
+        >
+          {stat.label}
+        </p>
+      </div>
+    </motion.div>
+  );
+};
+
+/**
+ * A single "Notable Participation" row.
+ *
+ * Enters blurred and offset, decodes its BUILT line like terminal output, then
+ * pops its level badge with a one-shot ring. Triggered at -15% so the row is
+ * meaningfully on screen before it plays, and once:true so nothing replays on
+ * scroll-up.
+ */
+const ParticipationRow = ({ hack, index, reduced }) => {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-15%' });
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <motion.div
+      ref={ref}
+      className="flex flex-col sm:flex-row sm:items-center justify-between p-6 brutal-border transition-colors duration-300 group"
+      variants={reduced ? reducedVariants : blurSlideIn}
+      initial="hidden"
+      animate={inView ? 'visible' : 'hidden'}
+      transition={{ delay: index * 0.15 }}
+      style={{
+        backgroundColor: 'var(--color-paper-3)',
+        color: 'var(--color-ink)',
+        position: 'relative',
+      }}
+      onMouseEnter={(e) => {
+        setHovered(true);
+        e.currentTarget.style.backgroundColor = 'var(--color-ink)';
+        e.currentTarget.style.color = 'var(--color-paper)';
+      }}
+      onMouseLeave={(e) => {
+        setHovered(false);
+        e.currentTarget.style.backgroundColor = 'var(--color-paper-3)';
+        e.currentTarget.style.color = 'var(--color-ink)';
+      }}
+    >
+      {/* Left edge bar. scaleX, never width, so it stays on the compositor. */}
+      <motion.span
+        aria-hidden
+        initial={false}
+        animate={{ scaleX: hovered && !reduced ? 1 : 0 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          bottom: 0,
+          width: 3,
+          backgroundColor: 'currentColor',
+          transformOrigin: 'left',
+          pointerEvents: 'none',
+        }}
+      />
+
+      <motion.div
+        animate={{ x: hovered && !reduced ? 8 : 0 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 24 }}
+      >
+        <h4
+          style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: '20px',
+            fontWeight: 800,
+            textTransform: 'uppercase',
+            color: 'inherit',
+          }}
+        >
+          {hack.name}
+        </h4>
+        <p
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '12px',
+            color: 'inherit',
+            opacity: 0.8,
+            letterSpacing: '0.1em',
+            marginTop: '4px',
+          }}
+        >
+          BUILT:{' '}
+          <ScrambleText
+            text={hack.project}
+            active={inView}
+            reduced={reduced}
+            duration={700}
+          />
+        </p>
+      </motion.div>
+
+      <div className="mt-4 sm:mt-0 text-left sm:text-right">
+        <motion.span
+          className="inline-block px-3 py-1 mb-2 sm:mb-1 border"
+          variants={reduced ? reducedVariants : badgePop}
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '10px',
+            textTransform: 'uppercase',
+            borderColor: 'currentColor',
+            color: 'inherit',
+            position: 'relative',
+          }}
+        >
+          {hack.level}
+          {/* One-shot ring that expands and fades as the badge lands. */}
+          {!reduced && (
+            <motion.span
+              aria-hidden
+              initial={{ opacity: 0, scale: 1 }}
+              animate={inView ? { opacity: [0, 0.6, 0], scale: 1.6 } : false}
+              transition={{ duration: 0.4, delay: 0.35 + index * 0.15 }}
+              style={{
+                position: 'absolute',
+                inset: -1,
+                border: '1px solid currentColor',
+                pointerEvents: 'none',
+              }}
+            />
+          )}
+        </motion.span>
+        <motion.p
+          animate={{
+            scale: hovered && !reduced ? 1.15 : 1,
+            opacity: hovered && !reduced ? 0.7 : 1,
+          }}
+          transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '12px',
+            fontWeight: 'bold',
+            color: 'inherit',
+            transformOrigin: 'right center',
+          }}
+        >
+          {hack.date}
+        </motion.p>
+      </div>
+    </motion.div>
+  );
+};
+
 /* ─── PART A: Hackathon Section ─── */
 const HackathonSection = () => {
   const sectionRef = useRef(null);
@@ -155,6 +451,34 @@ const HackathonSection = () => {
   const doodleY1 = useTransform(scrollYProgress, [0, 1], ['-20px', '40px']);
   const doodleY2 = useTransform(scrollYProgress, [0, 1], ['30px', '-30px']);
   const doodleRotate = useTransform(scrollYProgress, [0, 1], [-8, 8]);
+
+  // One switch for the whole section. When the OS asks for reduced motion we
+  // hand every child the opacity-only variant set and skip pointer effects.
+  const reduced = useReducedMotion();
+  const isMobile = useIsMobile();
+  // Halve stagger on small screens so the section does not feel sluggish.
+  const stagger = isMobile ? 0.04 : 0.08;
+
+  // Header fires slightly before it is centred so the wipe reads as you arrive.
+  const headerRef = useRef(null);
+  const headerInView = useInView(headerRef, { once: true, margin: '-20%' });
+
+  // Counters start only once a good chunk of the strip is on screen.
+  const statsRef = useRef(null);
+  const statsInView = useInView(statsRef, { once: true, margin: '-20%' });
+
+  // "Sprint line": fills as the participation list passes through the viewport.
+  const listRef = useRef(null);
+  const { scrollYProgress: listProgress } = useScroll({
+    target: listRef,
+    offset: ['start 85%', 'end 60%'],
+  });
+
+  // Alternating horizontal drift for the three glimpse photos.
+  const galleryX1 = useTransform(scrollYProgress, [0, 1], ['-30px', '30px']);
+  const galleryX2 = useTransform(scrollYProgress, [0, 1], ['30px', '-30px']);
+  const galleryX3 = useTransform(scrollYProgress, [0, 1], ['-30px', '30px']);
+  const galleryX = [galleryX1, galleryX2, galleryX3];
 
   return (
     <section
@@ -228,15 +552,73 @@ const HackathonSection = () => {
         <DoodleStar style={{ width: 44, height: 44 }} />
       </motion.div>
 
+      {/* ── AMBIENT LAYER ── */}
+      {!reduced && (
+        <>
+          {/* Grain. Painted from --color-ink so it inherits the active theme
+              instead of introducing a colour of its own. */}
+          <motion.div
+            aria-hidden
+            animate={{ backgroundPosition: ['0px 0px', '128px 96px'] }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              zIndex: 1,
+              pointerEvents: 'none',
+              opacity: 0.03,
+              backgroundImage:
+                'radial-gradient(var(--color-ink) 1px, transparent 1px)',
+              backgroundSize: '3px 3px',
+            }}
+          />
+          {/* A single 1px scanline drifting top to bottom every 8s. */}
+          <motion.div
+            aria-hidden
+            initial={{ top: 0 }}
+            animate={{ y: ['0%', '100%'] }}
+            transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+            style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              top: 0,
+              height: 1,
+              zIndex: 1,
+              pointerEvents: 'none',
+              opacity: 0.06,
+              backgroundColor: 'var(--color-ink)',
+            }}
+          />
+        </>
+      )}
+
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         {/* Section label + title */}
         <motion.div
+          ref={headerRef}
           className="mb-16"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
+          initial="hidden"
+          animate={headerInView ? 'visible' : 'hidden'}
         >
-          <span className="section-label mb-4 block">05 / HACKATHONS</span>
+          <span className="section-label mb-4 block">
+            <ScrambleText
+              text="05 / HACKATHONS"
+              active={headerInView}
+              reduced={reduced}
+              duration={700}
+            />
+            {!reduced && (
+              <motion.span
+                aria-hidden
+                animate={{ opacity: [1, 1, 0, 0] }}
+                transition={{ duration: 1, repeat: Infinity, times: [0, 0.5, 0.5, 1] }}
+                style={{ marginLeft: '2px' }}
+              >
+                ▌
+              </motion.span>
+            )}
+          </span>
           <div
             style={{
               display: 'flex',
@@ -245,92 +627,79 @@ const HackathonSection = () => {
               flexWrap: 'wrap',
             }}
           >
+            {/* Each word is masked independently and staggered by 120ms. The
+                text is always laid out, so the h2 never changes size. */}
             <h2 style={{ fontSize: 'clamp(40px, 8vw, 80px)', lineHeight: 0.9 }}>
-              BATTLE
-              <br />
-              TESTED
+              <RevealText reduced={reduced}>BATTLE</RevealText>
+              <RevealText reduced={reduced} delay={0.12}>
+                TESTED
+              </RevealText>
             </h2>
+            {/* Outer element wipes the squiggle into view once the words land;
+                the inner one keeps the original idle drift. A clip wipe is used
+                rather than SVG pathLength so the dashed stroke stays dashed. */}
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.5, duration: 0.6 }}
+              initial={reduced ? { opacity: 0 } : { clipPath: 'inset(0 100% 0 0)' }}
+              animate={
+                headerInView
+                  ? reduced
+                    ? { opacity: 1 }
+                    : { clipPath: 'inset(0 0% 0 0)' }
+                  : false
+              }
+              transition={{ delay: 0.8, duration: 0.8, ease: EASE_WIPE }}
               style={{
                 color: 'var(--color-ink)',
                 opacity: 0.4,
                 marginBottom: '8px',
               }}
-              animate={{ x: [0, 8, 0] }}
             >
-              <DoodleArrow style={{ width: 72, height: 36 }} />
+              <motion.div animate={reduced ? undefined : { x: [0, 8, 0] }}>
+                <DoodleArrow style={{ width: 72, height: 36 }} />
+              </motion.div>
             </motion.div>
           </div>
         </motion.div>
 
         {/* Stats row */}
-        <motion.div
+        <div
+          ref={statsRef}
           className="grid grid-cols-2 md:grid-cols-4 mb-16"
           style={{ border: '2px solid var(--color-ink)' }}
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
         >
           {hackathonStats.map((stat, i) => (
-            <motion.div
+            <StatCell
               key={i}
-              style={{
-                padding: '24px 20px',
-                borderRight:
-                  i < hackathonStats.length - 1
-                    ? '2px solid var(--color-ink)'
-                    : 'none',
-                textAlign: 'center',
-                backgroundColor: 'var(--color-paper)',
-                color: 'var(--color-ink)',
-              }}
-              whileHover={{
-                backgroundColor: 'var(--color-ink)',
-                color: 'var(--color-paper)',
-              }}
-              transition={{ duration: 0.15 }}
-            >
-              <p
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: 'clamp(32px, 5vw, 52px)',
-                  fontWeight: 900,
-                  lineHeight: 1,
-                  color: 'inherit',
-                }}
-              >
-                {stat.value}
-              </p>
-              <p
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '10px',
-                  letterSpacing: '0.18em',
-                  color: 'inherit',
-                  opacity: 0.7,
-                  marginTop: '6px',
-                  textTransform: 'uppercase',
-                }}
-              >
-                {stat.label}
-              </p>
-            </motion.div>
+              stat={stat}
+              index={i}
+              inView={statsInView}
+              reduced={reduced}
+              isLast={i === hackathonStats.length - 1}
+            />
           ))}
-        </motion.div>
+        </div>
 
         {/* Hackathon Details List */}
-        <motion.div
-          className="mb-16 space-y-4"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
+        <div ref={listRef} className="mb-16 space-y-4" style={{ position: 'relative' }}>
+          {/* Sprint line. Absolutely positioned so it adds no layout, and
+              scaleY is bound directly to the list's scroll progress. */}
+          {!reduced && (
+            <motion.span
+              aria-hidden
+              style={{
+                position: 'absolute',
+                left: -16,
+                top: 0,
+                bottom: 0,
+                width: 1,
+                backgroundColor: 'var(--color-ink)',
+                opacity: 0.25,
+                transformOrigin: 'top',
+                scaleY: listProgress,
+                pointerEvents: 'none',
+              }}
+            />
+          )}
           <h3
             style={{
               fontFamily: 'var(--font-heading)',
@@ -343,74 +712,14 @@ const HackathonSection = () => {
             Notable Participations
           </h3>
           {hackathonDetails.map((hack, i) => (
-            <div
+            <ParticipationRow
               key={i}
-              className="flex flex-col sm:flex-row sm:items-center justify-between p-6 brutal-border transition-colors duration-300 group"
-              style={{
-                backgroundColor: 'var(--color-paper-3)',
-                color: 'var(--color-ink)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--color-ink)';
-                e.currentTarget.style.color = 'var(--color-paper)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--color-paper-3)';
-                e.currentTarget.style.color = 'var(--color-ink)';
-              }}
-            >
-              <div>
-                <h4
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    fontSize: '20px',
-                    fontWeight: 800,
-                    textTransform: 'uppercase',
-                    color: 'inherit',
-                  }}
-                >
-                  {hack.name}
-                </h4>
-                <p
-                  style={{
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '12px',
-                    color: 'inherit',
-                    opacity: 0.8,
-                    letterSpacing: '0.1em',
-                    marginTop: '4px',
-                  }}
-                >
-                  BUILT: {hack.project}
-                </p>
-              </div>
-              <div className="mt-4 sm:mt-0 text-left sm:text-right">
-                <span
-                  className="inline-block px-3 py-1 mb-2 sm:mb-1 border"
-                  style={{
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '10px',
-                    textTransform: 'uppercase',
-                    borderColor: 'currentColor',
-                    color: 'inherit',
-                  }}
-                >
-                  {hack.level}
-                </span>
-                <p
-                  style={{
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '12px',
-                    fontWeight: 'bold',
-                    color: 'inherit',
-                  }}
-                >
-                  {hack.date}
-                </p>
-              </div>
-            </div>
+              hack={hack}
+              index={i}
+              reduced={reduced}
+            />
           ))}
-        </motion.div>
+        </div>
 
         {/* Highlight cards grid */}
         <div
@@ -418,8 +727,11 @@ const HackathonSection = () => {
           style={{ border: '2px solid var(--color-ink)' }}
         >
           {hackathonHighlights.map((item, i) => (
-            <motion.div
+            <MagneticCard
               key={i}
+              // Pointer tilt and spotlight are meaningless on touch and are
+              // suppressed outright for reduced-motion users.
+              disabled={isMobile || reduced}
               className="brutal-card"
               style={{
                 padding: '28px 24px',
@@ -431,10 +743,13 @@ const HackathonSection = () => {
 
                 backgroundColor: 'var(--color-paper-2)',
               }}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              // Diagonal wave: delay grows with row + column, so the reveal
+              // sweeps from the top-left corner of the grid.
+              variants={reduced ? reducedVariants : cardRise}
+              custom={(Math.floor(i / 3) + (i % 3)) * stagger}
+              initial="hidden"
+              whileInView="visible"
               viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
               whileHover={{
                 backgroundColor: 'var(--color-ink)',
                 transition: { duration: 0.15 },
@@ -501,7 +816,7 @@ const HackathonSection = () => {
               >
                 {item.body}
               </p>
-            </motion.div>
+            </MagneticCard>
           ))}
         </div>
 
@@ -526,7 +841,7 @@ const HackathonSection = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-          {[hackathon1, hackathon2, hackathon3].map((img, i) => {
+          {hackathonGallery.map((img, i) => {
             const hackathonAlts = [
               'Harshid Soni at hackathon event - team collaboration',
               'Hackathon coding session - building prototypes under pressure',
@@ -536,11 +851,14 @@ const HackathonSection = () => {
               <motion.div
                 key={i}
                 className="relative group"
-                style={{ aspectRatio: '1/1' }}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                // x is a scroll-linked motion value (alternating direction per
+                // image); the reveal itself is a bottom-up clip mask.
+                style={{ aspectRatio: '1/1', x: reduced ? 0 : galleryX[i] }}
+                variants={reduced ? reducedVariants : photoReveal}
+                custom={i * (isMobile ? 0.06 : 0.12)}
+                initial="hidden"
+                whileInView="visible"
                 viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.5, delay: i * 0.15 }}
                 onTouchStart={() => {}}
               >
                 {/* GPU-accelerated brutalist shadow */}
@@ -556,12 +874,18 @@ const HackathonSection = () => {
                   className="relative z-10 w-full h-full brutal-border overflow-hidden bg-[var(--color-paper)] transition-transform duration-200 ease-out group-hover:-translate-y-1 group-hover:-translate-x-1"
                   style={{ willChange: 'transform' }}
                 >
-                  <img
-                    src={img}
-                    alt={hackathonAlts[i]}
-                    loading="lazy"
-                    className="w-full h-full object-cover grayscale transition-transform duration-500 group-hover:grayscale-0 group-active:grayscale-0 group-hover:scale-105 group-active:scale-105"
-                  />
+                  <picture>
+                    <source srcSet={img.webp} type="image/webp" />
+                    <img
+                      src={img.fallback}
+                      alt={hackathonAlts[i]}
+                      loading="lazy"
+                      decoding="async"
+                      width={img.width}
+                      height={img.height}
+                      className="w-full h-full object-cover grayscale transition-transform duration-500 group-hover:grayscale-0 group-active:grayscale-0 group-hover:scale-105 group-active:scale-105"
+                    />
+                  </picture>
                 </div>
               </motion.div>
             );

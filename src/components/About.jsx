@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import heroImg from '../assets/Profile.png';
+import heroImgWebp from '../assets/Profile.webp';
 import GrainText from './GrainText';
 
 const DotShaderBackground = lazy(() => import('./DotShaderBackground'));
@@ -80,12 +81,25 @@ const About = () => {
                   willChange: 'transform',
                 }}
               >
-                <img
-                  src={heroImg}
-                  alt="Harshid Soni — Full Stack Developer portrait"
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                  style={{ objectPosition: 'center top' }}
-                />
+                {/*
+                  WebP first, original PNG as fallback. Same pixels, same box:
+                  width/height still describe the original 1086x1448 aspect
+                  ratio, and object-cover means the rendered result is byte-for
+                  -byte identical in layout terms. 178KB -> 41KB.
+                */}
+                <picture>
+                  <source srcSet={heroImgWebp} type="image/webp" />
+                  <img
+                    src={heroImg}
+                    alt="Harshid Soni — Full Stack Developer portrait"
+                    loading="lazy"
+                    decoding="async"
+                    width="800"
+                    height="1000"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    style={{ objectPosition: 'center top' }}
+                  />
+                </picture>
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none"
                   style={{ backgroundColor: 'var(--color-ink)' }}

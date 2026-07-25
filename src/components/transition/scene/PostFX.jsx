@@ -21,6 +21,12 @@ const fx = { bloom: 0.4, ca: 0.0003, vignette: 0.7 };
 const fxTarget = { bloom: 0.4, ca: 0.0003, vignette: 0.7 };
 const FX_LERP = 0.07;
 
+// A9: this Vector2 was constructed inline in JSX, so a fresh instance was
+// allocated on every render of PostFX. useFrame mutates the live instance
+// through caRef.current.offset, so one shared instance is both cheaper and
+// closer to the original intent.
+const CA_OFFSET = new THREE.Vector2(0.0003, 0.0003);
+
 export default function PostFX({ transitionState }) {
   const bloomRef = useRef(null);
   const caRef = useRef(null);
@@ -91,7 +97,7 @@ export default function PostFX({ transitionState }) {
       />
       <ChromaticAberration
         ref={caRef}
-        offset={new THREE.Vector2(0.0003, 0.0003)}
+        offset={CA_OFFSET}
         blendFunction={BlendFunction.NORMAL}
       />
       <Vignette

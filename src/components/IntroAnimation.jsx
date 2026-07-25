@@ -88,7 +88,6 @@ const EyeBox = ({ isTouchDevice, onSequenceDone, restPos }) => {
   const [stage, setStage] = useState('flying');
   const [ready, setReady] = useState(false);
 
-  const stageRef = useRef(stage);
   const mouseRef = useRef({ x: 0, y: 0 });
   const startedRef = useRef(false);
 
@@ -98,34 +97,23 @@ const EyeBox = ({ isTouchDevice, onSequenceDone, restPos }) => {
   const glowMV = useMotionValue(0); // morph flash intensity
 
   useEffect(() => {
-    stageRef.current = stage;
-  }, [stage]);
-
-  useEffect(() => {
     if (restPos && !ready) setReady(true);
   }, [restPos, ready]);
 
-  // Track the real cursor. During 'tracking' stage, match GhostCursor's
-  // own spring (stiffness 120, damping 18) so the swap is pixel-perfect.
+  // Record the pointer so the morph stage knows where to glide to.
+  //
+  // The eye-box used to keep spring-chasing the mouse itself during the
+  // 'tracking' stage (stiffness 120 / damping 18) to fake being the cursor.
+  // GhostCursor is now mounted for the whole intro, so that duplicate
+  // spring was the laggy cursor you were seeing — it trailed the real one.
+  // We just store the position now; the real cursor does the tracking.
   useEffect(() => {
     const handleMove = (e) => {
       mouseRef.current = { x: e.clientX, y: e.clientY };
-      if (stageRef.current === 'tracking') {
-        animate(boxX, e.clientX, {
-          type: 'spring',
-          stiffness: 120,
-          damping: 18,
-        });
-        animate(boxY, e.clientY, {
-          type: 'spring',
-          stiffness: 120,
-          damping: 18,
-        });
-      }
     };
-    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mousemove', handleMove, { passive: true });
     return () => window.removeEventListener('mousemove', handleMove);
-  }, [boxX, boxY]);
+  }, []);
 
   // Main sequence — runs exactly once when ready.
   useEffect(() => {
@@ -173,6 +161,7 @@ const EyeBox = ({ isTouchDevice, onSequenceDone, restPos }) => {
           () => {
             setStage('fading');
             onSequenceDone();
+            document.body.classList.remove('intro-animating-cursor');
           },
           fadeStart + CENTER_DURATION * 1000,
         ),
@@ -219,6 +208,7 @@ const EyeBox = ({ isTouchDevice, onSequenceDone, restPos }) => {
       setTimeout(() => {
         setStage('tracking');
         onSequenceDone();
+        document.body.classList.remove('intro-animating-cursor');
       }, trackStart),
     );
 
@@ -277,8 +267,16 @@ const EyeBox = ({ isTouchDevice, onSequenceDone, restPos }) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
-      animate={{ opacity: stage === 'fading' ? 0 : 1 }}
-      transition={{ duration: stage === 'fading' ? 0.4 : 0.25 }}
+      // Once the morph lands ('tracking'), the eye-box dissolves into the real
+      // GhostCursor that is already sitting at that exact spot, so there is no
+      // second cursor and no hand-off gap.
+      animate={{
+        opacity: stage === 'fading' || stage === 'tracking' ? 0 : 1,
+      }}
+      transition={{
+        duration:
+          stage === 'tracking' ? 0.25 : stage === 'fading' ? 0.4 : 0.25,
+      }}
       style={{
         position: 'fixed',
         top: 0,
@@ -370,7 +368,11 @@ const IntroAnimation = ({ onComplete }) => {
         window.matchMedia('(pointer: coarse)').matches,
     );
     document.body.classList.add('hide-cursor');
-    return () => document.body.classList.remove('hide-cursor');
+    document.body.classList.add('intro-animating-cursor');
+    return () => {
+      document.body.classList.remove('hide-cursor');
+      document.body.classList.remove('intro-animating-cursor');
+    };
   }, []);
 
   // Measure where "under the name" is so the eye-box has a real target.

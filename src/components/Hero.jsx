@@ -1,9 +1,10 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaYoutube, FaTwitter } from 'react-icons/fa';
-import ParticleMorph from './ParticleMorph';
 
-const ShaderBackground = lazy(() => import('./ShaderBackground'));
+// Both of these pull in `three`. Keeping them lazy means the hero text and
+// buttons are interactive long before the WebGL bundle finishes downloading.
+const PrismTypography = lazy(() => import('./PrismTypography'));
 
 const staggerContainer = {
   hidden: {},
@@ -25,22 +26,20 @@ const textSlam = {
 };
 
 const Hero = () => {
-  const [showCursor, setShowCursor] = useState(true);
-
-  useEffect(() => {
-    const interval = setInterval(() => setShowCursor((c) => !c), 500);
-    return () => clearInterval(interval);
-  }, []);
-
+  // The blinking caret used to be a 500ms setInterval driving React state,
+  // which re-rendered the entire hero (WebGL widget included) twice a second
+  // forever. It is now a pure CSS animation that runs off the main thread.
   return (
     <section
       id="home"
       className="relative min-h-screen flex items-center pt-16 overflow-hidden"
     >
-      {/* 3D SHADER BACKGROUND */}
-      <Suspense fallback={null}>
-        <ShaderBackground />
-      </Suspense>
+      {/* 3D TYPOGRAPHY MODEL (FULL SCREEN) */}
+      <div className="absolute inset-0 z-0 pointer-events-auto">
+        <Suspense fallback={null}>
+          <PrismTypography text="<HS/>" />
+        </Suspense>
+      </div>
 
       {/* Semi-transparent overlay for text legibility */}
       <div
@@ -124,8 +123,9 @@ const Hero = () => {
             >
               [ FULL STACK DEVELOPER ]
               <span
+                className="caret-blink"
+                aria-hidden="true"
                 style={{
-                  opacity: showCursor ? 1 : 0,
                   color: 'var(--color-ink)',
                   fontWeight: 'bold',
                 }}
@@ -183,38 +183,42 @@ const Hero = () => {
 
           <motion.div variants={fadeUp} className="flex gap-4">
             {[
-              { icon: <FaGithub />, link: 'https://github.com/Harshid001' },
+              {
+                icon: <FaGithub />,
+                label: 'GitHub',
+                link: 'https://github.com/Harshid001',
+              },
               {
                 icon: <FaLinkedin />,
+                label: 'LinkedIn',
                 link: 'https://www.linkedin.com/in/harshid-soni-441500385/',
               },
               {
                 icon: <FaYoutube />,
+                label: 'YouTube',
                 link: 'https://www.youtube.com/@Harshid001',
               },
-              { icon: <FaTwitter />, link: 'https://x.com/HarshidSoni2007' },
-            ].map((social, i) => (
+              {
+                icon: <FaTwitter />,
+                label: 'Twitter',
+                link: 'https://x.com/HarshidSoni2007',
+              },
+            ].map((social) => (
               <motion.a
-                key={i}
+                key={social.label}
                 href={social.link}
                 target="_blank"
                 rel="noreferrer"
+                aria-label={social.label}
                 whileTap={{ scale: 0.9, rotate: 5 }}
-                className="w-[44px] h-[44px] flex items-center justify-center text-xl transition-all brutal-border"
-                style={{
-                  backgroundColor: 'var(--color-paper)',
-                  color: 'var(--color-ink)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-ink)';
-                  e.currentTarget.style.color = 'var(--color-white)';
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-paper)';
-                  e.currentTarget.style.color = 'var(--color-ink)';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
+                /*
+                  Hover/colour is handled by the `.social-icon` class now.
+                  The old inline onMouseEnter/onMouseLeave handlers wrote three
+                  inline styles per event, forcing a style recalc on every
+                  pointer pass, and their hardcoded paper background vanished
+                  against the dark bands of the hero shader.
+                */
+                className="social-icon w-[44px] h-[44px] flex items-center justify-center text-xl brutal-border"
               >
                 {social.icon}
               </motion.a>
@@ -222,12 +226,11 @@ const Hero = () => {
           </motion.div>
         </motion.div>
 
-        {/* RIGHT COLUMN — PARTICLE MORPH WIDGET */}
+        {/* RIGHT COLUMN — NOW EMPTY TO ALLOW MODEL TO SHINE THROUGH */}
         <motion.div
           variants={fadeUp}
-          className="hero-right flex items-center justify-center relative w-full lg:w-auto h-[400px] lg:h-[500px] xl:h-[600px] mt-12 lg:mt-0"
+          className="hero-right flex items-center justify-center relative w-full lg:w-auto h-[400px] lg:h-[500px] xl:h-[600px] mt-12 lg:mt-0 pointer-events-none"
         >
-          <ParticleMorph />
         </motion.div>
       </div>
 

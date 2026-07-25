@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { loadGpuTier } from '../lib/gpuTier';
 
 export default function ShaderBackground() {
   const containerRef = useRef(null);
@@ -101,8 +102,37 @@ export default function ShaderBackground() {
       powerPreference: 'high-performance',
       alpha: false,
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
+    // A1: start from the existing conservative cap, then let the shared GPU
+    // tier lower it further on weak hardware. This can only ever reduce DPR.
+    let dprCap = Math.min(window.devicePixelRatio, 1.25);
+    renderer.setPixelRatio(dprCap);
     container.appendChild(renderer.domElement);
+
+    let disposed = false;
+    loadGpuTier().then((tier) => {
+      if (disposed) return;
+      const next = Math.min(dprCap, tier.dprCap);
+      if (next < dprCap) {
+        dprCap = next;
+        renderer.setPixelRatio(next);
+        onResize();
+      }
+    });
+
+    // B3: the pointer handler used to call getBoundingClientRect() on every
+    // mousemove, forcing a synchronous layout per event. Cache the box in
+    // DOCUMENT space and derive the viewport offset with scroll math, so
+    // scrolling never invalidates the cache.
+    let box = { left: 0, top: 0, width: 1, height: 1 };
+    const measureBox = () => {
+      const r = container.getBoundingClientRect();
+      box = {
+        left: r.left + window.scrollX,
+        top: r.top + window.scrollY,
+        width: r.width || 1,
+        height: r.height || 1,
+      };
+    };
 
     const onResize = () => {
       const width = container.clientWidth;
@@ -112,16 +142,24 @@ export default function ShaderBackground() {
         renderer.domElement.width,
         renderer.domElement.height,
       );
+      measureBox();
     };
     onResize();
     window.addEventListener('resize', onResize, false);
 
+    // Sections above this one mount lazily, so the box can move without ever
+    // firing a window resize. ResizeObserver catches that.
+    const boxObserver = new ResizeObserver(measureBox);
+    boxObserver.observe(container);
+
     let isHovering = false;
 
     const onMouseMove = (e) => {
-      const rect = container.getBoundingClientRect();
-      mouseRef.current.x = (e.clientX - rect.left) / rect.width;
-      mouseRef.current.y = 1.0 - (e.clientY - rect.top) / rect.height;
+      // Document-space box -> current viewport position, zero layout reads.
+      const left = box.left - window.scrollX;
+      const top = box.top - window.scrollY;
+      mouseRef.current.x = (e.clientX - left) / box.width;
+      mouseRef.current.y = 1.0 - (e.clientY - top) / box.height;
       isHovering = true;
     };
     const onMouseEnter = () => {
@@ -201,6 +239,8 @@ export default function ShaderBackground() {
     visObserver.observe(container);
 
     return () => {
+      disposed = true;
+      boxObserver.disconnect();
       visObserver.disconnect();
       themeObserver.disconnect();
       window.removeEventListener('resize', onResize);

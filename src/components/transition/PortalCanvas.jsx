@@ -15,6 +15,7 @@
 
 import { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
+import { AdaptiveDpr, AdaptiveEvents, Preload } from '@react-three/drei';
 import CameraRig from './scene/CameraRig';
 import ParticleField from './scene/ParticleField';
 import PortalRing from './scene/PortalRing';
@@ -33,7 +34,15 @@ export default function PortalCanvas({ transitionState }) {
       }}
     >
       <Canvas
-        gl={{ antialias: false, powerPreference: 'high-performance', alpha: true }}
+        gl={{
+          antialias: false,
+          powerPreference: 'high-performance',
+          alpha: true,
+          // A8: the portal never reads back pixels or uses the stencil buffer.
+          stencil: false,
+          depth: true,
+          preserveDrawingBuffer: false,
+        }}
         dpr={[1, 1.5]}
         camera={{ position: [0, 0, 6], fov: 50, near: 0.1, far: 220 }}
       >
@@ -43,7 +52,14 @@ export default function PortalCanvas({ transitionState }) {
           <PortalRing transitionState={transitionState} />
           <ParticleField transitionState={transitionState} count={4000} />
           <PostFX transitionState={transitionState} />
+          {/* A7: compiles every shader in the scene during the mount frame so
+              the first frame of the dive doesn't pay a compile hitch. */}
+          <Preload all />
         </Suspense>
+        {/* A4: throttles DPR while the transition is actively animating and
+            restores it on settle. No change to the resting image. */}
+        <AdaptiveDpr pixelated />
+        <AdaptiveEvents />
       </Canvas>
     </div>
   );

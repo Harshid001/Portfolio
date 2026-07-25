@@ -33,12 +33,24 @@ const ProjectShowcase = ({ project, index }) => {
           >
             {project.image ? (
               <>
-                <img
-                  src={project.image}
-                  alt={`${project.title} project screenshot`}
-                  loading="lazy"
-                  className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-active:grayscale-0 group-hover:scale-105 group-active:scale-105"
-                />
+                {/*
+                  Local screenshots ship a WebP sibling; remote Cloudinary URLs
+                  already negotiate format via f_auto, so they just fall through
+                  to the plain <img>. The wrapper owns aspect-ratio 16/9, so no
+                  width/height is needed here and there is zero layout shift.
+                */}
+                <picture>
+                  {project.imageWebp && (
+                    <source srcSet={project.imageWebp} type="image/webp" />
+                  )}
+                  <img
+                    src={project.image}
+                    alt={`${project.title} project screenshot`}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-active:grayscale-0 group-hover:scale-105 group-active:scale-105"
+                  />
+                </picture>
                 <div className="absolute inset-0 bg-black/70 flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 group-hover:opacity-100 group-active:opacity-100 focus-within:opacity-100 transition-opacity duration-300">
                   <span className="absolute top-4 text-white/70 text-xs tracking-widest font-mono lg:hidden pointer-events-none">
                     TAP TO VIEW LINKS

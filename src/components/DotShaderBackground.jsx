@@ -1,14 +1,29 @@
-import { useRef, useEffect, useState } from 'react';
-import { Canvas, useFrame, useThree, extend } from '@react-three/fiber';
-import { shaderMaterial, useTrailTexture } from '@react-three/drei';
-import * as THREE from 'three';
+import { useRef, useEffect, useState } from "react";
+import { Canvas, useFrame, useThree, extend } from "@react-three/fiber";
+import {
+  shaderMaterial,
+  useTrailTexture,
+  AdaptiveDpr,
+  AdaptiveEvents,
+  PerformanceMonitor,
+  Preload,
+} from "@react-three/drei";
+import * as THREE from "three";
+import { loadGpuTier } from "../lib/gpuTier";
+
+// A9: hoisted out of the pointer handler, which allocated a Vector2 plus a
+// wrapper object on every animation frame the cursor was moving.
+// Verified safe against drei: TrailTexture.addTouch() copies point.x / point.y
+// into a new record synchronously and never retains the vector we hand it.
+const POINTER_UV = new THREE.Vector2();
+const POINTER_EVENT = { uv: POINTER_UV };
 
 const DotMaterialImpl = shaderMaterial(
   {
     time: 0,
     resolution: new THREE.Vector2(),
-    dotColor: new THREE.Color('#0d0d0d'),
-    bgColor: new THREE.Color('#f5f2ed'),
+    dotColor: new THREE.Color("#0d0d0d"),
+    bgColor: new THREE.Color("#f5f2ed"),
     mouseTrail: null,
     render: 0,
     rotation: 0,
@@ -92,8 +107,8 @@ function Scene() {
 
   const isMobile =
     window.innerWidth < 768 ||
-    window.matchMedia('(pointer: coarse)').matches ||
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.matchMedia("(pointer: coarse)").matches ||
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const gridSize = isMobile ? 40 : 80;
 
   const [trail, onMove] = useTrailTexture({
@@ -116,9 +131,9 @@ function Scene() {
     const updateColors = () => {
       const rootStyle = getComputedStyle(document.documentElement);
       const paperColor =
-        rootStyle.getPropertyValue('--color-paper').trim() || '#f5f2ed';
+        rootStyle.getPropertyValue("--color-paper").trim() || "#f5f2ed";
       const inkColor =
-        rootStyle.getPropertyValue('--color-ink').trim() || '#0d0d0d';
+        rootStyle.getPropertyValue("--color-ink").trim() || "#0d0d0d";
 
       if (materialRef.current) {
         materialRef.current.uniforms.bgColor.value.set(paperColor);
@@ -130,7 +145,7 @@ function Scene() {
 
     const themeObserver = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
-        if (mutation.attributeName === 'class') {
+        if (mutation.attributeName === "class") {
           updateColors();
         }
       }
@@ -144,45 +159,67 @@ function Scene() {
   useEffect(() => {
     if (isMobile) return;
 
-    const el = document.getElementById('about');
+    const el = document.getElementById("about");
     if (!el || !meshRef.current) return;
 
     let ticking = false;
 
+    // B3: the old handler called getBoundingClientRect() inside the rAF on
+    // every pointer frame, forcing a synchronous layout while the user was
+    // moving the cursor. The element's document-space box is layout-invariant
+    // until a resize, so it is cached and the viewport position is derived
+    // with cheap scroll math instead.
+    let box = { top: 0, left: 0, width: 1, height: 1 };
+    const measure = () => {
+      const r = el.getBoundingClientRect();
+      box = {
+        top: r.top + window.scrollY,
+        left: r.left + window.scrollX,
+        width: r.width || 1,
+        height: r.height || 1,
+      };
+    };
+    measure();
+
+    let resizeTimer = null;
+    const scheduleMeasure = () => {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(measure, 150);
+    };
+    window.addEventListener("resize", scheduleMeasure, { passive: true });
+    const ro = new ResizeObserver(scheduleMeasure);
+    ro.observe(el);
+
     const handleMove = (e) => {
       if (!ticking) {
+        const touch = e.touches && e.touches.length > 0 ? e.touches[0] : e;
+        const clientX = touch.clientX;
+        const clientY = touch.clientY;
+
         requestAnimationFrame(() => {
-          const rect = el.getBoundingClientRect();
-          const clientX =
-            e.touches && e.touches.length > 0
-              ? e.touches[0].clientX
-              : e.clientX;
-          const clientY =
-            e.touches && e.touches.length > 0
-              ? e.touches[0].clientY
-              : e.clientY;
-
           // Direct UV calculation is orders of magnitude faster than Three.js raycasting
-          const uv = new THREE.Vector2(
-            (clientX - rect.left) / rect.width,
-            1.0 - (clientY - rect.top) / rect.height,
-          );
+          const localX = clientX - (box.left - window.scrollX);
+          const localY = clientY - (box.top - window.scrollY);
 
-          onMove({ uv });
+          POINTER_UV.set(localX / box.width, 1.0 - localY / box.height);
+          onMove(POINTER_EVENT);
           ticking = false;
         });
         ticking = true;
       }
     };
 
-    el.addEventListener('mousemove', handleMove, { passive: true });
-    el.addEventListener('touchmove', handleMove, { passive: true });
-    el.addEventListener('touchstart', handleMove, { passive: true });
+    el.addEventListener("mousemove", handleMove, { passive: true });
+    el.addEventListener("touchmove", handleMove, { passive: true });
+    el.addEventListener("touchstart", handleMove, { passive: true });
 
     return () => {
-      el.removeEventListener('mousemove', handleMove);
-      el.removeEventListener('touchmove', handleMove);
-      el.removeEventListener('touchstart', handleMove);
+      if (resizeTimer) clearTimeout(resizeTimer);
+      window.removeEventListener("resize", scheduleMeasure);
+      ro.disconnect();
+      el.removeEventListener("mousemove", handleMove);
+      el.removeEventListener("touchmove", handleMove);
+      el.removeEventListener("touchstart", handleMove);
     };
   }, [onMove, isMobile]);
 
@@ -203,16 +240,32 @@ function Scene() {
   );
 }
 
+const DPR_CEILING = 1.5;
+
 export default function DotShaderBackground() {
   const containerRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [dprMax, setDprMax] = useState(DPR_CEILING);
+
+  // A1: fold the detected GPU tier into the DPR ceiling. Only ever lowers it.
+  useEffect(() => {
+    let cancelled = false;
+    loadGpuTier().then((tier) => {
+      if (!cancelled) setDprMax(Math.min(tier.dprCap, DPR_CEILING));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => setIsVisible(entry.isIntersecting),
-      { threshold: 0 },
+      // A3: resume slightly before the canvas scrolls into view so the first
+      // visible frame is already warm rather than appearing mid-scroll.
+      { threshold: 0, rootMargin: "200px 0px" },
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -222,20 +275,44 @@ export default function DotShaderBackground() {
     <div
       ref={containerRef}
       className="absolute inset-0 w-full h-full"
-      style={{ overflow: 'hidden' }}
+      // B5: isolate the canvas subtree so a canvas resize can never invalidate
+      // layout or paint for sibling sections.
+      style={{ overflow: "hidden", contain: "layout paint style" }}
     >
       <Canvas
-        frameloop={isVisible ? 'always' : 'demand'}
+        // A3: 'demand' still rendered on every invalidate() while off-screen.
+        // 'never' fully parks the loop until the observer says otherwise.
+        frameloop={isVisible ? "always" : "never"}
         gl={{
           antialias: false,
-          powerPreference: 'high-performance',
+          powerPreference: "high-performance",
           outputColorSpace: THREE.SRGBColorSpace,
           toneMapping: THREE.NoToneMapping,
+          // A8: fullscreen quad shader — no stencil, no readback needed.
+          stencil: false,
+          depth: true,
+          preserveDrawingBuffer: false,
         }}
-        dpr={[1, 1.5]}
-        style={{ position: 'absolute', inset: 0 }}
+        dpr={[1, dprMax]}
+        style={{ position: "absolute", inset: 0 }}
       >
         <Scene />
+        {/* A7: compile the dot shader on mount instead of on first scroll-in. */}
+        <Preload all />
+        {/* A4 */}
+        <AdaptiveDpr pixelated />
+        <AdaptiveEvents />
+        {/* A5: hysteresis via drei's own bounds + flipflops guard, so a
+            recovering GPU can't oscillate between resolutions. */}
+        <PerformanceMonitor
+          bounds={() => [50, 55]}
+          flipflops={3}
+          onDecline={() => setDprMax((d) => (d > 1 ? 1 : d))}
+          onIncline={() =>
+            setDprMax((d) => (d < DPR_CEILING ? DPR_CEILING : d))
+          }
+          onFallback={() => setDprMax(1)}
+        />
       </Canvas>
     </div>
   );

@@ -1,31 +1,27 @@
-import { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState, useEffect, useRef } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   motion,
   AnimatePresence,
   useScroll,
   useMotionValueEvent,
-} from 'framer-motion';
-import { HiMenuAlt3, HiX, HiOutlineMoon, HiOutlineSun } from 'react-icons/hi';
-// CHANGED: wire the logo into the cinematic portal transition.
-import { usePortalTransition } from './transition/PortalTransitionProvider';
-import { useGridTransition } from './transition/GridTransitionContext';
+} from "framer-motion";
+import { HiMenuAlt3, HiX, HiOutlineMoon, HiOutlineSun } from "react-icons/hi";
+import { useGridTransition } from "./transition/GridTransitionContext";
 
 const navLinks = [
-  { name: 'Home', href: '#home' },
-  { name: 'About', href: '#about' },
-  { name: 'Skills', href: '#skills' },
-  { name: 'Projects', href: '#projects' },
-  { name: 'Experience', href: '#experience' },
+  { name: "Home", href: "#home" },
+  { name: "About", href: "#about" },
+  { name: "Skills", href: "#skills" },
+  { name: "Projects", href: "#projects" },
+  { name: "Experience", href: "#experience" },
 ];
 
-const HOME_LABEL = '<HS />';
+const HOME_LABEL = "<HS />";
 
 const Navbar = () => {
   const location = useLocation();
-  const isHome = location.pathname === '/';
-  // CHANGED: pull in the transition trigger + busy flag.
-  const { triggerPortal, isTransitioning } = usePortalTransition();
+  const isHome = location.pathname === "/";
   const {
     triggerTransition: triggerGridTransition,
     isTransitioning: isGridTransitioning,
@@ -33,12 +29,13 @@ const Navbar = () => {
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
+  const [activeSection, setActiveSection] = useState("home");
   const [clickedLink, setClickedLink] = useState(null);
-  const [navY, setNavY] = useState(0);
+  const [isAtFooter, setIsAtFooter] = useState(false);
+
   const [isDark, setIsDark] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.theme !== 'light';
+    if (typeof window !== "undefined") {
+      return localStorage.theme !== "light";
     }
     return true;
   });
@@ -59,78 +56,129 @@ const Navbar = () => {
     const rect = el.getBoundingClientRect();
     const px = (e.clientX - rect.left) / rect.width - 0.5;
     const py = (e.clientY - rect.top) / rect.height - 0.5;
-    el.style.setProperty('--mx', px.toFixed(3));
-    el.style.setProperty('--my', py.toFixed(3));
+    el.style.setProperty("--mx", px.toFixed(3));
+    el.style.setProperty("--my", py.toFixed(3));
   };
   const resetLogoMove = () => {
-    logoRef.current?.style.setProperty('--mx', 0);
-    logoRef.current?.style.setProperty('--my', 0);
+    logoRef.current?.style.setProperty("--mx", 0);
+    logoRef.current?.style.setProperty("--my", 0);
   };
 
-  // Transition trigger
+  // Logo now performs a plain scroll-to-top instead of the removed portal
+  // transition. Respects reduced-motion.
   const handleLogoClick = (e) => {
     e.preventDefault();
-    if (isTransitioning || isGridTransitioning) return;
-    triggerPortal({
-      logoEl: logoRef.current,
-      targetPath: '/',
-      clickX: e.clientX,
-      clickY: e.clientY,
-    });
+    if (isGridTransitioning) return;
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+    setActiveSection("home");
   };
 
-  const logoCaption = 'Click to Level Up';
+  const logoCaption = "Back to top";
 
-  useMotionValueEvent(scrollY, 'change', (latest) => {
-    // Keep nav visible at all times by keeping navY at 0
-    setNavY(0);
-    // Anthropic-style logo shrink at ~25% of viewport height
-    if (typeof window !== 'undefined') {
-      setIsScrolledLogo(latest > window.innerHeight * 0.25);
-    }
-  });
+  // ---- B3: cached section offsets ----
+  // The old scroll handler called getBoundingClientRect() on up to six
+  // elements per scroll frame, forcing a synchronous layout every time.
+  // Document-space offsets only change on resize, so they are measured once
+  // and refreshed on a debounced resize instead.
+  const offsetsRef = useRef({ sections: [], footerTop: Infinity });
 
   useEffect(() => {
-    let scrollTimeout = null;
-    const handleScrollTracking = () => {
-      if (scrollTimeout) return;
-      scrollTimeout = requestAnimationFrame(() => {
-        setIsScrolled(window.scrollY > 20);
-        if (isHome && !isGridTransitioning) {
-          const sections = navLinks.map((l) => l.href.slice(1));
-          for (let i = sections.length - 1; i >= 0; i--) {
-            const el = document.getElementById(sections[i]);
-            if (el && el.getBoundingClientRect().top <= 120) {
-              setActiveSection(sections[i]);
-              break;
-            }
-          }
-        }
-        scrollTimeout = null;
-      });
+    const measure = () => {
+      const y = window.scrollY;
+      offsetsRef.current = {
+        sections: navLinks.map((l) => {
+          const id = l.href.slice(1);
+          const el = document.getElementById(id);
+          return {
+            id,
+            top: el ? el.getBoundingClientRect().top + y : Infinity,
+          };
+        }),
+        footerTop: (() => {
+          const f = document.getElementById("footer");
+          return f ? f.getBoundingClientRect().top + y : Infinity;
+        })(),
+      };
     };
-    window.addEventListener('scroll', handleScrollTracking, { passive: true });
 
-    if (localStorage.theme === 'light') {
-      setIsDark(false);
-      document.documentElement.classList.remove('dark');
-    } else {
-      setIsDark(true);
-      document.documentElement.classList.add('dark');
+    measure();
+
+    let timer = null;
+    const schedule = () => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(measure, 150);
+    };
+
+    window.addEventListener("resize", schedule, { passive: true });
+    // Sections mount lazily, so document height keeps changing after first
+    // paint — re-measure when the body box settles.
+    const ro = new ResizeObserver(schedule);
+    ro.observe(document.body);
+
+    return () => {
+      if (timer) clearTimeout(timer);
+      window.removeEventListener("resize", schedule);
+      ro.disconnect();
+    };
+  }, []);
+
+  // ---- B1: single scroll source ----
+  // This component previously added a second window 'scroll' listener with
+  // its own rAF throttle, on top of framer-motion's shared scrollY (which
+  // Lenis already drives). Everything now rides that one source.
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    if (typeof window === "undefined") return;
+
+    // Anthropic-style logo shrink at ~25% of viewport height.
+    // Guarded so React only re-renders when the boolean actually flips.
+    const nextLogo = latest > window.innerHeight * 0.25;
+    setIsScrolledLogo((prev) => (prev === nextLogo ? prev : nextLogo));
+
+    const nextScrolled = latest > 20;
+    setIsScrolled((prev) => (prev === nextScrolled ? prev : nextScrolled));
+
+    const { sections, footerTop } = offsetsRef.current;
+
+    if (isHome && !isGridTransitioning) {
+      // `rect.top <= 120` is algebraically `documentTop - scrollY <= 120`.
+      for (let i = sections.length - 1; i >= 0; i--) {
+        if (sections[i].top - latest <= 120) {
+          const id = sections[i].id;
+          setActiveSection((prev) => (prev === id ? prev : id));
+          break;
+        }
+      }
     }
 
-    return () => window.removeEventListener('scroll', handleScrollTracking);
-  }, [isHome, isGridTransitioning]);
+    const nextAtFooter = footerTop - latest < window.innerHeight - 50;
+    setIsAtFooter((prev) => (prev === nextAtFooter ? prev : nextAtFooter));
+  });
+
+  // Theme bootstrap, split out of the old scroll effect so it runs once
+  // instead of tearing down and re-subscribing whenever isHome or
+  // isGridTransitioning flips.
+  useEffect(() => {
+    if (localStorage.theme === "light") {
+      setIsDark(false);
+      document.documentElement.classList.remove("dark");
+    } else {
+      setIsDark(true);
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
 
   const toggleTheme = () => {
     const nextDark = !isDark;
     setIsDark(nextDark);
     if (nextDark) {
-      document.documentElement.classList.add('dark');
-      localStorage.theme = 'dark';
+      document.documentElement.classList.add("dark");
+      localStorage.theme = "dark";
     } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.theme = 'light';
+      document.documentElement.classList.remove("dark");
+      localStorage.theme = "light";
     }
   };
 
@@ -144,7 +192,7 @@ const Navbar = () => {
       (l) => l.href.slice(1) === activeSection,
     );
     const targetIdx = navLinks.findIndex((l) => l.href === href);
-    const direction = targetIdx > currentIdx ? 'down' : 'up';
+    const direction = targetIdx > currentIdx ? "down" : "up";
 
     setClickedLink(href);
 
@@ -158,14 +206,14 @@ const Navbar = () => {
 
   return (
     <motion.nav
-      animate={{ y: isTransitioning ? -100 : navY }}
-      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      animate={{ y: isAtFooter ? "-100%" : 0 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
       className="fixed top-0 left-0 w-full z-50 flex items-center backdrop-blur-md"
       style={{
-        height: '75px',
+        height: "75px",
         backgroundColor:
-          'color-mix(in srgb, var(--color-paper) 85%, transparent)',
-        borderBottom: `${isScrolled ? '1px' : '0px'} solid var(--color-ink-3)`,
+          "color-mix(in srgb, var(--color-paper) 85%, transparent)",
+        borderBottom: `${isScrolled ? "1px" : "0px"} solid var(--color-ink-3)`,
       }}
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-full relative">
@@ -174,19 +222,19 @@ const Navbar = () => {
           <div
             className="logo-base select-none"
             style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: '1.3rem',
+              fontFamily: "var(--font-display)",
+              fontSize: "1.3rem",
               fontWeight: 600,
-              color: 'var(--color-ink)',
-              display: 'inline-flex',
-              alignItems: 'center',
+              color: "var(--color-ink)",
+              display: "inline-flex",
+              alignItems: "center",
             }}
           >
             <motion.span
               initial={false}
-              animate={{ fontSize: isScrolledLogo ? '1em' : '1.25em' }}
+              animate={{ fontSize: isScrolledLogo ? "1em" : "1.25em" }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              style={{ display: 'flex', alignItems: 'center' }}
+              style={{ display: "flex", alignItems: "center" }}
             >
               &lt;
             </motion.span>
@@ -194,39 +242,39 @@ const Navbar = () => {
             <motion.span
               initial={false}
               animate={{
-                width: isScrolledLogo ? 0 : 'auto',
+                width: isScrolledLogo ? 0 : "auto",
                 opacity: isScrolledLogo ? 0 : 1,
               }}
               style={{
-                overflow: 'hidden',
-                display: 'inline-flex',
-                whiteSpace: 'pre',
+                overflow: "hidden",
+                display: "inline-flex",
+                whiteSpace: "pre",
               }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
-              {'arshid '}
+              {"arshid "}
             </motion.span>
             <span>S</span>
             <motion.span
               initial={false}
               animate={{
-                width: isScrolledLogo ? 0 : 'auto',
+                width: isScrolledLogo ? 0 : "auto",
                 opacity: isScrolledLogo ? 0 : 1,
               }}
               style={{
-                overflow: 'hidden',
-                display: 'inline-flex',
-                whiteSpace: 'pre',
+                overflow: "hidden",
+                display: "inline-flex",
+                whiteSpace: "pre",
               }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
-              {'oni'}
+              {"oni"}
             </motion.span>
             <motion.span
               initial={false}
-              animate={{ fontSize: isScrolledLogo ? '1em' : '1.25em' }}
+              animate={{ fontSize: isScrolledLogo ? "1em" : "1.25em" }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              style={{ display: 'flex', alignItems: 'center' }}
+              style={{ display: "flex", alignItems: "center" }}
             >
               /&gt;
             </motion.span>
@@ -251,18 +299,18 @@ const Navbar = () => {
                 onMouseEnter={() => setHoveredNav(link.name)}
                 className="relative flex items-center justify-center transition-all duration-100"
                 style={{
-                  padding: '8px 16px',
-                  fontFamily: 'var(--font-body)',
+                  padding: "8px 16px",
+                  fontFamily: "var(--font-body)",
                   fontWeight: 600,
-                  fontSize: '13px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
+                  fontSize: "13px",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
                   color:
                     isActive || isHovered
-                      ? 'var(--color-ink)'
-                      : 'var(--color-ink-2)',
+                      ? "var(--color-ink)"
+                      : "var(--color-ink-2)",
                   transform:
-                    clickedLink === link.href ? 'scale(0.92)' : 'scale(1)',
+                    clickedLink === link.href ? "scale(0.92)" : "scale(1)",
                 }}
               >
                 {showSlider && (
@@ -270,21 +318,21 @@ const Navbar = () => {
                     layoutId="navSlider"
                     className="absolute inset-0 z-[-1]"
                     style={{
-                      backgroundColor: 'var(--color-ink)',
+                      backgroundColor: "var(--color-ink)",
                       opacity: 0.08,
-                      borderRadius: '0px' /* Square box as requested */,
+                      borderRadius: "0px" /* Square box as requested */,
                     }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}
                 <span
                   className="relative z-10 transition-colors duration-200"
                   style={{
                     color: isHovered
-                      ? 'var(--color-red)'
+                      ? "var(--color-red)"
                       : isActive
-                        ? 'var(--color-ink)'
-                        : 'var(--color-ink-2)',
+                        ? "var(--color-ink)"
+                        : "var(--color-ink-2)",
                   }}
                 >
                   {link.name}
@@ -303,25 +351,25 @@ const Navbar = () => {
               rel="noopener noreferrer"
               className="btn-secondary h-[40px] flex items-center justify-center transition-transform hover:scale-[1.02]"
               style={{
-                padding: '0 32px',
-                fontFamily: 'var(--font-body)',
+                padding: "0 32px",
+                fontFamily: "var(--font-body)",
                 fontWeight: 600,
-                fontSize: '13px',
-                letterSpacing: '0.1em',
+                fontSize: "13px",
+                letterSpacing: "0.1em",
               }}
             >
               RESUME
             </a>
             <a
               href="#contact"
-              onClick={(e) => scrollTo(e, '#contact')}
+              onClick={(e) => scrollTo(e, "#contact")}
               className="btn-primary h-[40px] flex items-center justify-center transition-transform hover:scale-[1.02]"
               style={{
-                padding: '0 32px',
-                fontFamily: 'var(--font-body)',
+                padding: "0 32px",
+                fontFamily: "var(--font-body)",
                 fontWeight: 600,
-                fontSize: '13px',
-                letterSpacing: '0.1em',
+                fontSize: "13px",
+                letterSpacing: "0.1em",
               }}
             >
               CONTACT
@@ -335,15 +383,15 @@ const Navbar = () => {
             whileTap={{ scale: 0.95 }}
             className="w-[40px] h-[40px] rounded-full flex items-center justify-center border-2 transition-colors"
             style={{
-              borderColor: 'var(--color-ink)',
-              backgroundColor: 'var(--color-paper-2)',
-              color: 'var(--color-ink)',
+              borderColor: "var(--color-ink)",
+              backgroundColor: "var(--color-paper-2)",
+              color: "var(--color-ink)",
             }}
             aria-label="Toggle Dark Mode"
           >
             <motion.div
               animate={{ rotate: isDark ? 180 : 0 }}
-              transition={{ duration: 0.5, ease: 'easeInOut' }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
               className="flex items-center justify-center"
             >
               {isDark ? (
@@ -357,7 +405,7 @@ const Navbar = () => {
           {/* MOBILE HAMBURGER MENU */}
           <button
             className="w-10 h-10 flex md:hidden items-center justify-end text-3xl transition-transform active:scale-95"
-            style={{ color: 'var(--color-ink)' }}
+            style={{ color: "var(--color-ink)" }}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <HiX /> : <HiMenuAlt3 />}
@@ -368,17 +416,17 @@ const Navbar = () => {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ clipPath: 'inset(0 0 100% 0)' }}
-            animate={{ clipPath: 'inset(0 0 0% 0)' }}
-            exit={{ clipPath: 'inset(0 0 100% 0)' }}
-            transition={{ duration: 0.4, ease: 'easeInOut' }}
+            initial={{ clipPath: "inset(0 0 100% 0)" }}
+            animate={{ clipPath: "inset(0 0 0% 0)" }}
+            exit={{ clipPath: "inset(0 0 100% 0)" }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
             className="fixed inset-0 flex flex-col p-10 z-[100] md:hidden"
-            style={{ backgroundColor: 'var(--color-ink)' }}
+            style={{ backgroundColor: "var(--color-ink)" }}
           >
             <div className="flex justify-end mb-12">
               <button
                 className="text-4xl"
-                style={{ color: 'var(--color-paper)' }}
+                style={{ color: "var(--color-paper)" }}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <HiX />
@@ -395,23 +443,23 @@ const Navbar = () => {
                   onClick={(e) => scrollTo(e, link.href)}
                   className="text-4xl sm:text-5xl transition-all duration-100"
                   style={{
-                    fontFamily: 'var(--font-display)',
+                    fontFamily: "var(--font-display)",
                     color:
                       activeSection === link.href.slice(1)
-                        ? 'var(--color-red)'
-                        : 'var(--color-paper)',
+                        ? "var(--color-red)"
+                        : "var(--color-paper)",
                     transform:
-                      clickedLink === link.href ? 'scale(0.92)' : 'scale(1)',
+                      clickedLink === link.href ? "scale(0.92)" : "scale(1)",
                     opacity: clickedLink === link.href ? 0.8 : 1,
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.color = 'var(--color-red)';
+                    e.currentTarget.style.color = "var(--color-red)";
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.color =
                       activeSection === link.href.slice(1)
-                        ? 'var(--color-red)'
-                        : 'var(--color-paper)';
+                        ? "var(--color-red)"
+                        : "var(--color-paper)";
                   }}
                 >
                   {link.name}
@@ -426,18 +474,18 @@ const Navbar = () => {
                 rel="noopener noreferrer"
                 className="text-4xl sm:text-5xl transition-colors mt-4"
                 style={{
-                  fontFamily: 'var(--font-display)',
-                  color: 'var(--color-ink)',
-                  WebkitTextStroke: '1px var(--color-paper)',
+                  fontFamily: "var(--font-display)",
+                  color: "var(--color-ink)",
+                  WebkitTextStroke: "1px var(--color-paper)",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--color-red)';
-                  e.currentTarget.style.WebkitTextStroke = '0px';
+                  e.currentTarget.style.color = "var(--color-red)";
+                  e.currentTarget.style.WebkitTextStroke = "0px";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--color-ink)';
+                  e.currentTarget.style.color = "var(--color-ink)";
                   e.currentTarget.style.WebkitTextStroke =
-                    '1px var(--color-paper)';
+                    "1px var(--color-paper)";
                 }}
               >
                 RESUME

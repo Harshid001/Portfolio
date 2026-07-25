@@ -1,27 +1,16 @@
 // useWorldReveal.js
 //
-// Call this on mount of any page that's a portal destination (or a
-// homepage being reconstructed on the way back). It fades/grows elements
-// in group by group so the new world constructs itself progressively.
+// Progressive on-mount reveal. Elements tagged with `data-reveal="<group>"`
+// fade/scale in group by group, in REVEAL_ORDER, so the page assembles
+// itself instead of popping in all at once.
 //
-// FIX: previously watched a one-shot `window` CustomEvent
-// (`portal:disperse`). One-shot DOM events are inherently racy with
-// component mount timing — if the listener isn't attached at the exact
-// instant the event fires, it's gone, and the content (hidden by
-// portalDom.js's CSS guard) never gets revealed. This now watches
-// `disperseKey`, a counter exposed through PortalTransitionProvider's
-// context: since it's normal React state, every render sees the current
-// value, so there's no window in which the signal can be "missed."
-//
-// A bounded fallback timer is still kept as a last line of defense, in
-// case `isTransitioning` is somehow true with no transition actually able
-// to complete (see PortalTransitionProvider's own safety timeout, which
-// this is intentionally shorter than, so this page usually recovers
-// first).
+// This used to be coupled to the portal transition system (it waited on a
+// `disperseKey` counter from PortalTransitionProvider). That system has been
+// removed, so the hook now simply reveals on mount — which is what it did in
+// the common "direct load" case anyway.
 
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { usePortalTransition } from './PortalTransitionProvider';
 
 const REVEAL_ORDER = [
   'environment',
@@ -48,11 +37,6 @@ const GROUP_CONFIG = {
 };
 
 const DEFAULT_CONFIG = { y: 24, scale: 0.94, blur: 4, duration: 1.2, ease: 'power2.out' };
-
-// Independent last-resort timer — shorter than the provider's own
-// SAFETY_TIMEOUT_MS (9000ms) so, in the worst case, this page reveals
-// itself before the provider even finishes force-cleaning-up.
-const FALLBACK_MS = 2600;
 
 function runReveal(container, delay, tweensOut) {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -93,50 +77,22 @@ function runReveal(container, delay, tweensOut) {
 }
 
 export function useWorldReveal(containerRef, { enabled = true, delay = 0.1 } = {}) {
-  const { isTransitioning, disperseKey } = usePortalTransition();
-  // Captured once, on first render — used to detect when disperseKey
-  // advances *past* whatever it was when this page mounted, rather than
-  // reacting to a stale value left over from some earlier transition.
-  const baselineKeyRef = useRef(disperseKey);
   const hasRevealedRef = useRef(false);
   const tweensRef = useRef([]);
 
   useEffect(() => {
     if (!enabled || !containerRef.current || hasRevealedRef.current) return undefined;
 
-    if (!isTransitioning) {
-      // Direct load / no transition in flight — reveal immediately, no
-      // need to wait on anything.
-      hasRevealedRef.current = true;
-      runReveal(containerRef.current, delay, tweensRef.current);
-      return undefined;
-    }
+    hasRevealedRef.current = true;
+    runReveal(containerRef.current, delay, tweensRef.current);
 
-    if (disperseKey !== baselineKeyRef.current) {
-      // The transition that brought us here has already dispersed by the
-      // time this effect ran — reveal now, no delay needed.
-      hasRevealedRef.current = true;
-      runReveal(containerRef.current, 0, tweensRef.current);
-      return undefined;
-    }
-
-    // Still mid-transition and disperse hasn't happened yet — the
-    // baseline-check above will catch it on the next render once
-    // disperseKey changes (it's a dependency below). This fallback is
-    // purely defensive, for the case where disperse never fires at all.
-    const fallback = setTimeout(() => {
-      if (hasRevealedRef.current || !containerRef.current) return;
-      hasRevealedRef.current = true;
-      runReveal(containerRef.current, 0, tweensRef.current);
-    }, FALLBACK_MS);
-
+    const tweens = tweensRef.current;
     return () => {
-      clearTimeout(fallback);
-      // React 18 Strict Mode cleanup: kill tweens and reset the revealed flag
-      // so the animation can properly run again on remount.
-      tweensRef.current.forEach((t) => t.kill());
+      // React StrictMode double-invoke cleanup: kill tweens and reset the
+      // flag so the animation runs correctly on remount.
+      tweens.forEach((t) => t.kill());
       tweensRef.current = [];
       hasRevealedRef.current = false;
     };
-  }, [containerRef, enabled, delay, isTransitioning, disperseKey]);
+  }, [containerRef, enabled, delay]);
 }

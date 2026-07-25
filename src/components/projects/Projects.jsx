@@ -6,14 +6,13 @@ import './projects.css';
 
 // ── Project data ─────────────────────────────────────────
 import studybuddyImg from '../../assets/studdy-buddy.png';
+import studybuddyImgWebp from '../../assets/studdy-buddy.webp';
 import pincodeImg from '../../assets/Pincode.png';
+import pincodeImgWebp from '../../assets/Pincode.webp';
 import smartfactoryImg from '../../assets/smartfactory.png';
-import logitechImg from '../../assets/Logitech.png';
-import rockstarImg from '../../assets/Rockstar.png';
-import numeraiImg from '../../assets/NumerAI.png';
-import radheJewellersImg from '../../assets/radhe-jewellers.png';
+import smartfactoryImgWebp from '../../assets/smartfactory.webp';
 import websiteMakerImg from '../../assets/website-maker.png';
-import fundHuntersImg from '../../assets/fund-hunters.png';
+import websiteMakerImgWebp from '../../assets/website-maker.webp';
 
 const projects = [
   {
@@ -23,6 +22,7 @@ const projects = [
     tech: ['React', 'Node.js', 'MongoDB', 'Express'],
     github: 'https://github.com/Harshid001/studybuddy',
     image: studybuddyImg,
+    imageWebp: studybuddyImgWebp,
     category: 'APPLICATIONS',
   },
   {
@@ -33,7 +33,7 @@ const projects = [
     github: 'https://github.com/Harshid001/team_hacksheild',
     live: 'https://mf-advisor-seven.vercel.app/',
     image:
-      'https://res.cloudinary.com/dh0xawlig/image/upload/v1783864799/Screenshot_2026-07-12_192909_llxok0.png',
+      'https://res.cloudinary.com/dh0xawlig/image/upload/q_auto/f_auto/v1783864799/Screenshot_2026-07-12_192909_llxok0.png',
     category: 'WEBSITES',
   },
   {
@@ -44,7 +44,7 @@ const projects = [
     github: 'https://github.com/Harshid001/traveloop',
     live: 'https://traveloop-wheat.vercel.app/onboarding',
     image:
-      'https://res.cloudinary.com/dxvggspmi/image/upload/v1781610545/Screenshot_2026-06-16_171746_oub72r.png',
+      'https://res.cloudinary.com/dxvggspmi/image/upload/q_auto/f_auto/v1781610545/Screenshot_2026-06-16_171746_oub72r.png',
     category: 'WEBSITES',
   },
   {
@@ -88,6 +88,7 @@ const projects = [
     github: 'https://github.com/Harshid001/Website-maker',
     live: 'https://website-maker-gevx.vercel.app/',
     image: websiteMakerImg,
+    imageWebp: websiteMakerImgWebp,
     category: 'WEBSITES',
   },
   {
@@ -98,6 +99,7 @@ const projects = [
     github: 'https://github.com/Harshid001/PINCODE',
     live: 'https://pincode-delta.vercel.app',
     image: pincodeImg,
+    imageWebp: pincodeImgWebp,
     category: 'WEBSITES',
   },
   {
@@ -107,6 +109,7 @@ const projects = [
     tech: ['Python', 'AI/ML', 'REST API', 'Web'],
     github: 'https://github.com/Harshid001/smartfactoryAIsystem',
     image: smartfactoryImg,
+    imageWebp: smartfactoryImgWebp,
     category: 'WEBSITES',
   },
 ];
