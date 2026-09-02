@@ -477,9 +477,9 @@ const Footer = () => {
             <span className="lhs"><span className="num">04</span><span className="txt"><span>About</span><span className="sub">Frontend engineer</span></span></span>
             <span className="kbd">[4]</span><span className="arw">&#8594;</span>
           </a>
-          <a className="lnk" data-dir="down" data-k="5" data-glyph="&#8595;" href="/resume.pdf" target="_blank"
-             data-pv-num="05 / RESUME" data-pv-ttl="Download" data-pv-sub="PDF &middot; 148 KB &middot; updated Jul 2026">
-            <span className="lhs"><span className="num">05</span><span className="txt"><span>Resume</span><span className="sub">PDF &middot; Jul 2026</span></span></span>
+          <a className="lnk" data-dir="down" data-k="5" data-glyph="&#8595;" href="/resume.pdf" target="_blank" rel="noopener noreferrer"
+             data-pv-num="05 / RESUME" data-pv-ttl="Download" data-pv-sub="PDF &middot; 61 KB">
+            <span className="lhs"><span className="num">05</span><span className="txt"><span>Resume</span><span className="sub">PDF</span></span></span>
             <span className="kbd">[5]</span><span className="arw">&#8595;</span>
           </a>
         </div>
