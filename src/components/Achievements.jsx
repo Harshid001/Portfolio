@@ -910,10 +910,9 @@ const HackathonSection = () => {
   );
 };
 
-/* ─── PART B: In-Section Certificate Viewer ─── */
-const SectionCertificateViewer = ({
+/* ─── PART B: Certificate Preview Component ─── */
+const CertificatePreview = ({
   cert,
-  onClose,
   onPrev,
   onNext,
   hasPrev,
@@ -931,181 +930,121 @@ const SectionCertificateViewer = ({
     }
   }, [cert?.id]);
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowLeft' && hasPrev) onPrev();
-      if (e.key === 'ArrowRight' && hasNext) onNext();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose, onPrev, onNext, hasPrev, hasNext]);
-
-  if (!cert) return null;
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -20, height: 0 }}
-      animate={{ opacity: 1, y: 0, height: 'auto' }}
-      exit={{ opacity: 0, y: -20, height: 0 }}
-      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+    <div
       style={{
-        overflow: 'hidden',
-        marginBottom: '48px',
+        position: 'relative',
+        backgroundColor: 'var(--color-paper-2)',
+        border: '2px solid var(--color-ink)',
+        boxShadow: '8px 8px 0px var(--color-ink)',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
       }}
     >
+      {/* Header Bar */}
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '12px 18px',
+          borderBottom: '2px solid var(--color-ink)',
+          backgroundColor: 'var(--color-paper-3)',
+          gap: '10px',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              backgroundColor: 'var(--color-ink)',
+              color: 'var(--color-paper)',
+              padding: '3px 8px',
+            }}
+          >
+            PREVIEW // {cert.id}
+          </span>
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 12,
+              color: 'var(--color-ink-2)',
+              letterSpacing: '0.08em',
+            }}
+          >
+            {currentIndex + 1} OF {totalCount}
+          </span>
+        </div>
+
+        <a
+          href={cert.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Open full-resolution certificate image in new tab"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            fontFamily: 'var(--font-mono)',
+            fontSize: 11,
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            fontWeight: 600,
+            padding: '5px 12px',
+            border: '1.5px solid var(--color-ink)',
+            backgroundColor: 'var(--color-paper)',
+            color: 'var(--color-ink)',
+            textDecoration: 'none',
+            transition: 'all 0.15s ease',
+          }}
+          className="hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)]"
+        >
+          <span>FULL RES</span>
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            <polyline points="15 3 21 3 21 9" />
+            <line x1="10" y1="14" x2="21" y2="3" />
+          </svg>
+        </a>
+      </div>
+
+      {/* Certificate Image Canvas */}
       <div
         style={{
           position: 'relative',
-          backgroundColor: 'var(--color-paper-2)',
-          border: '2px solid var(--color-ink)',
-          boxShadow: '8px 8px 0px var(--color-ink)',
+          padding: '16px',
+          backgroundColor: '#0a0c10',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '280px',
+          maxHeight: '460px',
+          flexGrow: 1,
+          overflow: 'hidden',
         }}
       >
-        {/* Header Bar */}
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '14px 20px',
-            borderBottom: '2px solid var(--color-ink)',
-            backgroundColor: 'var(--color-paper-3)',
-            gap: '10px',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              flexWrap: 'wrap',
-            }}
-          >
-            <span
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                backgroundColor: 'var(--color-ink)',
-                color: 'var(--color-paper)',
-                padding: '4px 10px',
-              }}
-            >
-              CERTIFICATE // {cert.id}
-            </span>
-            <span
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: 12,
-                color: 'var(--color-ink-2)',
-                letterSpacing: '0.08em',
-              }}
-            >
-              {currentIndex + 1} OF {totalCount} — {cert.title}
-            </span>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <a
-              href={cert.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              title="Open full-resolution certificate image in new tab"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontFamily: 'var(--font-mono)',
-                fontSize: 11,
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                fontWeight: 600,
-                padding: '6px 14px',
-                border: '1.5px solid var(--color-ink)',
-                backgroundColor: 'var(--color-paper)',
-                color: 'var(--color-ink)',
-                textDecoration: 'none',
-                transition: 'all 0.15s ease',
-              }}
-              className="hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)]"
-            >
-              <span>FULL RES</span>
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                <polyline points="15 3 21 3 21 9" />
-                <line x1="10" y1="14" x2="21" y2="3" />
-              </svg>
-            </a>
-
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Close certificate preview"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontFamily: 'var(--font-mono)',
-                fontSize: 11,
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                fontWeight: 600,
-                padding: '6px 12px',
-                border: '1.5px solid var(--color-ink)',
-                backgroundColor: 'var(--color-paper)',
-                color: 'var(--color-ink)',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-              }}
-              className="hover:bg-[var(--color-red)] hover:text-white hover:border-[var(--color-red)]"
-            >
-              <span>CLOSE</span>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        {/* Certificate Display Area */}
-        <div
-          style={{
-            position: 'relative',
-            padding: '24px',
-            backgroundColor: '#0a0c10',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '320px',
-            maxHeight: '680px',
-            overflow: 'hidden',
-          }}
-        >
+        <AnimatePresence mode="wait">
           {!loaded && (
-            <div
+            <motion.div
+              key="loading-spinner"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               style={{
                 position: 'absolute',
                 inset: 0,
@@ -1113,15 +1052,15 @@ const SectionCertificateViewer = ({
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '12px',
+                gap: '10px',
                 backgroundColor: '#0a0c10',
                 zIndex: 2,
               }}
             >
               <div
                 style={{
-                  width: '32px',
-                  height: '32px',
+                  width: '28px',
+                  height: '28px',
                   border: '3px solid rgba(255,255,255,0.2)',
                   borderTopColor: 'var(--color-paper)',
                   borderRadius: '50%',
@@ -1131,7 +1070,7 @@ const SectionCertificateViewer = ({
               <span
                 style={{
                   fontFamily: 'var(--font-mono)',
-                  fontSize: 11,
+                  fontSize: 10,
                   letterSpacing: '0.15em',
                   color: 'rgba(255,255,255,0.6)',
                   textTransform: 'uppercase',
@@ -1139,9 +1078,24 @@ const SectionCertificateViewer = ({
               >
                 LOADING CREDENTIAL...
               </span>
-            </div>
+            </motion.div>
           )}
+        </AnimatePresence>
 
+        <a
+          href={cert.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Click to open full size"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            height: '100%',
+            cursor: 'zoom-in',
+          }}
+        >
           <img
             ref={imgRef}
             key={cert.id}
@@ -1149,82 +1103,101 @@ const SectionCertificateViewer = ({
             alt={cert.title}
             onLoad={() => setLoaded(true)}
             style={{
-              maxHeight: '600px',
+              maxHeight: '420px',
               maxWidth: '100%',
               width: 'auto',
               height: 'auto',
               objectFit: 'contain',
               border: '2px solid rgba(255, 255, 255, 0.15)',
-              boxShadow: '0 12px 35px rgba(0,0,0,0.6)',
+              boxShadow: '0 8px 25px rgba(0,0,0,0.6)',
               opacity: loaded ? 1 : 0,
               transition: 'opacity 0.25s ease',
             }}
           />
+        </a>
+      </div>
+
+      {/* Metadata & Controls Footer */}
+      <div
+        style={{
+          padding: '16px 20px',
+          borderTop: '2px solid var(--color-ink)',
+          backgroundColor: 'var(--color-paper)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '14px',
+        }}
+      >
+        <div>
+          <h3
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: 'clamp(18px, 2.2vw, 24px)',
+              fontWeight: 900,
+              textTransform: 'uppercase',
+              color: 'var(--color-ink)',
+              margin: 0,
+              lineHeight: 1.2,
+            }}
+          >
+            {cert.title}
+          </h3>
+          <p
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 12,
+              color: 'var(--color-ink-3)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              margin: '4px 0 10px',
+            }}
+          >
+            ISSUED BY: {cert.issuer} • YEAR: {cert.date}
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+            {cert.skills.map((s) => (
+              <span
+                key={s}
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 10,
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  fontWeight: 600,
+                  border: '1px solid var(--color-ink)',
+                  padding: '2px 8px',
+                  backgroundColor: 'var(--color-paper-2)',
+                  color: 'var(--color-ink)',
+                }}
+              >
+                {s}
+              </span>
+            ))}
+          </div>
         </div>
 
-        {/* Footer info & Controls */}
+        {/* Bottom Bar: Prev / Next */}
         <div
           style={{
-            padding: '18px 24px',
-            borderTop: '2px solid var(--color-ink)',
-            backgroundColor: 'var(--color-paper)',
             display: 'flex',
-            flexWrap: 'wrap',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '16px',
+            paddingTop: '10px',
+            borderTop: '1px dashed rgba(0,0,0,0.15)',
           }}
         >
-          <div style={{ flex: '1 1 320px' }}>
-            <h3
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'clamp(18px, 2.5vw, 24px)',
-                fontWeight: 900,
-                textTransform: 'uppercase',
-                color: 'var(--color-ink)',
-                margin: 0,
-                lineHeight: 1.2,
-              }}
-            >
-              {cert.title}
-            </h3>
-            <p
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: 12,
-                color: 'var(--color-ink-3)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                margin: '6px 0 10px',
-              }}
-            >
-              ISSUED BY: {cert.issuer} • YEAR: {cert.date}
-            </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-              {cert.skills.map((s) => (
-                <span
-                  key={s}
-                  style={{
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: 10,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    fontWeight: 600,
-                    border: '1px solid var(--color-ink)',
-                    padding: '3px 10px',
-                    backgroundColor: 'var(--color-paper-2)',
-                    color: 'var(--color-ink)',
-                  }}
-                >
-                  {s}
-                </span>
-              ))}
-            </div>
-          </div>
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 11,
+              color: 'var(--color-ink-3)',
+              letterSpacing: '0.1em',
+            }}
+          >
+            CREDENTIAL {currentIndex + 1} OF {totalCount}
+          </span>
 
-          {/* Navigation Controls */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <button
               type="button"
               onClick={onPrev}
@@ -1239,7 +1212,7 @@ const SectionCertificateViewer = ({
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
                 fontWeight: 700,
-                padding: '9px 16px',
+                padding: '7px 14px',
                 border: '1.5px solid var(--color-ink)',
                 backgroundColor: hasPrev
                   ? 'var(--color-paper-2)'
@@ -1258,18 +1231,6 @@ const SectionCertificateViewer = ({
               ← PREV
             </button>
 
-            <span
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: 11,
-                letterSpacing: '0.12em',
-                color: 'var(--color-ink-3)',
-                padding: '0 4px',
-              }}
-            >
-              {currentIndex + 1} / {totalCount}
-            </span>
-
             <button
               type="button"
               onClick={onNext}
@@ -1284,7 +1245,7 @@ const SectionCertificateViewer = ({
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
                 fontWeight: 700,
-                padding: '9px 16px',
+                padding: '7px 14px',
                 border: '1.5px solid var(--color-ink)',
                 backgroundColor: hasNext
                   ? 'var(--color-paper-2)'
@@ -1305,17 +1266,18 @@ const SectionCertificateViewer = ({
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
-/* ─── Certificate Card ─── */
-const CertificateCard = ({ cert, index, onSelect, isSelected }) => {
+/* ─── Stacked Certificate Card Component ─── */
+const StackedCertificateCard = ({ cert, index, onSelect }) => {
   const [hovered, setHovered] = useState(false);
   const isInverted = cert.color === 'var(--color-ink)';
 
   return (
     <motion.div
+      layout
       role="button"
       tabIndex={0}
       onClick={() => onSelect(cert)}
@@ -1325,132 +1287,52 @@ const CertificateCard = ({ cert, index, onSelect, isSelected }) => {
           onSelect(cert);
         }
       }}
-      aria-label={`View certificate: ${cert.title}`}
+      aria-label={`Preview certificate: ${cert.title}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      initial={{ opacity: 0, y: 60, rotate: index % 2 === 0 ? -1.5 : 1.5 }}
-      whileInView={{ opacity: 1, y: 0, rotate: index % 2 === 0 ? -1 : 1 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{
-        duration: 0.6,
-        delay: index * 0.12,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-      whileHover={{ y: -8, rotate: 0, transition: { duration: 0.2 } }}
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      transition={{ duration: 0.3, delay: index * 0.05 }}
+      whileHover={{ x: -6, y: -4, transition: { duration: 0.15 } }}
       style={{
         position: 'relative',
         cursor: 'pointer',
       }}
     >
-      {/* GPU-accelerated brutalist shadow */}
+      {/* Brutalist Shadow */}
       <div
         className="absolute inset-0 transition-transform duration-200 ease-out pointer-events-none"
         style={{
           backgroundColor: 'var(--color-ink)',
-          transform:
-            hovered || isSelected
-              ? 'translate(10px, 10px)'
-              : 'translate(6px, 6px)',
+          transform: hovered ? 'translate(8px, 8px)' : 'translate(4px, 4px)',
           willChange: 'transform',
         }}
       />
 
-      {/* Foreground Content wrapper */}
+      {/* Card Content Container */}
       <div
-        className="relative z-10 overflow-hidden h-full flex flex-col"
+        className="relative z-10 flex items-stretch overflow-hidden"
         style={{
           backgroundColor: cert.color,
-          border: isSelected
-            ? '2.5px solid var(--color-ink)'
-            : '2px solid var(--color-ink)',
-          outline: isSelected ? '3px solid var(--color-ink)' : 'none',
-          outlineOffset: '2px',
+          border: '2px solid var(--color-ink)',
+          transition: 'all 0.2s ease',
         }}
       >
-        {/* Top strip */}
-        <div
-          style={{
-            borderBottom: `2px solid ${isInverted ? 'rgba(245,242,237,0.2)' : 'var(--color-ink)'}`,
-            padding: '12px 18px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            backgroundColor: isInverted
-              ? 'rgba(255,255,255,0.05)'
-              : 'rgba(0,0,0,0.03)',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: 10,
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                fontWeight: 700,
-                color: isInverted
-                  ? 'rgba(245,242,237,0.7)'
-                  : 'var(--color-ink-3)',
-              }}
-            >
-              CERTIFICATE · {cert.id}
-            </span>
-            {isSelected && (
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 9,
-                  fontWeight: 700,
-                  letterSpacing: '0.1em',
-                  padding: '2px 6px',
-                  backgroundColor: 'var(--color-ink)',
-                  color: 'var(--color-paper)',
-                  border: '1px solid var(--color-paper)',
-                }}
-              >
-                <span
-                  style={{
-                    width: 5,
-                    height: 5,
-                    borderRadius: '50%',
-                    backgroundColor: '#22c55e',
-                  }}
-                />
-                VIEWING
-              </span>
-            )}
-          </div>
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke={isInverted ? 'rgba(245,242,237,0.5)' : 'var(--color-ink-3)'}
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          >
-            <circle cx="12" cy="8" r="6" />
-            <path d="M8.56 14.75 L6 22 L12 19 L18 22 L15.44 14.75" />
-          </svg>
-        </div>
-
-        {/* Certificate Image Frame */}
+        {/* Certificate Image Thumbnail on the left */}
         <div
           style={{
             position: 'relative',
-            width: '100%',
-            aspectRatio: '16 / 10',
+            width: '110px',
+            minWidth: '110px',
             backgroundColor: '#0a0c10',
-            borderBottom: `2px solid ${isInverted ? 'rgba(245,242,237,0.2)' : 'var(--color-ink)'}`,
+            borderRight: `2px solid ${isInverted ? 'rgba(245,242,237,0.2)' : 'var(--color-ink)'}`,
             overflow: 'hidden',
           }}
         >
           <img
             src={cert.link}
-            alt={`${cert.title} Certificate`}
+            alt={cert.title}
             loading="lazy"
             decoding="async"
             style={{
@@ -1458,171 +1340,164 @@ const CertificateCard = ({ cert, index, onSelect, isSelected }) => {
               height: '100%',
               objectFit: 'cover',
               objectPosition: 'center',
-              transition:
-                'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease',
-              transform: hovered ? 'scale(1.05)' : 'scale(1)',
-              filter: hovered ? 'none' : 'contrast(1.02)',
+              transform: hovered ? 'scale(1.08)' : 'scale(1)',
+              transition: 'transform 0.3s ease',
             }}
           />
-          {/* Subtle hover overlay badge */}
           <div
             style={{
               position: 'absolute',
-              inset: 0,
-              backgroundColor: 'rgba(7, 9, 14, 0.4)',
-              opacity: hovered ? 1 : 0,
-              transition: 'opacity 0.2s ease',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              top: '4px',
+              left: '4px',
+              backgroundColor: 'var(--color-ink)',
+              color: 'var(--color-paper)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: 9,
+              fontWeight: 700,
+              padding: '1px 5px',
+              border: '1px solid var(--color-paper)',
             }}
           >
-            <span
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: 10,
-                letterSpacing: '0.12em',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                backgroundColor: 'var(--color-paper)',
-                color: 'var(--color-ink)',
-                border: '1.5px solid var(--color-ink)',
-                boxShadow: '3px 3px 0px var(--color-ink)',
-                padding: '6px 14px',
-              }}
-            >
-              {isSelected ? 'VIEWING IN SECTION' : 'CLICK TO EXPAND'}
-            </span>
+            {cert.id}
           </div>
         </div>
 
-        {/* Body */}
+        {/* Info Column */}
         <div
           style={{
-            padding: '20px 20px 24px',
+            padding: '12px 14px',
             display: 'flex',
             flexDirection: 'column',
+            justifyContent: 'space-between',
             flexGrow: 1,
+            minWidth: 0,
           }}
         >
-          <h3
-            style={{
-              fontFamily: 'var(--font-heading)',
-              fontWeight: 800,
-              fontSize: 'clamp(16px, 2.2vw, 20px)',
-              lineHeight: 1.2,
-              textTransform: 'uppercase',
-              letterSpacing: '0.04em',
-              color: cert.accent,
-              marginBottom: 8,
-            }}
-          >
-            {cert.title}
-          </h3>
-
-          <p
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: 12,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              color: isInverted
-                ? 'rgba(245,242,237,0.6)'
-                : 'var(--color-ink-3)',
-              marginBottom: 16,
-            }}
-          >
-            {cert.issuer}
-          </p>
-
-          {/* Skills tags */}
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '6px',
-              marginBottom: 18,
-              flexGrow: 1,
-            }}
-          >
-            {cert.skills.map((s) => (
+          <div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '6px',
+                marginBottom: '4px',
+              }}
+            >
               <span
-                key={s}
                 style={{
                   fontFamily: 'var(--font-mono)',
                   fontSize: 10,
-                  letterSpacing: '0.1em',
+                  letterSpacing: '0.12em',
                   textTransform: 'uppercase',
-                  border: `1px solid ${isInverted ? 'rgba(245,242,237,0.3)' : 'var(--color-ink)'}`,
+                  fontWeight: 700,
                   color: isInverted
                     ? 'rgba(245,242,237,0.7)'
-                    : 'var(--color-ink)',
-                  padding: '2px 8px',
+                    : 'var(--color-ink-3)',
                 }}
               >
-                {s}
+                {cert.issuer}
               </span>
-            ))}
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 10,
+                  color: isInverted
+                    ? 'rgba(245,242,237,0.5)'
+                    : 'var(--color-ink-3)',
+                  letterSpacing: '0.08em',
+                }}
+              >
+                {cert.date}
+              </span>
+            </div>
+
+            <h4
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 800,
+                fontSize: 14,
+                lineHeight: 1.25,
+                textTransform: 'uppercase',
+                color: cert.accent,
+                margin: 0,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+              }}
+            >
+              {cert.title}
+            </h4>
           </div>
 
-          {/* Bottom row */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              paddingTop: '12px',
-              borderTop: `1px dashed ${isInverted ? 'rgba(245,242,237,0.2)' : 'rgba(0,0,0,0.15)'}`,
+              marginTop: '8px',
+              paddingTop: '6px',
+              borderTop: `1px dashed ${isInverted ? 'rgba(245,242,237,0.2)' : 'rgba(0,0,0,0.1)'}`,
             }}
           >
-            <span
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: 11,
-                color: isInverted
-                  ? 'rgba(245,242,237,0.5)'
-                  : 'var(--color-ink-3)',
-                letterSpacing: '0.1em',
-              }}
-            >
-              {cert.date}
-            </span>
+            <div style={{ display: 'flex', gap: '4px', overflow: 'hidden' }}>
+              {cert.skills.slice(0, 2).map((s) => (
+                <span
+                  key={s}
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 9,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    border: `1px solid ${isInverted ? 'rgba(245,242,237,0.25)' : 'var(--color-ink)'}`,
+                    color: isInverted
+                      ? 'rgba(245,242,237,0.75)'
+                      : 'var(--color-ink)',
+                    padding: '1px 6px',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {s}
+                </span>
+              ))}
+            </div>
+
             <div
               style={{
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
-                gap: '6px',
-                padding: '6px 12px',
-                border: `1.5px solid ${cert.accent}`,
+                gap: '4px',
                 fontFamily: 'var(--font-mono)',
-                fontSize: 10,
-                letterSpacing: '0.12em',
+                fontSize: 9,
                 fontWeight: 700,
+                letterSpacing: '0.12em',
                 textTransform: 'uppercase',
-                backgroundColor:
-                  hovered || isSelected ? cert.accent : 'transparent',
-                color:
-                  hovered || isSelected
-                    ? isInverted
-                      ? 'var(--color-ink)'
-                      : 'var(--color-paper)'
-                    : cert.accent,
-                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                color: hovered
+                  ? cert.accent
+                  : isInverted
+                    ? 'rgba(245,242,237,0.8)'
+                    : 'var(--color-ink)',
+                transition: 'all 0.15s ease',
               }}
             >
-              <span>{isSelected ? 'VIEWING' : 'VIEW IN SECTION'}</span>
+              <span>PREVIEW</span>
               <svg
-                width="12"
-                height="12"
+                width="10"
+                height="10"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                style={{
+                  transform: hovered ? 'translateX(-3px)' : 'none',
+                  transition: 'transform 0.15s ease',
+                }}
               >
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                <circle cx="12" cy="12" r="3" />
+                <path d="M5 12h14" />
+                <path d="M12 5l7 7-7 7" />
               </svg>
             </div>
           </div>
@@ -1634,12 +1509,9 @@ const CertificateCard = ({ cert, index, onSelect, isSelected }) => {
 
 /* ─── PART B: Certificates Section ─── */
 const CertificatesSection = () => {
-  const [selectedCert, setSelectedCert] = useState(null);
-  const viewerRef = useRef(null);
+  const [selectedCert, setSelectedCert] = useState(certificates[0]);
 
-  const currentIndex = selectedCert
-    ? certificates.findIndex((c) => c.id === selectedCert.id)
-    : -1;
+  const currentIndex = certificates.findIndex((c) => c.id === selectedCert.id);
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < certificates.length - 1;
 
@@ -1652,10 +1524,22 @@ const CertificatesSection = () => {
 
   const handleSelectCert = (c) => {
     setSelectedCert(c);
-    setTimeout(() => {
-      viewerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 60);
   };
+
+  // The rest of the certificates in the stack (excluding currently previewed)
+  const remainingCertificates = certificates.filter(
+    (c) => c.id !== selectedCert.id
+  );
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowLeft' && hasPrev) handlePrev();
+      if (e.key === 'ArrowRight' && hasNext) handleNext();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [hasPrev, hasNext, currentIndex]);
 
   return (
     <section
@@ -1669,7 +1553,7 @@ const CertificatesSection = () => {
     >
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
-          className="mb-16"
+          className="mb-14"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
@@ -1681,35 +1565,97 @@ const CertificatesSection = () => {
           </h2>
         </motion.div>
 
-        {/* In-Section Certificate Spotlight Viewer */}
-        <div ref={viewerRef}>
-          <AnimatePresence>
-            {selectedCert && (
-              <SectionCertificateViewer
-                cert={selectedCert}
-                onClose={() => setSelectedCert(null)}
-                onPrev={handlePrev}
-                onNext={handleNext}
-                hasPrev={hasPrev}
-                hasNext={hasNext}
-                totalCount={certificates.length}
-                currentIndex={currentIndex}
-              />
-            )}
-          </AnimatePresence>
-        </div>
+        {/* 2-Column Split: Active Preview (Col 1) + The Stack of Rest of Certificates (Col 2) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Main Column: Active Certificate Preview */}
+          <div className="lg:col-span-7 xl:col-span-7">
+            <div
+              className="flex items-center justify-between mb-3 pb-2 border-b-2"
+              style={{ borderColor: 'var(--color-ink)' }}
+            >
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 11,
+                  fontWeight: 700,
+                  letterSpacing: '0.15em',
+                  textTransform: 'uppercase',
+                  color: 'var(--color-ink)',
+                }}
+              >
+                FEATURED PREVIEW
+              </span>
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 10,
+                  letterSpacing: '0.1em',
+                  color: 'var(--color-ink-3)',
+                  textTransform: 'uppercase',
+                }}
+              >
+                USE ARROWS OR BUTTONS TO NAVIGATE
+              </span>
+            </div>
 
-        {/* Certificate Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-          {certificates.map((cert, i) => (
-            <CertificateCard
-              key={cert.id}
-              cert={cert}
-              index={i}
-              isSelected={selectedCert?.id === cert.id}
-              onSelect={handleSelectCert}
+            <CertificatePreview
+              cert={selectedCert}
+              onPrev={handlePrev}
+              onNext={handleNext}
+              hasPrev={hasPrev}
+              hasNext={hasNext}
+              totalCount={certificates.length}
+              currentIndex={currentIndex}
             />
-          ))}
+          </div>
+
+          {/* Side Column: The Rest of the Certificates in Stack */}
+          <div className="lg:col-span-5 xl:col-span-5">
+            <div
+              className="flex items-center justify-between mb-3 pb-2 border-b-2"
+              style={{ borderColor: 'var(--color-ink)' }}
+            >
+              <div className="flex items-center gap-2">
+                <span
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 11,
+                    fontWeight: 700,
+                    letterSpacing: '0.15em',
+                    textTransform: 'uppercase',
+                    color: 'var(--color-ink)',
+                  }}
+                >
+                  CREDENTIALS STACK ({remainingCertificates.length})
+                </span>
+              </div>
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 10,
+                  letterSpacing: '0.1em',
+                  color: 'var(--color-ink-3)',
+                  textTransform: 'uppercase',
+                }}
+              >
+                CLICK CARD TO PREVIEW
+              </span>
+            </div>
+
+            {/* Stack Cards Deck */}
+            <div className="flex flex-col gap-3.5">
+              <AnimatePresence initial={false}>
+                {remainingCertificates.map((cert, index) => (
+                  <StackedCertificateCard
+                    key={cert.id}
+                    cert={cert}
+                    index={index}
+                    onSelect={handleSelectCert}
+                  />
+                ))}
+              </AnimatePresence>
+            </div>
+          </div>
         </div>
       </div>
     </section>
