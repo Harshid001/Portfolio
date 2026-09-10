@@ -910,13 +910,439 @@ const HackathonSection = () => {
   );
 };
 
-/* â”€â”€â”€ Certificate Card â”€â”€â”€ */
-const CertificateCard = ({ cert, index }) => {
+/* ─── Certificate Preview Lightbox Modal ─── */
+const CertificateModal = ({
+  cert,
+  onClose,
+  onPrev,
+  onNext,
+  hasPrev,
+  hasNext,
+  totalCount,
+  currentIndex,
+}) => {
+  const [loaded, setLoaded] = useState(false);
+
+  // Close on Escape key, navigate on Arrow keys
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft' && hasPrev) onPrev();
+      if (e.key === 'ArrowRight' && hasNext) onNext();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose, onPrev, onNext, hasPrev, hasNext]);
+
+  // Lock body scroll while modal is open
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
+
+  // Reset loaded status when cert changes
+  useEffect(() => {
+    setLoaded(false);
+  }, [cert?.id]);
+
+  if (!cert) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 99990,
+        backgroundColor: 'rgba(7, 9, 14, 0.88)',
+        backdropFilter: 'blur(8px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '16px',
+        overflowY: 'auto',
+      }}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Certificate: ${cert.title}`}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 15 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 15 }}
+        transition={{ type: 'spring', damping: 28, stiffness: 350 }}
+        style={{
+          width: '100%',
+          maxWidth: '920px',
+          backgroundColor: 'var(--color-paper)',
+          border: '2px solid var(--color-ink)',
+          boxShadow: '10px 10px 0px var(--color-ink)',
+          position: 'relative',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          maxHeight: '92vh',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header Bar */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '12px 18px',
+            borderBottom: '2px solid var(--color-ink)',
+            backgroundColor: 'var(--color-paper-2)',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                backgroundColor: 'var(--color-ink)',
+                color: 'var(--color-paper)',
+                padding: '3px 8px',
+              }}
+            >
+              CERTIFICATE // {cert.id}
+            </span>
+            <span
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 12,
+                color: 'var(--color-ink-3)',
+                letterSpacing: '0.08em',
+              }}
+              className="hidden sm:inline"
+            >
+              {currentIndex + 1} OF {totalCount}
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <a
+              href={cert.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Open full-resolution image in new tab"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                fontWeight: 600,
+                padding: '6px 12px',
+                border: '1.5px solid var(--color-ink)',
+                backgroundColor: 'var(--color-paper)',
+                color: 'var(--color-ink)',
+                textDecoration: 'none',
+                transition: 'all 0.15s ease',
+              }}
+              className="hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)] cursor-pointer"
+            >
+              <span>FULL SIZE</span>
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </a>
+
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close certificate modal"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 32,
+                height: 32,
+                border: '1.5px solid var(--color-ink)',
+                backgroundColor: 'var(--color-paper)',
+                color: 'var(--color-ink)',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease',
+              }}
+              className="hover:bg-[var(--color-red)] hover:text-white hover:border-[var(--color-red)]"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Certificate Image Canvas Area */}
+        <div
+          style={{
+            position: 'relative',
+            padding: '16px',
+            backgroundColor: '#0a0c10',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '280px',
+            maxHeight: '58vh',
+            overflow: 'hidden',
+          }}
+        >
+          {/* Loading state indicator */}
+          {!loaded && (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '12px',
+                backgroundColor: 'var(--color-paper-2)',
+                zIndex: 2,
+              }}
+            >
+              <div
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  border: '3px solid var(--color-paper-3)',
+                  borderTopColor: 'var(--color-ink)',
+                  borderRadius: '50%',
+                  animation: 'spin 0.8s linear infinite',
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 11,
+                  letterSpacing: '0.15em',
+                  color: 'var(--color-ink-3)',
+                  textTransform: 'uppercase',
+                }}
+              >
+                LOADING CREDENTIAL...
+              </span>
+            </div>
+          )}
+
+          <img
+            key={cert.id}
+            src={cert.link}
+            alt={cert.title}
+            onLoad={() => setLoaded(true)}
+            style={{
+              maxHeight: '54vh',
+              maxWidth: '100%',
+              width: 'auto',
+              height: 'auto',
+              objectFit: 'contain',
+              border: '2px solid var(--color-ink)',
+              boxShadow: '0 6px 20px rgba(0,0,0,0.4)',
+              opacity: loaded ? 1 : 0,
+              transition: 'opacity 0.25s ease',
+            }}
+          />
+        </div>
+
+        {/* Certificate Metadata and Navigation Footer */}
+        <div
+          style={{
+            padding: '16px 20px',
+            borderTop: '2px solid var(--color-ink)',
+            backgroundColor: 'var(--color-paper)',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '14px',
+          }}
+        >
+          <div style={{ flex: '1 1 300px' }}>
+            <h3
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: 'clamp(16px, 2vw, 20px)',
+                fontWeight: 800,
+                textTransform: 'uppercase',
+                color: 'var(--color-ink)',
+                margin: 0,
+                lineHeight: 1.2,
+              }}
+            >
+              {cert.title}
+            </h3>
+            <p
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 12,
+                color: 'var(--color-ink-3)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                margin: '4px 0 8px',
+              }}
+            >
+              {cert.issuer} • {cert.date}
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+              {cert.skills.map((s) => (
+                <span
+                  key={s}
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 10,
+                    letterSpacing: '0.1em',
+                    textTransform: 'uppercase',
+                    border: '1px solid var(--color-ink)',
+                    padding: '2px 8px',
+                    backgroundColor: 'var(--color-paper-2)',
+                    color: 'var(--color-ink)',
+                  }}
+                >
+                  {s}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Navigation Controls */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <button
+              type="button"
+              onClick={onPrev}
+              disabled={!hasPrev}
+              aria-label="Previous certificate"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                fontWeight: 600,
+                padding: '8px 14px',
+                border: '1.5px solid var(--color-ink)',
+                backgroundColor: hasPrev
+                  ? 'var(--color-paper)'
+                  : 'var(--color-paper-3)',
+                color: hasPrev ? 'var(--color-ink)' : 'var(--color-ink-3)',
+                cursor: hasPrev ? 'pointer' : 'not-allowed',
+                opacity: hasPrev ? 1 : 0.4,
+                transition: 'all 0.15s ease',
+              }}
+              className={
+                hasPrev
+                  ? 'hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)]'
+                  : ''
+              }
+            >
+              ← PREV
+            </button>
+
+            <span
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                letterSpacing: '0.1em',
+                color: 'var(--color-ink-3)',
+              }}
+            >
+              {currentIndex + 1} / {totalCount}
+            </span>
+
+            <button
+              type="button"
+              onClick={onNext}
+              disabled={!hasNext}
+              aria-label="Next certificate"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                fontWeight: 600,
+                padding: '8px 14px',
+                border: '1.5px solid var(--color-ink)',
+                backgroundColor: hasNext
+                  ? 'var(--color-paper)'
+                  : 'var(--color-paper-3)',
+                color: hasNext ? 'var(--color-ink)' : 'var(--color-ink-3)',
+                cursor: hasNext ? 'pointer' : 'not-allowed',
+                opacity: hasNext ? 1 : 0.4,
+                transition: 'all 0.15s ease',
+              }}
+              className={
+                hasNext
+                  ? 'hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)]'
+                  : ''
+              }
+            >
+              NEXT →
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+/* ─── Certificate Card ─── */
+const CertificateCard = ({ cert, index, onSelect }) => {
   const [hovered, setHovered] = useState(false);
   const isInverted = cert.color === 'var(--color-ink)';
 
   return (
     <motion.div
+      role="button"
+      tabIndex={0}
+      onClick={() => onSelect(cert)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onSelect(cert);
+        }
+      }}
+      aria-label={`View certificate: ${cert.title}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       initial={{ opacity: 0, y: 60, rotate: index % 2 === 0 ? -1.5 : 1.5 }}
@@ -930,6 +1356,7 @@ const CertificateCard = ({ cert, index }) => {
       whileHover={{ y: -8, rotate: 0, transition: { duration: 0.2 } }}
       style={{
         position: 'relative',
+        cursor: 'pointer',
       }}
     >
       {/* GPU-accelerated brutalist shadow */}
@@ -990,7 +1417,7 @@ const CertificateCard = ({ cert, index }) => {
                 : 'var(--color-ink-3)',
             }}
           >
-            CERTIFICATE Â· {cert.id}
+            CERTIFICATE · {cert.id}
           </span>
           <svg
             width="18"
@@ -1087,30 +1514,40 @@ const CertificateCard = ({ cert, index }) => {
             >
               {cert.date}
             </span>
-            <motion.div
-              animate={{ scale: hovered ? 1 : 0.8, opacity: hovered ? 1 : 0.4 }}
-              transition={{ duration: 0.2 }}
+            <div
               style={{
-                width: 28,
-                height: 28,
-                border: `2px solid ${cert.accent}`,
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
+                gap: '6px',
+                padding: '5px 12px',
+                border: `1.5px solid ${cert.accent}`,
+                fontFamily: 'var(--font-mono)',
+                fontSize: 10,
+                letterSpacing: '0.12em',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                backgroundColor: hovered ? cert.accent : 'transparent',
+                color: hovered
+                  ? (isInverted ? 'var(--color-ink)' : 'var(--color-paper)')
+                  : cert.accent,
+                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
               }}
             >
+              <span>VIEW CERTIFICATE</span>
               <svg
                 width="12"
                 height="12"
-                viewBox="0 0 12 12"
+                viewBox="0 0 24 24"
                 fill="none"
-                stroke={cert.accent}
-                strokeWidth="2"
+                stroke="currentColor"
+                strokeWidth="2.5"
                 strokeLinecap="round"
+                strokeLinejoin="round"
               >
-                <path d="M2 6 L5 9 L10 3" />
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
               </svg>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>
@@ -1118,38 +1555,75 @@ const CertificateCard = ({ cert, index }) => {
   );
 };
 
-/* â”€â”€â”€ PART B: Certificates Section â”€â”€â”€ */
-const CertificatesSection = () => (
-  <section
-    id="certificates"
-    className="py-24 border-t-2"
-    style={{
-      backgroundColor: 'var(--color-paper)',
-      borderColor: 'var(--color-ink)',
-    }}
-  >
-    <div className="max-w-7xl mx-auto px-6">
-      <motion.div
-        className="mb-16"
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-60px' }}
-      >
-        <span className="section-label mb-4 block">06 / CREDENTIALS</span>
-        <h2 style={{ fontSize: 'clamp(40px, 8vw, 80px)', lineHeight: 0.9 }}>
-          EARNED &<br />
-          CERTIFIED
-        </h2>
-      </motion.div>
+/* ─── PART B: Certificates Section ─── */
+const CertificatesSection = () => {
+  const [selectedCert, setSelectedCert] = useState(null);
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-        {certificates.map((cert, i) => (
-          <CertificateCard key={cert.id} cert={cert} index={i} />
-        ))}
+  const currentIndex = selectedCert
+    ? certificates.findIndex((c) => c.id === selectedCert.id)
+    : -1;
+  const hasPrev = currentIndex > 0;
+  const hasNext = currentIndex < certificates.length - 1;
+
+  const handlePrev = () => {
+    if (hasPrev) setSelectedCert(certificates[currentIndex - 1]);
+  };
+  const handleNext = () => {
+    if (hasNext) setSelectedCert(certificates[currentIndex + 1]);
+  };
+
+  return (
+    <section
+      id="certificates"
+      className="py-24 border-t-2"
+      style={{
+        backgroundColor: 'var(--color-paper)',
+        borderColor: 'var(--color-ink)',
+      }}
+    >
+      <div className="max-w-7xl mx-auto px-6">
+        <motion.div
+          className="mb-16"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+        >
+          <span className="section-label mb-4 block">06 / CREDENTIALS</span>
+          <h2 style={{ fontSize: 'clamp(40px, 8vw, 80px)', lineHeight: 0.9 }}>
+            EARNED &<br />
+            CERTIFIED
+          </h2>
+        </motion.div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          {certificates.map((cert, i) => (
+            <CertificateCard
+              key={cert.id}
+              cert={cert}
+              index={i}
+              onSelect={(c) => setSelectedCert(c)}
+            />
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
-);
+
+      <AnimatePresence>
+        {selectedCert && (
+          <CertificateModal
+            cert={selectedCert}
+            onClose={() => setSelectedCert(null)}
+            onPrev={handlePrev}
+            onNext={handleNext}
+            hasPrev={hasPrev}
+            hasNext={hasNext}
+            totalCount={certificates.length}
+            currentIndex={currentIndex}
+          />
+        )}
+      </AnimatePresence>
+    </section>
+  );
+};
 
 /* â”€â”€â”€ Main Export â”€â”€â”€ */
 const Achievements = () => (
