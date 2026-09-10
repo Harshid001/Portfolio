@@ -1,11 +1,11 @@
-﻿import { motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { FaReact, FaNodeJs } from 'react-icons/fa';
 import { DiJavascript1, DiMongodb } from 'react-icons/di';
-import { SiTailwindcss, SiExpress, SiNextdotjs, SiRedis, SiTypescript, SiCplusplus } from 'react-icons/si';
+import { SiExpress, SiNextdotjs, SiTypescript, SiCplusplus } from 'react-icons/si';
 import GrainText from './GrainText';
 
 const skills = [
-  // â”€â”€ Frontend â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Frontend ──────────────────────────────────────────
   {
     name: 'React',
     category: 'Frontend',
@@ -34,15 +34,8 @@ const skills = [
       'Strongly typed JavaScript — interfaces, generics, and scalable type-safe codebases',
     icon: SiTypescript,
   },
-  {
-    name: 'Tailwind CSS',
-    category: 'Frontend',
-    description:
-      'Utility-first CSS framework for rapid, responsive UI development',
-    icon: SiTailwindcss,
-  },
 
-  // â”€â”€ Backend â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Backend ───────────────────────────────────────────
   {
     name: 'Node.js',
     category: 'Backend',
@@ -63,13 +56,6 @@ const skills = [
     description:
       'Systems programming, data structures, algorithms, and competitive programming foundations',
     icon: SiCplusplus,
-  },
-  {
-    name: 'Redis',
-    category: 'Backend',
-    description:
-      'In-memory data structure store, used as a database, cache, and message broker',
-    icon: SiRedis,
   },
   {
     name: 'MongoDB',

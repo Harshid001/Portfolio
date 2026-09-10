@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ProjectShowcase from './ProjectShowcase';
 import ProjectNavigation from './ProjectNavigation';
@@ -40,7 +40,7 @@ const projects = [
     title: 'Traveloop',
     description:
       'Travel planning is often fragmented across multiple apps and websites, making trip organization frustrating. Built a modern travel platform with personalized onboarding, destination discovery, and itinerary planning using React. Delivers a seamless trip-planning experience with intuitive UI flows and responsive design across all devices.',
-    tech: ['React', 'Vite', 'Tailwind CSS', 'JavaScript'],
+    tech: ['React', 'Vite', 'JavaScript'],
     github: 'https://github.com/Harshid001/traveloop',
     live: 'https://traveloop-wheat.vercel.app/onboarding',
     image:
@@ -50,8 +50,8 @@ const projects = [
   {
     title: 'Crop Sphere',
     description:
-      'Farmers need accessible digital tools to manage crop data and agricultural planning. Built a comprehensive agricultural dashboard with crop tracking, weather integration, and analytics using React and Tailwind CSS. Delivers real-time agricultural insights through an intuitive, mobile-friendly dashboard interface.',
-    tech: ['React', 'Tailwind CSS', 'JavaScript'],
+      'Farmers need accessible digital tools to manage crop data and agricultural planning. Built a comprehensive agricultural dashboard with crop tracking, weather integration, and analytics using React. Delivers real-time agricultural insights through an intuitive, mobile-friendly dashboard interface.',
+    tech: ['React', 'JavaScript'],
     github: 'https://github.com/Harshid001/crop_sphere',
     live: 'https://crop-sphere.vercel.app/',
     image:
@@ -62,7 +62,7 @@ const projects = [
     title: 'MediPrice',
     description:
       'Patients struggle to compare healthcare costs across different providers and services. Built a medical pricing platform with provider search, cost comparison, and transparent pricing data using React. Aggregates pricing data from multiple sources into a single, easy-to-navigate comparison interface.',
-    tech: ['React', 'Tailwind CSS', 'JavaScript'],
+    tech: ['React', 'JavaScript'],
     github: 'https://github.com/codinggita/mediPrice',
     live: 'https://mediprice-five.vercel.app/about',
     image:
@@ -73,7 +73,7 @@ const projects = [
     title: 'Payfair',
     description:
       'Peer-to-peer payments need simple, trustworthy interfaces that minimize friction. Built a digital payment platform with secure transaction processing, wallet management, and payment history using React. Implemented smooth payment flows with real-time balance updates and transaction confirmation.',
-    tech: ['React', 'Tailwind CSS', 'JavaScript'],
+    tech: ['React', 'JavaScript'],
     github: 'https://github.com/Harshid001/PAYFAIR',
     live: 'https://payfair-nine.vercel.app/',
     image:
@@ -84,7 +84,7 @@ const projects = [
     title: 'Website Maker',
     description:
       'Non-technical users need an intuitive way to build web pages without writing code. Built a drag-and-drop website builder with real-time layout customization, element styling, and live preview using React state management. Supports real-time editing with instant visual feedback across all viewport sizes.',
-    tech: ['React', 'Vite', 'Tailwind CSS', 'State Management'],
+    tech: ['React', 'Vite', 'State Management'],
     github: 'https://github.com/Harshid001/Website-maker',
     live: 'https://website-maker-gevx.vercel.app/',
     image: websiteMakerImg,

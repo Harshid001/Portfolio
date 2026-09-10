@@ -1,4 +1,4 @@
-﻿import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import {
   motion,
   useScroll,
@@ -71,7 +71,7 @@ const hackathonHighlights = [
   },
   {
     title: 'Full-Stack Execution',
-    body: 'API integration, backend logic, and Tailwind-powered UIs â€” all in one sprint.',
+    body: 'API integration, backend logic, and modern responsive UIs — all in one sprint.',
   },
   {
     title: 'National Exposure',

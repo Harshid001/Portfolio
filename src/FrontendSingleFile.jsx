@@ -38,7 +38,7 @@ import {
   FaPython,
 } from 'react-icons/fa';
 import { DiJavascript1 } from 'react-icons/di';
-import { SiTailwindcss, SiExpress, SiNextdotjs, SiRedis } from 'react-icons/si';
+import { SiExpress, SiNextdotjs } from 'react-icons/si';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -666,10 +666,8 @@ const skillsList = [
   'NODE.JS',
   'EXPRESS',
   'PYTHON',
-  'TAILWIND CSS',
   'MONGODB',
   'POSTGRESQL',
-  'REDIS',
   'TYPESCRIPT',
 ];
 
@@ -730,13 +728,7 @@ const skillsData = [
     icon: DiJavascript1,
     desc: 'ES6+, async patterns, DOM',
   },
-  {
-    name: 'Tailwind CSS',
-    icon: SiTailwindcss,
-    desc: 'Utility-first modern styling',
-  },
   { name: 'Python', icon: FaPython, desc: 'Data processing & AI integration' },
-  { name: 'Redis', icon: SiRedis, desc: 'In-memory caching & messaging' },
 ];
 
 const Skills = () => {
