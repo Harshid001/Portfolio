@@ -910,8 +910,8 @@ const HackathonSection = () => {
   );
 };
 
-/* ─── Certificate Preview Lightbox Modal ─── */
-const CertificateModal = ({
+/* ─── PART B: In-Section Certificate Viewer ─── */
+const SectionCertificateViewer = ({
   cert,
   onClose,
   onPrev,
@@ -922,8 +922,15 @@ const CertificateModal = ({
   currentIndex,
 }) => {
   const [loaded, setLoaded] = useState(false);
+  const imgRef = useRef(null);
 
-  // Close on Escape key, navigate on Arrow keys
+  useEffect(() => {
+    setLoaded(false);
+    if (imgRef.current?.complete) {
+      setLoaded(true);
+    }
+  }, [cert?.id]);
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') onClose();
@@ -934,78 +941,48 @@ const CertificateModal = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose, onPrev, onNext, hasPrev, hasNext]);
 
-  // Lock body scroll while modal is open
-  useEffect(() => {
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = originalOverflow;
-    };
-  }, []);
-
-  // Reset loaded status when cert changes
-  useEffect(() => {
-    setLoaded(false);
-  }, [cert?.id]);
-
   if (!cert) return null;
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
+      initial={{ opacity: 0, y: -20, height: 0 }}
+      animate={{ opacity: 1, y: 0, height: 'auto' }}
+      exit={{ opacity: 0, y: -20, height: 0 }}
+      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
       style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 99990,
-        backgroundColor: 'rgba(7, 9, 14, 0.88)',
-        backdropFilter: 'blur(8px)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '16px',
-        overflowY: 'auto',
+        overflow: 'hidden',
+        marginBottom: '48px',
       }}
-      role="dialog"
-      aria-modal="true"
-      aria-label={`Certificate: ${cert.title}`}
     >
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 15 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 15 }}
-        transition={{ type: 'spring', damping: 28, stiffness: 350 }}
+      <div
         style={{
-          width: '100%',
-          maxWidth: '920px',
-          backgroundColor: 'var(--color-paper)',
-          border: '2px solid var(--color-ink)',
-          boxShadow: '10px 10px 0px var(--color-ink)',
           position: 'relative',
-          overflow: 'hidden',
-          display: 'flex',
-          flexDirection: 'column',
-          maxHeight: '92vh',
+          backgroundColor: 'var(--color-paper-2)',
+          border: '2px solid var(--color-ink)',
+          boxShadow: '8px 8px 0px var(--color-ink)',
         }}
-        onClick={(e) => e.stopPropagation()}
       >
         {/* Header Bar */}
         <div
           style={{
             display: 'flex',
+            flexWrap: 'wrap',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '12px 18px',
+            padding: '14px 20px',
             borderBottom: '2px solid var(--color-ink)',
-            backgroundColor: 'var(--color-paper-2)',
+            backgroundColor: 'var(--color-paper-3)',
+            gap: '10px',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              flexWrap: 'wrap',
+            }}
+          >
             <span
               style={{
                 fontFamily: 'var(--font-mono)',
@@ -1015,7 +992,7 @@ const CertificateModal = ({
                 textTransform: 'uppercase',
                 backgroundColor: 'var(--color-ink)',
                 color: 'var(--color-paper)',
-                padding: '3px 8px',
+                padding: '4px 10px',
               }}
             >
               CERTIFICATE // {cert.id}
@@ -1024,12 +1001,11 @@ const CertificateModal = ({
               style={{
                 fontFamily: 'var(--font-mono)',
                 fontSize: 12,
-                color: 'var(--color-ink-3)',
+                color: 'var(--color-ink-2)',
                 letterSpacing: '0.08em',
               }}
-              className="hidden sm:inline"
             >
-              {currentIndex + 1} OF {totalCount}
+              {currentIndex + 1} OF {totalCount} — {cert.title}
             </span>
           </div>
 
@@ -1038,7 +1014,7 @@ const CertificateModal = ({
               href={cert.link}
               target="_blank"
               rel="noopener noreferrer"
-              title="Open full-resolution image in new tab"
+              title="Open full-resolution certificate image in new tab"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -1048,16 +1024,16 @@ const CertificateModal = ({
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
                 fontWeight: 600,
-                padding: '6px 12px',
+                padding: '6px 14px',
                 border: '1.5px solid var(--color-ink)',
                 backgroundColor: 'var(--color-paper)',
                 color: 'var(--color-ink)',
                 textDecoration: 'none',
                 transition: 'all 0.15s ease',
               }}
-              className="hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)] cursor-pointer"
+              className="hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)]"
             >
-              <span>FULL SIZE</span>
+              <span>FULL RES</span>
               <svg
                 width="12"
                 height="12"
@@ -1077,13 +1053,17 @@ const CertificateModal = ({
             <button
               type="button"
               onClick={onClose}
-              aria-label="Close certificate modal"
+              aria-label="Close certificate preview"
               style={{
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                width: 32,
-                height: 32,
+                gap: '6px',
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                fontWeight: 600,
+                padding: '6px 12px',
                 border: '1.5px solid var(--color-ink)',
                 backgroundColor: 'var(--color-paper)',
                 color: 'var(--color-ink)',
@@ -1092,9 +1072,10 @@ const CertificateModal = ({
               }}
               className="hover:bg-[var(--color-red)] hover:text-white hover:border-[var(--color-red)]"
             >
+              <span>CLOSE</span>
               <svg
-                width="16"
-                height="16"
+                width="14"
+                height="14"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -1109,21 +1090,20 @@ const CertificateModal = ({
           </div>
         </div>
 
-        {/* Certificate Image Canvas Area */}
+        {/* Certificate Display Area */}
         <div
           style={{
             position: 'relative',
-            padding: '16px',
+            padding: '24px',
             backgroundColor: '#0a0c10',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            minHeight: '280px',
-            maxHeight: '58vh',
+            minHeight: '320px',
+            maxHeight: '680px',
             overflow: 'hidden',
           }}
         >
-          {/* Loading state indicator */}
           {!loaded && (
             <div
               style={{
@@ -1134,7 +1114,7 @@ const CertificateModal = ({
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '12px',
-                backgroundColor: 'var(--color-paper-2)',
+                backgroundColor: '#0a0c10',
                 zIndex: 2,
               }}
             >
@@ -1142,8 +1122,8 @@ const CertificateModal = ({
                 style={{
                   width: '32px',
                   height: '32px',
-                  border: '3px solid var(--color-paper-3)',
-                  borderTopColor: 'var(--color-ink)',
+                  border: '3px solid rgba(255,255,255,0.2)',
+                  borderTopColor: 'var(--color-paper)',
                   borderRadius: '50%',
                   animation: 'spin 0.8s linear infinite',
                 }}
@@ -1153,7 +1133,7 @@ const CertificateModal = ({
                   fontFamily: 'var(--font-mono)',
                   fontSize: 11,
                   letterSpacing: '0.15em',
-                  color: 'var(--color-ink-3)',
+                  color: 'rgba(255,255,255,0.6)',
                   textTransform: 'uppercase',
                 }}
               >
@@ -1163,43 +1143,44 @@ const CertificateModal = ({
           )}
 
           <img
+            ref={imgRef}
             key={cert.id}
             src={cert.link}
             alt={cert.title}
             onLoad={() => setLoaded(true)}
             style={{
-              maxHeight: '54vh',
+              maxHeight: '600px',
               maxWidth: '100%',
               width: 'auto',
               height: 'auto',
               objectFit: 'contain',
-              border: '2px solid var(--color-ink)',
-              boxShadow: '0 6px 20px rgba(0,0,0,0.4)',
+              border: '2px solid rgba(255, 255, 255, 0.15)',
+              boxShadow: '0 12px 35px rgba(0,0,0,0.6)',
               opacity: loaded ? 1 : 0,
               transition: 'opacity 0.25s ease',
             }}
           />
         </div>
 
-        {/* Certificate Metadata and Navigation Footer */}
+        {/* Footer info & Controls */}
         <div
           style={{
-            padding: '16px 20px',
+            padding: '18px 24px',
             borderTop: '2px solid var(--color-ink)',
             backgroundColor: 'var(--color-paper)',
             display: 'flex',
             flexWrap: 'wrap',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '14px',
+            gap: '16px',
           }}
         >
-          <div style={{ flex: '1 1 300px' }}>
+          <div style={{ flex: '1 1 320px' }}>
             <h3
               style={{
                 fontFamily: 'var(--font-heading)',
-                fontSize: 'clamp(16px, 2vw, 20px)',
-                fontWeight: 800,
+                fontSize: 'clamp(18px, 2.5vw, 24px)',
+                fontWeight: 900,
                 textTransform: 'uppercase',
                 color: 'var(--color-ink)',
                 margin: 0,
@@ -1214,23 +1195,24 @@ const CertificateModal = ({
                 fontSize: 12,
                 color: 'var(--color-ink-3)',
                 textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                margin: '4px 0 8px',
+                letterSpacing: '0.1em',
+                margin: '6px 0 10px',
               }}
             >
-              {cert.issuer} • {cert.date}
+              ISSUED BY: {cert.issuer} • YEAR: {cert.date}
             </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
               {cert.skills.map((s) => (
                 <span
                   key={s}
                   style={{
                     fontFamily: 'var(--font-mono)',
                     fontSize: 10,
-                    letterSpacing: '0.1em',
+                    letterSpacing: '0.12em',
                     textTransform: 'uppercase',
+                    fontWeight: 600,
                     border: '1px solid var(--color-ink)',
-                    padding: '2px 8px',
+                    padding: '3px 10px',
                     backgroundColor: 'var(--color-paper-2)',
                     color: 'var(--color-ink)',
                   }}
@@ -1256,11 +1238,11 @@ const CertificateModal = ({
                 fontSize: 11,
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
-                fontWeight: 600,
-                padding: '8px 14px',
+                fontWeight: 700,
+                padding: '9px 16px',
                 border: '1.5px solid var(--color-ink)',
                 backgroundColor: hasPrev
-                  ? 'var(--color-paper)'
+                  ? 'var(--color-paper-2)'
                   : 'var(--color-paper-3)',
                 color: hasPrev ? 'var(--color-ink)' : 'var(--color-ink-3)',
                 cursor: hasPrev ? 'pointer' : 'not-allowed',
@@ -1280,8 +1262,9 @@ const CertificateModal = ({
               style={{
                 fontFamily: 'var(--font-mono)',
                 fontSize: 11,
-                letterSpacing: '0.1em',
+                letterSpacing: '0.12em',
                 color: 'var(--color-ink-3)',
+                padding: '0 4px',
               }}
             >
               {currentIndex + 1} / {totalCount}
@@ -1300,11 +1283,11 @@ const CertificateModal = ({
                 fontSize: 11,
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
-                fontWeight: 600,
-                padding: '8px 14px',
+                fontWeight: 700,
+                padding: '9px 16px',
                 border: '1.5px solid var(--color-ink)',
                 backgroundColor: hasNext
-                  ? 'var(--color-paper)'
+                  ? 'var(--color-paper-2)'
                   : 'var(--color-paper-3)',
                 color: hasNext ? 'var(--color-ink)' : 'var(--color-ink-3)',
                 cursor: hasNext ? 'pointer' : 'not-allowed',
@@ -1321,13 +1304,13 @@ const CertificateModal = ({
             </button>
           </div>
         </div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 };
 
 /* ─── Certificate Card ─── */
-const CertificateCard = ({ cert, index, onSelect }) => {
+const CertificateCard = ({ cert, index, onSelect, isSelected }) => {
   const [hovered, setHovered] = useState(false);
   const isInverted = cert.color === 'var(--color-ink)';
 
@@ -1364,7 +1347,10 @@ const CertificateCard = ({ cert, index, onSelect }) => {
         className="absolute inset-0 transition-transform duration-200 ease-out pointer-events-none"
         style={{
           backgroundColor: 'var(--color-ink)',
-          transform: hovered ? 'translate(10px, 10px)' : 'translate(6px, 6px)',
+          transform:
+            hovered || isSelected
+              ? 'translate(10px, 10px)'
+              : 'translate(6px, 6px)',
           willChange: 'transform',
         }}
       />
@@ -1374,51 +1360,69 @@ const CertificateCard = ({ cert, index, onSelect }) => {
         className="relative z-10 overflow-hidden h-full flex flex-col"
         style={{
           backgroundColor: cert.color,
-          border: `2px solid var(--color-ink)`,
+          border: isSelected
+            ? '2.5px solid var(--color-ink)'
+            : '2px solid var(--color-ink)',
+          outline: isSelected ? '3px solid var(--color-ink)' : 'none',
+          outlineOffset: '2px',
         }}
       >
-        {/* Certificate number watermark */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '-10px',
-            right: '-10px',
-            fontFamily: 'var(--font-heading)',
-            fontSize: 120,
-            fontWeight: 900,
-            opacity: isInverted ? 0.06 : 0.05,
-            color: cert.accent,
-            lineHeight: 1,
-            pointerEvents: 'none',
-            userSelect: 'none',
-          }}
-        >
-          {cert.id}
-        </div>
-
         {/* Top strip */}
         <div
           style={{
             borderBottom: `2px solid ${isInverted ? 'rgba(245,242,237,0.2)' : 'var(--color-ink)'}`,
-            padding: '14px 20px',
+            padding: '12px 18px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            backgroundColor: isInverted
+              ? 'rgba(255,255,255,0.05)'
+              : 'rgba(0,0,0,0.03)',
           }}
         >
-          <span
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: 10,
-              letterSpacing: '0.2em',
-              textTransform: 'uppercase',
-              color: isInverted
-                ? 'rgba(245,242,237,0.5)'
-                : 'var(--color-ink-3)',
-            }}
-          >
-            CERTIFICATE · {cert.id}
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 10,
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                fontWeight: 700,
+                color: isInverted
+                  ? 'rgba(245,242,237,0.7)'
+                  : 'var(--color-ink-3)',
+              }}
+            >
+              CERTIFICATE · {cert.id}
+            </span>
+            {isSelected && (
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 9,
+                  fontWeight: 700,
+                  letterSpacing: '0.1em',
+                  padding: '2px 6px',
+                  backgroundColor: 'var(--color-ink)',
+                  color: 'var(--color-paper)',
+                  border: '1px solid var(--color-paper)',
+                }}
+              >
+                <span
+                  style={{
+                    width: 5,
+                    height: 5,
+                    borderRadius: '50%',
+                    backgroundColor: '#22c55e',
+                  }}
+                />
+                VIEWING
+              </span>
+            )}
+          </div>
           <svg
             width="18"
             height="18"
@@ -1433,18 +1437,84 @@ const CertificateCard = ({ cert, index, onSelect }) => {
           </svg>
         </div>
 
+        {/* Certificate Image Frame */}
+        <div
+          style={{
+            position: 'relative',
+            width: '100%',
+            aspectRatio: '16 / 10',
+            backgroundColor: '#0a0c10',
+            borderBottom: `2px solid ${isInverted ? 'rgba(245,242,237,0.2)' : 'var(--color-ink)'}`,
+            overflow: 'hidden',
+          }}
+        >
+          <img
+            src={cert.link}
+            alt={`${cert.title} Certificate`}
+            loading="lazy"
+            decoding="async"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center',
+              transition:
+                'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease',
+              transform: hovered ? 'scale(1.05)' : 'scale(1)',
+              filter: hovered ? 'none' : 'contrast(1.02)',
+            }}
+          />
+          {/* Subtle hover overlay badge */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundColor: 'rgba(7, 9, 14, 0.4)',
+              opacity: hovered ? 1 : 0,
+              transition: 'opacity 0.2s ease',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <span
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 10,
+                letterSpacing: '0.12em',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                backgroundColor: 'var(--color-paper)',
+                color: 'var(--color-ink)',
+                border: '1.5px solid var(--color-ink)',
+                boxShadow: '3px 3px 0px var(--color-ink)',
+                padding: '6px 14px',
+              }}
+            >
+              {isSelected ? 'VIEWING IN SECTION' : 'CLICK TO EXPAND'}
+            </span>
+          </div>
+        </div>
+
         {/* Body */}
-        <div style={{ padding: '24px 20px 28px' }}>
+        <div
+          style={{
+            padding: '20px 20px 24px',
+            display: 'flex',
+            flexDirection: 'column',
+            flexGrow: 1,
+          }}
+        >
           <h3
             style={{
               fontFamily: 'var(--font-heading)',
               fontWeight: 800,
-              fontSize: 'clamp(16px, 2.5vw, 20px)',
+              fontSize: 'clamp(16px, 2.2vw, 20px)',
               lineHeight: 1.2,
               textTransform: 'uppercase',
               letterSpacing: '0.04em',
               color: cert.accent,
-              marginBottom: 10,
+              marginBottom: 8,
             }}
           >
             {cert.title}
@@ -1459,7 +1529,7 @@ const CertificateCard = ({ cert, index, onSelect }) => {
               color: isInverted
                 ? 'rgba(245,242,237,0.6)'
                 : 'var(--color-ink-3)',
-              marginBottom: 20,
+              marginBottom: 16,
             }}
           >
             {cert.issuer}
@@ -1470,8 +1540,9 @@ const CertificateCard = ({ cert, index, onSelect }) => {
             style={{
               display: 'flex',
               flexWrap: 'wrap',
-              gap: '8px',
-              marginBottom: 20,
+              gap: '6px',
+              marginBottom: 18,
+              flexGrow: 1,
             }}
           >
             {cert.skills.map((s) => (
@@ -1480,13 +1551,13 @@ const CertificateCard = ({ cert, index, onSelect }) => {
                 style={{
                   fontFamily: 'var(--font-mono)',
                   fontSize: 10,
-                  letterSpacing: '0.12em',
+                  letterSpacing: '0.1em',
                   textTransform: 'uppercase',
                   border: `1px solid ${isInverted ? 'rgba(245,242,237,0.3)' : 'var(--color-ink)'}`,
                   color: isInverted
                     ? 'rgba(245,242,237,0.7)'
                     : 'var(--color-ink)',
-                  padding: '3px 10px',
+                  padding: '2px 8px',
                 }}
               >
                 {s}
@@ -1500,6 +1571,8 @@ const CertificateCard = ({ cert, index, onSelect }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
+              paddingTop: '12px',
+              borderTop: `1px dashed ${isInverted ? 'rgba(245,242,237,0.2)' : 'rgba(0,0,0,0.15)'}`,
             }}
           >
             <span
@@ -1507,7 +1580,7 @@ const CertificateCard = ({ cert, index, onSelect }) => {
                 fontFamily: 'var(--font-mono)',
                 fontSize: 11,
                 color: isInverted
-                  ? 'rgba(245,242,237,0.4)'
+                  ? 'rgba(245,242,237,0.5)'
                   : 'var(--color-ink-3)',
                 letterSpacing: '0.1em',
               }}
@@ -1519,21 +1592,25 @@ const CertificateCard = ({ cert, index, onSelect }) => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '5px 12px',
+                padding: '6px 12px',
                 border: `1.5px solid ${cert.accent}`,
                 fontFamily: 'var(--font-mono)',
                 fontSize: 10,
                 letterSpacing: '0.12em',
                 fontWeight: 700,
                 textTransform: 'uppercase',
-                backgroundColor: hovered ? cert.accent : 'transparent',
-                color: hovered
-                  ? (isInverted ? 'var(--color-ink)' : 'var(--color-paper)')
-                  : cert.accent,
+                backgroundColor:
+                  hovered || isSelected ? cert.accent : 'transparent',
+                color:
+                  hovered || isSelected
+                    ? isInverted
+                      ? 'var(--color-ink)'
+                      : 'var(--color-paper)'
+                    : cert.accent,
                 transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
               }}
             >
-              <span>VIEW CERTIFICATE</span>
+              <span>{isSelected ? 'VIEWING' : 'VIEW IN SECTION'}</span>
               <svg
                 width="12"
                 height="12"
@@ -1558,6 +1635,7 @@ const CertificateCard = ({ cert, index, onSelect }) => {
 /* ─── PART B: Certificates Section ─── */
 const CertificatesSection = () => {
   const [selectedCert, setSelectedCert] = useState(null);
+  const viewerRef = useRef(null);
 
   const currentIndex = selectedCert
     ? certificates.findIndex((c) => c.id === selectedCert.id)
@@ -1572,6 +1650,13 @@ const CertificatesSection = () => {
     if (hasNext) setSelectedCert(certificates[currentIndex + 1]);
   };
 
+  const handleSelectCert = (c) => {
+    setSelectedCert(c);
+    setTimeout(() => {
+      viewerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 60);
+  };
+
   return (
     <section
       id="certificates"
@@ -1579,6 +1664,7 @@ const CertificatesSection = () => {
       style={{
         backgroundColor: 'var(--color-paper)',
         borderColor: 'var(--color-ink)',
+        position: 'relative',
       }}
     >
       <div className="max-w-7xl mx-auto px-6">
@@ -1595,32 +1681,37 @@ const CertificatesSection = () => {
           </h2>
         </motion.div>
 
+        {/* In-Section Certificate Spotlight Viewer */}
+        <div ref={viewerRef}>
+          <AnimatePresence>
+            {selectedCert && (
+              <SectionCertificateViewer
+                cert={selectedCert}
+                onClose={() => setSelectedCert(null)}
+                onPrev={handlePrev}
+                onNext={handleNext}
+                hasPrev={hasPrev}
+                hasNext={hasNext}
+                totalCount={certificates.length}
+                currentIndex={currentIndex}
+              />
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Certificate Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
           {certificates.map((cert, i) => (
             <CertificateCard
               key={cert.id}
               cert={cert}
               index={i}
-              onSelect={(c) => setSelectedCert(c)}
+              isSelected={selectedCert?.id === cert.id}
+              onSelect={handleSelectCert}
             />
           ))}
         </div>
       </div>
-
-      <AnimatePresence>
-        {selectedCert && (
-          <CertificateModal
-            cert={selectedCert}
-            onClose={() => setSelectedCert(null)}
-            onPrev={handlePrev}
-            onNext={handleNext}
-            hasPrev={hasPrev}
-            hasNext={hasNext}
-            totalCount={certificates.length}
-            currentIndex={currentIndex}
-          />
-        )}
-      </AnimatePresence>
     </section>
   );
 };
