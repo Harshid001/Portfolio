@@ -1,6 +1,6 @@
-import { lazy, Suspense } from 'react';
+﻿import { lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
-import { FaGithub, FaLinkedin, FaYoutube, FaTwitter } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaYoutube, FaTwitter, FaCode } from 'react-icons/fa';
 
 // Both of these pull in `three`. Keeping them lazy means the hero text and
 // buttons are interactive long before the WebGL bundle finishes downloading.
@@ -53,7 +53,7 @@ const Hero = () => {
       />
 
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 hero-two-col">
-        {/* LEFT COLUMN — TEXT CONTENT */}
+        {/* LEFT COLUMN â€” TEXT CONTENT */}
         <motion.div
           variants={staggerContainer}
           initial="hidden"
@@ -226,7 +226,7 @@ const Hero = () => {
           </motion.div>
         </motion.div>
 
-        {/* RIGHT COLUMN — NOW EMPTY TO ALLOW MODEL TO SHINE THROUGH */}
+        {/* RIGHT COLUMN â€” NOW EMPTY TO ALLOW MODEL TO SHINE THROUGH */}
         <motion.div
           variants={fadeUp}
           className="hero-right flex items-center justify-center relative w-full lg:w-auto h-[400px] lg:h-[500px] xl:h-[600px] mt-12 lg:mt-0 pointer-events-none"
@@ -260,3 +260,4 @@ const Hero = () => {
 };
 
 export default Hero;
+

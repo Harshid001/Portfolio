@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+﻿import { useRef, useEffect, useState } from 'react';
 import {
   motion,
   useScroll,
@@ -42,7 +42,7 @@ const hackathonStats = [
   { value: '5+', label: 'HACKATHONS ENTERED' },
   { value: '2', label: 'NATIONAL LEVEL' },
   { value: '48H', label: 'MAX SPRINT' },
-  { value: '∞', label: 'LESSONS LEARNED' },
+  { value: 'âˆž', label: 'LESSONS LEARNED' },
 ];
 
 const hackathonDetails = [
@@ -63,7 +63,7 @@ const hackathonDetails = [
 const hackathonHighlights = [
   {
     title: 'Rapid Prototyping',
-    body: 'Shipped full-stack apps in 24–48 hours under real competition pressure.',
+    body: 'Shipped full-stack apps in 24â€“48 hours under real competition pressure.',
   },
   {
     title: 'Team Collaboration',
@@ -71,7 +71,7 @@ const hackathonHighlights = [
   },
   {
     title: 'Full-Stack Execution',
-    body: 'API integration, backend logic, and Tailwind-powered UIs — all in one sprint.',
+    body: 'API integration, backend logic, and Tailwind-powered UIs â€” all in one sprint.',
   },
   {
     title: 'National Exposure',
@@ -90,43 +90,57 @@ const hackathonHighlights = [
 const certificates = [
   {
     id: '01',
-    title: 'Full Stack Web Development',
-    issuer: 'Udemy / Self-Directed',
-    date: '2024',
-    skills: ['React', 'Node.js', 'MongoDB', 'REST APIs'],
+    title: 'Generative AI Mastermind',
+    issuer: 'Outskill',
+    date: '2026',
+    skills: ['GenAI', 'Prompt Engineering', 'Autonomous Workflows'],
     color: 'var(--color-ink)',
     accent: 'var(--color-paper)',
+    link: 'https://res.cloudinary.com/dh0xawlig/image/upload/v1789017756/Screenshot_2026-09-10_105016_bbr6ru.png',
   },
   {
     id: '02',
-    title: 'JavaScript Algorithms & Data Structures',
-    issuer: 'freeCodeCamp',
-    date: '2024',
-    skills: ['ES6+', 'OOP', 'DSA', 'Problem Solving'],
+    title: 'Tic Tech Toe \'26',
+    issuer: 'IEEE SB DAIICT',
+    date: '2026',
+    skills: ['National Competition', 'Tech Challenge', 'Full Stack'],
     color: 'var(--color-paper-3)',
     accent: 'var(--color-ink)',
+    link: 'https://res.cloudinary.com/dh0xawlig/image/upload/v1789017863/Screenshot_2026-09-10_105411_h4rsrp.png',
   },
   {
     id: '03',
-    title: 'UI/UX Design Fundamentals',
-    issuer: 'Google / Coursera',
-    date: '2023',
-    skills: ['Figma', 'Wireframing', 'Prototyping', 'User Research'],
+    title: 'Delta — Full-Stack Dev',
+    issuer: 'Apna College',
+    date: '2026',
+    skills: ['React', 'Node.js', 'Express', 'MongoDB'],
     color: 'var(--color-paper-2)',
     accent: 'var(--color-ink)',
+    link: 'https://res.cloudinary.com/dh0xawlig/image/upload/v1789020889/db78aef3-1e58-4c76-89ad-6c30bef84882_dakjv9.png',
   },
   {
     id: '04',
-    title: 'Python for Everybody',
-    issuer: 'University of Michigan (Coursera)',
-    date: '2023',
-    skills: ['Python', 'Data Structures', 'Web Scraping', 'APIs'],
+    title: 'TATA Crucible Quiz \'25',
+    issuer: 'Tata Group',
+    date: '2025',
+    skills: ['Business', 'Technology', 'National Quiz'],
     color: 'var(--color-ink)',
     accent: 'var(--color-paper)',
+    link: 'https://res.cloudinary.com/dh0xawlig/image/upload/v1789017456/b7c87848-17f6-4c93-a877-bc3674c9989f_rcdv1b.jpg',
+  },
+  {
+    id: '05',
+    title: 'Aarogya Setu 2.0',
+    issuer: 'Govt of India / NHA',
+    date: '2025',
+    skills: ['Digital Health', 'Awareness', 'MyGov'],
+    color: 'var(--color-paper-3)',
+    accent: 'var(--color-ink)',
+    link: 'https://res.cloudinary.com/dh0xawlig/image/upload/v1789017501/ba2b66fd-098c-47db-b012-cd33046e9529_s0ws1i.jpg',
   },
 ];
 
-/* ─── Doodle SVG Components ─── */
+/* â”€â”€â”€ Doodle SVG Components â”€â”€â”€ */
 const DoodleArrow = ({ style }) => (
   <svg width="60" height="30" viewBox="0 0 60 30" fill="none" style={style}>
     <path
@@ -173,7 +187,7 @@ const DoodleCircle = ({ style }) => (
   </svg>
 );
 
-/* ─── Animated pieces of the hackathon block ─── */
+/* â”€â”€â”€ Animated pieces of the hackathon block â”€â”€â”€ */
 
 /**
  * One cell of the stat strip.
@@ -441,7 +455,7 @@ const ParticipationRow = ({ hack, index, reduced }) => {
   );
 };
 
-/* ─── PART A: Hackathon Section ─── */
+/* â”€â”€â”€ PART A: Hackathon Section â”€â”€â”€ */
 const HackathonSection = () => {
   const sectionRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -490,7 +504,7 @@ const HackathonSection = () => {
         borderColor: 'var(--color-ink)',
       }}
     >
-      {/* ── FLOATING DOODLE LAYER ── */}
+      {/* â”€â”€ FLOATING DOODLE LAYER â”€â”€ */}
       <motion.div
         style={{
           y: doodleY1,
@@ -552,7 +566,7 @@ const HackathonSection = () => {
         <DoodleStar style={{ width: 44, height: 44 }} />
       </motion.div>
 
-      {/* ── AMBIENT LAYER ── */}
+      {/* â”€â”€ AMBIENT LAYER â”€â”€ */}
       {!reduced && (
         <>
           {/* Grain. Painted from --color-ink so it inherits the active theme
@@ -615,7 +629,7 @@ const HackathonSection = () => {
                 transition={{ duration: 1, repeat: Infinity, times: [0, 0.5, 0.5, 1] }}
                 style={{ marginLeft: '2px' }}
               >
-                ▌
+                â–Œ
               </motion.span>
             )}
           </span>
@@ -820,7 +834,7 @@ const HackathonSection = () => {
           ))}
         </div>
 
-        {/* ── HACKATHON JOURNEY GALLERY ── */}
+        {/* â”€â”€ HACKATHON JOURNEY GALLERY â”€â”€ */}
         <motion.div
           className="mt-24 mb-12"
           initial={{ opacity: 0, y: 50 }}
@@ -896,7 +910,7 @@ const HackathonSection = () => {
   );
 };
 
-/* ─── Certificate Card ─── */
+/* â”€â”€â”€ Certificate Card â”€â”€â”€ */
 const CertificateCard = ({ cert, index }) => {
   const [hovered, setHovered] = useState(false);
   const isInverted = cert.color === 'var(--color-ink)';
@@ -976,7 +990,7 @@ const CertificateCard = ({ cert, index }) => {
                 : 'var(--color-ink-3)',
             }}
           >
-            CERTIFICATE · {cert.id}
+            CERTIFICATE Â· {cert.id}
           </span>
           <svg
             width="18"
@@ -1104,7 +1118,7 @@ const CertificateCard = ({ cert, index }) => {
   );
 };
 
-/* ─── PART B: Certificates Section ─── */
+/* â”€â”€â”€ PART B: Certificates Section â”€â”€â”€ */
 const CertificatesSection = () => (
   <section
     id="certificates"
@@ -1137,7 +1151,7 @@ const CertificatesSection = () => (
   </section>
 );
 
-/* ─── Main Export ─── */
+/* â”€â”€â”€ Main Export â”€â”€â”€ */
 const Achievements = () => (
   <>
     <HackathonSection />
@@ -1146,3 +1160,6 @@ const Achievements = () => (
 );
 
 export default Achievements;
+
+
+

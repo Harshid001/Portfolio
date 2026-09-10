@@ -1,11 +1,11 @@
-import { motion } from 'framer-motion';
-import { FaReact, FaNodeJs, FaPython } from 'react-icons/fa';
-import { DiJavascript1 } from 'react-icons/di';
-import { SiTailwindcss, SiExpress, SiNextdotjs, SiRedis } from 'react-icons/si';
+﻿import { motion } from 'framer-motion';
+import { FaReact, FaNodeJs } from 'react-icons/fa';
+import { DiJavascript1, DiMongodb } from 'react-icons/di';
+import { SiTailwindcss, SiExpress, SiNextdotjs, SiRedis, SiTypescript, SiCplusplus } from 'react-icons/si';
 import GrainText from './GrainText';
 
 const skills = [
-  // ── Frontend ───────────────────────────────────────────
+  // â”€â”€ Frontend â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     name: 'React',
     category: 'Frontend',
@@ -28,6 +28,13 @@ const skills = [
     icon: DiJavascript1,
   },
   {
+    name: 'TypeScript',
+    category: 'Frontend',
+    description:
+      'Strongly typed JavaScript — interfaces, generics, and scalable type-safe codebases',
+    icon: SiTypescript,
+  },
+  {
     name: 'Tailwind CSS',
     category: 'Frontend',
     description:
@@ -35,7 +42,7 @@ const skills = [
     icon: SiTailwindcss,
   },
 
-  // ── Backend ────────────────────────────────────────────
+  // â”€â”€ Backend â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     name: 'Node.js',
     category: 'Backend',
@@ -51,11 +58,11 @@ const skills = [
     icon: SiExpress,
   },
   {
-    name: 'Python',
+    name: 'C / C++',
     category: 'Backend',
     description:
-      'General-purpose scripting, data processing, and AI/ML integration',
-    icon: FaPython,
+      'Systems programming, data structures, algorithms, and competitive programming foundations',
+    icon: SiCplusplus,
   },
   {
     name: 'Redis',
@@ -63,6 +70,13 @@ const skills = [
     description:
       'In-memory data structure store, used as a database, cache, and message broker',
     icon: SiRedis,
+  },
+  {
+    name: 'MongoDB',
+    category: 'Backend',
+    description:
+      'NoSQL document database for flexible, scalable data persistence and aggregation',
+    icon: DiMongodb,
   },
 ];
 
@@ -242,3 +256,5 @@ const Skills = () => {
 };
 
 export default Skills;
+
+

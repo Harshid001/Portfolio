@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+﻿import React, { useEffect, useRef } from 'react';
 import './Footer.css';
 
 const Footer = () => {
@@ -23,14 +23,14 @@ const Footer = () => {
 
     /* ---------- ticker: real content, slow ---------- */
     const feed = [
-      ['b', 'Let’s build something'],
+      ['b', 'Letâ€™s build something'],
       ['i', 'React 19 / Vite / Three.js / GLSL / Framer Motion'],
-      ['b', '2 slots left — Q3 2026'],
-      ['i', 'Last commit: particle-morph — cone spin atlas'],
+      ['b', '2 slots left â€” Q3 2026'],
+      ['i', 'Last commit: particle-morph â€” cone spin atlas'],
       ['b', 'Open to collaboration'],
-      ['i', 'Studio Kern · Northlane · Basil & Co · Meridian Labs'],
+      ['i', 'Studio Kern Â· Northlane Â· Basil & Co Â· Meridian Labs'],
       ['b', 'Frontend & WebGL'],
-      ['i', 'Avg. response 6h · Based in Gujarat, IN'],
+      ['i', 'Avg. response 6h Â· Based in Gujarat, IN'],
     ];
     const trEl = footer.querySelector('#tr');
     if (trEl) {
@@ -502,19 +502,19 @@ const Footer = () => {
         <div className="cell">
           <div className="cap"><span>Channels</span><span>Live</span></div>
           <a className="lnk" data-dir="up" data-key="github" href="https://github.com/Harshid001" target="_blank" rel="noopener noreferrer"
-             data-pv-num="GITHUB" data-pv-ttl="@Harshid001" data-pv-sub="240 repos &middot; 1.1k contributions">
-            <span className="lhs"><span className="num">01</span><span className="txt"><span>GitHub</span><span className="sub">@Harshid001 &middot; 240 repos</span></span></span><span className="arw">&#8599;</span>
+             data-pv-num="GITHUB" data-pv-ttl="@Harshid001" data-pv-sub="Open source &middot; repositories">
+            <span className="lhs"><span className="num">01</span><span className="txt"><span>GitHub</span><span className="sub">@Harshid001</span></span></span><span className="arw">&#8599;</span>
           </a>
           <a className="lnk" data-dir="up" data-key="linkedin" href="https://www.linkedin.com/in/harshid-soni-441500385/" target="_blank" rel="noopener noreferrer"
-             data-pv-num="LINKEDIN" data-pv-ttl="Harshid Soni" data-pv-sub="1.2k connections &middot; open to work">
-            <span className="lhs"><span className="num">02</span><span className="txt"><span>LinkedIn</span><span className="sub">1.2k connections</span></span></span><span className="arw">&#8599;</span>
+             data-pv-num="LINKEDIN" data-pv-ttl="Harshid Soni" data-pv-sub="Connect &middot; open to work">
+            <span className="lhs"><span className="num">02</span><span className="txt"><span>LinkedIn</span><span className="sub">Harshid Soni</span></span></span><span className="arw">&#8599;</span>
           </a>
           <a className="lnk" data-dir="up" data-key="youtube" href="https://www.youtube.com/@Harshid001" target="_blank" rel="noopener noreferrer"
-             data-pv-num="YOUTUBE" data-pv-ttl="@Harshid001" data-pv-sub="12.4k subscribers &middot; 40 videos">
-            <span className="lhs"><span className="num">03</span><span className="txt"><span>YouTube</span><span className="sub">12.4k subscribers</span></span></span><span className="arw">&#8599;</span>
+             data-pv-num="YOUTUBE" data-pv-ttl="@Harshid001" data-pv-sub="Videos &middot; tutorials">
+            <span className="lhs"><span className="num">03</span><span className="txt"><span>YouTube</span><span className="sub">@Harshid001</span></span></span><span className="arw">&#8599;</span>
           </a>
           <a className="lnk" data-dir="up" data-key="x" href="https://x.com/HarshidSoni2007" target="_blank" rel="noopener noreferrer"
-             data-pv-num="X / TWITTER" data-pv-ttl="@HarshidSoni2007" data-pv-sub="860 followers &middot; build logs">
+             data-pv-num="X / TWITTER" data-pv-ttl="@HarshidSoni2007" data-pv-sub="Build logs &middot; updates">
             <span className="lhs"><span className="num">04</span><span className="txt"><span>X / Twitter</span><span className="sub">@HarshidSoni2007</span></span></span><span className="arw">&#8599;</span>
           </a>
           <a className="lnk" data-dir="up" data-glyph="@" href="mailto:hello@harshid.dev"
@@ -533,7 +533,7 @@ const Footer = () => {
       <div className="cta" id="cta">
         <span className="big display">Let&rsquo;s build something</span>
         <span className="mailwrap"><span className="arw">&rarr;</span>
-          <a className="mail" href="mailto:hello@harshid.dev">hello@harshid.dev</a>
+          <a className="mail" href="mailto:harshidsoni01@gmail.com">harshidsoni01@gmail.com</a>
           <button className="copy" id="copy" type="button" aria-label="Copy email address"><span>Copy</span></button>
         </span>
       </div>
@@ -551,3 +551,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

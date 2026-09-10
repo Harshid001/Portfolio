@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+﻿import { lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import heroImg from '../assets/Profile.png';
 import heroImgWebp from '../assets/Profile.webp';
@@ -91,7 +91,7 @@ const About = () => {
                   <source srcSet={heroImgWebp} type="image/webp" />
                   <img
                     src={heroImg}
-                    alt="Harshid Soni — Full Stack Developer portrait"
+                    alt="Harshid Soni â€” Full Stack Developer portrait"
                     loading="lazy"
                     decoding="async"
                     width="800"
@@ -177,3 +177,4 @@ const About = () => {
 };
 
 export default About;
+

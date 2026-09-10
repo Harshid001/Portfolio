@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ProjectShowcase from './ProjectShowcase';
 import ProjectNavigation from './ProjectNavigation';
 import './projects.css';
 
-// ── Project data ─────────────────────────────────────────
+// â”€â”€ Project data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 import studybuddyImg from '../../assets/studdy-buddy.png';
 import studybuddyImgWebp from '../../assets/studdy-buddy.webp';
 import pincodeImg from '../../assets/Pincode.png';
@@ -201,3 +201,4 @@ const Projects = () => {
 };
 
 export default Projects;
+
