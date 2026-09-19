@@ -78,120 +78,100 @@ const harshid: Developer = {
 ## 🛠️ Tech Arsenal
 
 <div align="center">
-  <p><i>A comprehensive index of languages, frameworks, databases, and architectural tools I leverage to craft high-performance digital products.</i></p>
+  <p><i>A categorized overview of frameworks, languages, databases, and architectural tooling I leverage across the stack.</i></p>
   <br/>
 
-<!-- ══════════════════════════════════════════════════════════════ -->
-<!-- 01 🎨  FRONTEND ENGINEERING                                   -->
-<!-- ══════════════════════════════════════════════════════════════ -->
-
-![Frontend](https://img.shields.io/badge/01%20✦%20FRONTEND%20ENGINEERING-0d1117?style=for-the-badge&labelColor=533483&color=0d1117)
-
-<sub><b>Core Specialization:</b> Component-Driven Architecture • Reactive State Systems • SSR & Next.js • Fluid Interactions</sub>
-
-<br/><br/>
-
-<table>
+<table width="100%">
   <tr>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=react&theme=dark" width="56" height="56" alt="React"/><br/>
-      <b>React.js</b><br/>
-      <sub><font color="#8b949e">Component Architecture</font></sub>
+    <!-- 01 FRONTEND -->
+    <td width="50%" align="center" valign="top">
+      <br/>
+      <img src="https://img.shields.io/badge/01%20✦%20FRONTEND%20ENGINEERING-533483?style=for-the-badge&logo=react&logoColor=white" />
+      <br/><br/>
+      <a href="https://skillicons.dev">
+        <img src="https://skillicons.dev/icons?i=react,nextjs,ts,js,tailwind,redux,html,css,vite&perline=5&theme=dark" />
+      </a>
+      <br/><br/>
+      <sub><b>React.js</b> • <b>Next.js</b> • <b>TypeScript</b> • <b>JavaScript</b> • <b>Tailwind</b> • <b>Redux</b> • <b>Vite</b></sub>
+      <br/><br/>
     </td>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=nextjs&theme=dark" width="56" height="56" alt="Next.js"/><br/>
-      <b>Next.js</b><br/>
-      <sub><font color="#8b949e">SSR & Full-Stack Apps</font></sub>
-    </td>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=ts&theme=dark" width="56" height="56" alt="TypeScript"/><br/>
-      <b>TypeScript</b><br/>
-      <sub><font color="#8b949e">Type-Safe Scalability</font></sub>
+    <!-- 02 BACKEND -->
+    <td width="50%" align="center" valign="top">
+      <br/>
+      <img src="https://img.shields.io/badge/02%20✦%20BACKEND%20%26%20APIs-0f3460?style=for-the-badge&logo=nodedotjs&logoColor=white" />
+      <br/><br/>
+      <a href="https://skillicons.dev">
+        <img src="https://skillicons.dev/icons?i=nodejs,express,socketio,postman,cpp,c&perline=3&theme=dark" />
+      </a>
+      <br/><br/>
+      <sub><b>Node.js</b> • <b>Express.js</b> • <b>Socket.io</b> • <b>Postman</b> • <b>C++</b> • <b>C Language</b></sub>
+      <br/><br/>
     </td>
   </tr>
   <tr>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=js&theme=dark" width="56" height="56" alt="JavaScript"/><br/>
-      <b>JavaScript</b><br/>
-      <sub><font color="#8b949e">Modern ES6+ Engine</font></sub>
+    <!-- 03 DATABASES -->
+    <td width="50%" align="center" valign="top">
+      <br/>
+      <img src="https://img.shields.io/badge/03%20✦%20DATABASES%20%26%20STORAGE-1a6b3c?style=for-the-badge&logo=mongodb&logoColor=white" />
+      <br/><br/>
+      <a href="https://skillicons.dev">
+        <img src="https://skillicons.dev/icons?i=mongodb,mysql,postgres,prisma,redis,firebase&perline=3&theme=dark" />
+      </a>
+      <br/><br/>
+      <sub><b>MongoDB</b> • <b>MySQL</b> • <b>PostgreSQL</b> • <b>Prisma ORM</b> • <b>Redis</b> • <b>Firebase</b></sub>
+      <br/><br/>
     </td>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=tailwind&theme=dark" width="56" height="56" alt="Tailwind CSS"/><br/>
-      <b>Tailwind CSS</b><br/>
-      <sub><font color="#8b949e">Utility-First Styling</font></sub>
-    </td>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=redux&theme=dark" width="56" height="56" alt="Redux Toolkit"/><br/>
-      <b>Redux Toolkit</b><br/>
-      <sub><font color="#8b949e">Global State Store</font></sub>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=html&theme=dark" width="56" height="56" alt="HTML5"/><br/>
-      <b>HTML5</b><br/>
-      <sub><font color="#8b949e">Semantic Markup</font></sub>
-    </td>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=css&theme=dark" width="56" height="56" alt="CSS3"/><br/>
-      <b>CSS3</b><br/>
-      <sub><font color="#8b949e">Adaptive Layouts</font></sub>
-    </td>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=vite&theme=dark" width="56" height="56" alt="Vite"/><br/>
-      <b>Vite</b><br/>
-      <sub><font color="#8b949e">Blazing Build Tool</font></sub>
-    </td>
-  </tr>
-</table>
-
-<br/>
-<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="70%"/>
-<br/><br/>
-
-<!-- ══════════════════════════════════════════════════════════════ -->
-<!-- 02 ⚙️  BACKEND & SERVER ARCHITECTURE                          -->
-<!-- ══════════════════════════════════════════════════════════════ -->
-
-![Backend](https://img.shields.io/badge/02%20✦%20BACKEND%20%26%20SERVER%20ARCHITECTURE-0d1117?style=for-the-badge&labelColor=0f3460&color=0d1117)
-
-<sub><b>Core Specialization:</b> High-Throughput REST APIs • Event-Driven Microservices • Middleware Design • Real-time WebSockets</sub>
-
-<br/><br/>
-
-<table>
-  <tr>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=nodejs&theme=dark" width="56" height="56" alt="Node.js"/><br/>
-      <b>Node.js</b><br/>
-      <sub><font color="#8b949e">Async Event Runtime</font></sub>
-    </td>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=express&theme=dark" width="56" height="56" alt="Express.js"/><br/>
-      <b>Express.js</b><br/>
-      <sub><font color="#8b949e">RESTful Framework</font></sub>
-    </td>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=socketio&theme=dark" width="56" height="56" alt="Socket.io"/><br/>
-      <b>Socket.io</b><br/>
-      <sub><font color="#8b949e">Real-Time Sockets</font></sub>
+    <!-- 04 MOBILE -->
+    <td width="50%" align="center" valign="top">
+      <br/>
+      <img src="https://img.shields.io/badge/04%20✦%20MOBILE%20DEVELOPMENT-b5560a?style=for-the-badge&logo=android&logoColor=white" />
+      <br/><br/>
+      <a href="https://skillicons.dev">
+        <img src="https://skillicons.dev/icons?i=react,expo,firebase,redux&perline=4&theme=dark" />
+      </a>
+      <br/><br/>
+      <sub><b>React Native</b> • <b>Expo</b> • <b>Firebase FCM</b> • <b>Redux Mobile</b></sub>
+      <br/><br/>
     </td>
   </tr>
   <tr>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=postman&theme=dark" width="56" height="56" alt="Postman"/><br/>
-      <b>Postman</b><br/>
-      <sub><font color="#8b949e">API Contract & Tests</font></sub>
+    <!-- 05 LANGUAGES -->
+    <td width="50%" align="center" valign="top">
+      <br/>
+      <img src="https://img.shields.io/badge/05%20✦%20CORE%20LANGUAGES-e94560?style=for-the-badge&logo=javascript&logoColor=white" />
+      <br/><br/>
+      <a href="https://skillicons.dev">
+        <img src="https://skillicons.dev/icons?i=ts,js,cpp,c&perline=4&theme=dark" />
+      </a>
+      <br/><br/>
+      <sub><b>TypeScript</b> • <b>JavaScript</b> • <b>C++ (DSA)</b> • <b>C Language</b></sub>
+      <br/><br/>
     </td>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=cpp&theme=dark" width="56" height="56" alt="C++"/><br/>
-      <b>C++</b><br/>
-      <sub><font color="#8b949e">Systems & Algorithms</font></sub>
+    <!-- 06 DEVOPS -->
+    <td width="50%" align="center" valign="top">
+      <br/>
+      <img src="https://img.shields.io/badge/06%20✦%20DEVOPS%20%26%20DEPLOYMENT-7c3aed?style=for-the-badge&logo=git&logoColor=white" />
+      <br/><br/>
+      <a href="https://skillicons.dev">
+        <img src="https://skillicons.dev/icons?i=git,github,vercel,netlify,vscode,linux&perline=3&theme=dark" />
+      </a>
+      <br/><br/>
+      <sub><b>Git</b> • <b>GitHub</b> • <b>Vercel</b> • <b>Netlify</b> • <b>VS Code</b> • <b>Linux Shell</b></sub>
+      <br/><br/>
     </td>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=c&theme=dark" width="56" height="56" alt="C"/><br/>
-      <b>C Language</b><br/>
-      <sub><font color="#8b949e">Low-Level Memory</font></sub>
+  </tr>
+  <tr>
+    <!-- 07 UI/UX -->
+    <td colspan="2" align="center" valign="top">
+      <br/>
+      <img src="https://img.shields.io/badge/07%20✦%20UI%2FUX%20DESIGN%20%26%20MOTION-b91c8c?style=for-the-badge&logo=figma&logoColor=white" />
+      <br/><br/>
+      <a href="https://skillicons.dev">
+        <img src="https://skillicons.dev/icons?i=figma,framer,tailwind,css&perline=4&theme=dark" />
+      </a>
+      <br/><br/>
+      <sub><b>Figma Prototyping</b> • <b>Framer Motion</b> • <b>Tailwind Tokens</b> • <b>CSS Animations</b></sub>
+      <br/><br/>
     </td>
   </tr>
 </table>
@@ -199,227 +179,6 @@ const harshid: Developer = {
 <br/>
 <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="70%"/>
 <br/><br/>
-
-<!-- ══════════════════════════════════════════════════════════════ -->
-<!-- 03 🗄️  DATABASES & CLOUD PERSISTENCE                          -->
-<!-- ══════════════════════════════════════════════════════════════ -->
-
-![Database](https://img.shields.io/badge/03%20✦%20DATABASES%20%26%20CLOUD%20PERSISTENCE-0d1117?style=for-the-badge&labelColor=1a6b3c&color=0d1117)
-
-<sub><b>Core Specialization:</b> Schema Design • Aggregation Pipelines • In-Memory Caching • Relational Modelling & ORMs</sub>
-
-<br/><br/>
-
-<table>
-  <tr>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=mongodb&theme=dark" width="56" height="56" alt="MongoDB"/><br/>
-      <b>MongoDB</b><br/>
-      <sub><font color="#8b949e">NoSQL Document DB</font></sub>
-    </td>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=mysql&theme=dark" width="56" height="56" alt="MySQL"/><br/>
-      <b>MySQL</b><br/>
-      <sub><font color="#8b949e">Relational SQL Engine</font></sub>
-    </td>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=postgres&theme=dark" width="56" height="56" alt="PostgreSQL"/><br/>
-      <b>PostgreSQL</b><br/>
-      <sub><font color="#8b949e">ACID Enterprise DB</font></sub>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=prisma&theme=dark" width="56" height="56" alt="Prisma ORM"/><br/>
-      <b>Prisma ORM</b><br/>
-      <sub><font color="#8b949e">Type-Safe Client</font></sub>
-    </td>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=redis&theme=dark" width="56" height="56" alt="Redis"/><br/>
-      <b>Redis</b><br/>
-      <sub><font color="#8b949e">Cache & Queues</font></sub>
-    </td>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=firebase&theme=dark" width="56" height="56" alt="Firebase"/><br/>
-      <b>Firebase</b><br/>
-      <sub><font color="#8b949e">Firestore & Realtime</font></sub>
-    </td>
-  </tr>
-</table>
-
-<br/>
-<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="70%"/>
-<br/><br/>
-
-<!-- ══════════════════════════════════════════════════════════════ -->
-<!-- 04 📱  MOBILE APP DEVELOPMENT                                 -->
-<!-- ══════════════════════════════════════════════════════════════ -->
-
-![Mobile](https://img.shields.io/badge/04%20✦%20MOBILE%20APP%20DEVELOPMENT-0d1117?style=for-the-badge&labelColor=b5560a&color=0d1117)
-
-<sub><b>Core Specialization:</b> Cross-Platform Engineering • Native Device Bridges • Push Notifications • Offline-First Stores</sub>
-
-<br/><br/>
-
-<table>
-  <tr>
-    <td align="center" width="240">
-      <img src="https://skillicons.dev/icons?i=react&theme=dark" width="56" height="56" alt="React Native"/><br/>
-      <b>React Native</b><br/>
-      <sub><font color="#8b949e">Cross-Platform iOS & Android</font></sub>
-    </td>
-    <td align="center" width="240">
-      <img src="https://skillicons.dev/icons?i=expo&theme=dark" width="56" height="56" alt="Expo"/><br/>
-      <b>Expo Ecosystem</b><br/>
-      <sub><font color="#8b949e">Universal Tooling & Build CLI</font></sub>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="240">
-      <img src="https://skillicons.dev/icons?i=firebase&theme=dark" width="56" height="56" alt="Firebase"/><br/>
-      <b>Firebase Cloud Messaging</b><br/>
-      <sub><font color="#8b949e">Push Notifications & Sync</font></sub>
-    </td>
-    <td align="center" width="240">
-      <img src="https://skillicons.dev/icons?i=redux&theme=dark" width="56" height="56" alt="Redux"/><br/>
-      <b>Redux Toolkit Mobile</b><br/>
-      <sub><font color="#8b949e">Predictable Mobile State</font></sub>
-    </td>
-  </tr>
-</table>
-
-<br/>
-<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="70%"/>
-<br/><br/>
-
-<!-- ══════════════════════════════════════════════════════════════ -->
-<!-- 05 🔤  CORE PROGRAMMING LANGUAGES                             -->
-<!-- ══════════════════════════════════════════════════════════════ -->
-
-![Languages](https://img.shields.io/badge/05%20✦%20CORE%20PROGRAMMING%20LANGUAGES-0d1117?style=for-the-badge&labelColor=e94560&color=0d1117)
-
-<sub><b>Core Specialization:</b> Strong Static Typing • Object-Oriented Design • Data Structures • Algorithmic Efficiency</sub>
-
-<br/><br/>
-
-<table>
-  <tr>
-    <td align="center" width="240">
-      <img src="https://skillicons.dev/icons?i=ts&theme=dark" width="56" height="56" alt="TypeScript"/><br/>
-      <b>TypeScript</b><br/>
-      <sub><font color="#8b949e">Generics & Type Architecture</font></sub>
-    </td>
-    <td align="center" width="240">
-      <img src="https://skillicons.dev/icons?i=js&theme=dark" width="56" height="56" alt="JavaScript"/><br/>
-      <b>JavaScript (ES6+)</b><br/>
-      <sub><font color="#8b949e">Async / Await & Functional</font></sub>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="240">
-      <img src="https://skillicons.dev/icons?i=cpp&theme=dark" width="56" height="56" alt="C++"/><br/>
-      <b>C++</b><br/>
-      <sub><font color="#8b949e">DSA, STL & Computational Logic</font></sub>
-    </td>
-    <td align="center" width="240">
-      <img src="https://skillicons.dev/icons?i=c&theme=dark" width="56" height="56" alt="C"/><br/>
-      <b>C Language</b><br/>
-      <sub><font color="#8b949e">Memory Layout & Low-Level</font></sub>
-    </td>
-  </tr>
-</table>
-
-<br/>
-<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="70%"/>
-<br/><br/>
-
-<!-- ══════════════════════════════════════════════════════════════ -->
-<!-- 06 🚀  DEVOPS, CLOUD & DEPLOYMENT                             -->
-<!-- ══════════════════════════════════════════════════════════════ -->
-
-![DevOps](https://img.shields.io/badge/06%20✦%20DEVOPS%20%26%20CLOUD%20DEPLOYMENT-0d1117?style=for-the-badge&labelColor=7c3aed&color=0d1117)
-
-<sub><b>Core Specialization:</b> Automated Deploy Pipelines • Edge Network Delivery • Version Control Systems • Linux Environments</sub>
-
-<br/><br/>
-
-<table>
-  <tr>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=git&theme=dark" width="56" height="56" alt="Git"/><br/>
-      <b>Git</b><br/>
-      <sub><font color="#8b949e">Distributed VCS</font></sub>
-    </td>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=github&theme=dark" width="56" height="56" alt="GitHub"/><br/>
-      <b>GitHub</b><br/>
-      <sub><font color="#8b949e">CI/CD & Collaboration</font></sub>
-    </td>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=vercel&theme=dark" width="56" height="56" alt="Vercel"/><br/>
-      <b>Vercel</b><br/>
-      <sub><font color="#8b949e">Edge Cloud Deploy</font></sub>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=netlify&theme=dark" width="56" height="56" alt="Netlify"/><br/>
-      <b>Netlify</b><br/>
-      <sub><font color="#8b949e">Automated Hosting</font></sub>
-    </td>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=vscode&theme=dark" width="56" height="56" alt="VS Code"/><br/>
-      <b>VS Code</b><br/>
-      <sub><font color="#8b949e">Developer IDE</font></sub>
-    </td>
-    <td align="center" width="160">
-      <img src="https://skillicons.dev/icons?i=linux&theme=dark" width="56" height="56" alt="Linux"/><br/>
-      <b>Linux</b><br/>
-      <sub><font color="#8b949e">CLI & Server Shell</font></sub>
-    </td>
-  </tr>
-</table>
-
-<br/>
-<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="70%"/>
-<br/><br/>
-
-<!-- ══════════════════════════════════════════════════════════════ -->
-<!-- 07 🎭  UI/UX DESIGN & MOTION GRAPHICS                         -->
-<!-- ══════════════════════════════════════════════════════════════ -->
-
-![Design](https://img.shields.io/badge/07%20✦%20UI%2FUX%20DESIGN%20%26%20MOTION-0d1117?style=for-the-badge&labelColor=b91c8c&color=0d1117)
-
-<sub><b>Core Specialization:</b> High-Fidelity Prototyping • Physics-Based Motion • Design Systems & Tokens • Micro-Interactions</sub>
-
-<br/><br/>
-
-<table>
-  <tr>
-    <td align="center" width="240">
-      <img src="https://skillicons.dev/icons?i=figma&theme=dark" width="56" height="56" alt="Figma"/><br/>
-      <b>Figma</b><br/>
-      <sub><font color="#8b949e">Design Systems & UI Kits</font></sub>
-    </td>
-    <td align="center" width="240">
-      <img src="https://skillicons.dev/icons?i=framer&theme=dark" width="56" height="56" alt="Framer Motion"/><br/>
-      <b>Framer Motion</b><br/>
-      <sub><font color="#8b949e">Physics & Spring Animations</font></sub>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="240">
-      <img src="https://skillicons.dev/icons?i=tailwind&theme=dark" width="56" height="56" alt="Tailwind"/><br/>
-      <b>Tailwind CSS</b><br/>
-      <sub><font color="#8b949e">Design Token Implementation</font></sub>
-    </td>
-    <td align="center" width="240">
-      <img src="https://skillicons.dev/icons?i=css&theme=dark" width="56" height="56" alt="CSS3"/><br/>
-      <b>CSS3 Transitions</b><br/>
-      <sub><font color="#8b949e">Keyframes, Transforms & Grid</font></sub>
-    </td>
-  </tr>
-</table>
 
 </div>
 
