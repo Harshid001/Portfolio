@@ -221,12 +221,12 @@ const harshid: Developer = {
 
 ### 📜 Certifications
 
-| 📋 | Certificate | Issuer | Year |
-|:--:|:------------|:------:|:----:|
-| 🤖 | **Generative AI Mastermind** | Outskill | 2026 |
-| ⚡ | **Delta Full-Stack Dev** | Apna College | 2026 |
-| 🧠 | **TATA Crucible National Quiz** | Tata Group | 2025 |
-| 🏥 | **Aarogya Setu 2.0** | Govt of India / NHA | 2025 |
+| 📋 | Certificate | Issuer |
+|:--:|:------------|:------:|
+| 🤖 | **Generative AI Mastermind** | Outskill |
+| ⚡ | **Delta Full-Stack Dev** | Apna College |
+| 🧠 | **TATA Crucible National Quiz** | Tata Group |
+| 🏥 | **Aarogya Setu 2.0** | Govt of India / NHA |
 
 </td>
 </tr>
