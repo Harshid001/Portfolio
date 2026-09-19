@@ -77,16 +77,14 @@ const harshid: Developer = {
 
 ## 🛠️ Tech Arsenal
 
-<div align="center">
-  <p><i>A categorized overview of frameworks, languages, databases, and architectural tooling I leverage across the stack.</i></p>
-  <br/>
+<p align="center"><i>A categorized overview of frameworks, languages, databases, and architectural tooling I leverage across the stack.</i></p>
 
 <table width="100%">
   <tr>
     <!-- 01 FRONTEND -->
-    <td width="50%" align="center" valign="top">
+    <td width="450" align="center" valign="top">
       <br/>
-      <img src="https://img.shields.io/badge/01%20✦%20FRONTEND%20ENGINEERING-533483?style=for-the-badge&logo=react&logoColor=white" />
+      <img src="https://img.shields.io/badge/───────%2001%20✦%20FRONTEND%20ENGINEERING%20───────-533483?style=for-the-badge&logo=react&logoColor=white" />
       <br/><br/>
       <a href="https://skillicons.dev">
         <img src="https://skillicons.dev/icons?i=react,nextjs,ts,js,tailwind,redux,html,css,vite&perline=5&theme=dark" />
@@ -96,9 +94,9 @@ const harshid: Developer = {
       <br/><br/>
     </td>
     <!-- 02 BACKEND -->
-    <td width="50%" align="center" valign="top">
+    <td width="450" align="center" valign="top">
       <br/>
-      <img src="https://img.shields.io/badge/02%20✦%20BACKEND%20%26%20APIs-0f3460?style=for-the-badge&logo=nodedotjs&logoColor=white" />
+      <img src="https://img.shields.io/badge/──────────%2002%20✦%20BACKEND%20%26%20APIs%20──────────-0f3460?style=for-the-badge&logo=nodedotjs&logoColor=white" />
       <br/><br/>
       <a href="https://skillicons.dev">
         <img src="https://skillicons.dev/icons?i=nodejs,express,socketio,postman,cpp,c&perline=3&theme=dark" />
@@ -110,9 +108,9 @@ const harshid: Developer = {
   </tr>
   <tr>
     <!-- 03 DATABASES -->
-    <td width="50%" align="center" valign="top">
+    <td width="450" align="center" valign="top">
       <br/>
-      <img src="https://img.shields.io/badge/03%20✦%20DATABASES%20%26%20STORAGE-1a6b3c?style=for-the-badge&logo=mongodb&logoColor=white" />
+      <img src="https://img.shields.io/badge/────────%2003%20✦%20DATABASES%20%26%20STORAGE%20────────-1a6b3c?style=for-the-badge&logo=mongodb&logoColor=white" />
       <br/><br/>
       <a href="https://skillicons.dev">
         <img src="https://skillicons.dev/icons?i=mongodb,mysql,postgres,prisma,redis,firebase&perline=3&theme=dark" />
@@ -122,9 +120,9 @@ const harshid: Developer = {
       <br/><br/>
     </td>
     <!-- 04 MOBILE -->
-    <td width="50%" align="center" valign="top">
+    <td width="450" align="center" valign="top">
       <br/>
-      <img src="https://img.shields.io/badge/04%20✦%20MOBILE%20DEVELOPMENT-b5560a?style=for-the-badge&logo=android&logoColor=white" />
+      <img src="https://img.shields.io/badge/────────%2004%20✦%20MOBILE%20DEVELOPMENT%20────────-b5560a?style=for-the-badge&logo=android&logoColor=white" />
       <br/><br/>
       <a href="https://skillicons.dev">
         <img src="https://skillicons.dev/icons?i=react,expo,firebase,redux&perline=4&theme=dark" />
@@ -136,9 +134,9 @@ const harshid: Developer = {
   </tr>
   <tr>
     <!-- 05 LANGUAGES -->
-    <td width="50%" align="center" valign="top">
+    <td width="450" align="center" valign="top">
       <br/>
-      <img src="https://img.shields.io/badge/05%20✦%20CORE%20LANGUAGES-e94560?style=for-the-badge&logo=javascript&logoColor=white" />
+      <img src="https://img.shields.io/badge/─────────%2005%20✦%20CORE%20LANGUAGES%20─────────-e94560?style=for-the-badge&logo=javascript&logoColor=white" />
       <br/><br/>
       <a href="https://skillicons.dev">
         <img src="https://skillicons.dev/icons?i=ts,js,cpp,c&perline=4&theme=dark" />
@@ -148,9 +146,9 @@ const harshid: Developer = {
       <br/><br/>
     </td>
     <!-- 06 DEVOPS -->
-    <td width="50%" align="center" valign="top">
+    <td width="450" align="center" valign="top">
       <br/>
-      <img src="https://img.shields.io/badge/06%20✦%20DEVOPS%20%26%20DEPLOYMENT-7c3aed?style=for-the-badge&logo=git&logoColor=white" />
+      <img src="https://img.shields.io/badge/────────%2006%20✦%20DEVOPS%20%26%20DEPLOYMENT%20────────-7c3aed?style=for-the-badge&logo=git&logoColor=white" />
       <br/><br/>
       <a href="https://skillicons.dev">
         <img src="https://skillicons.dev/icons?i=git,github,vercel,netlify,vscode,linux&perline=3&theme=dark" />
@@ -162,9 +160,9 @@ const harshid: Developer = {
   </tr>
   <tr>
     <!-- 07 UI/UX -->
-    <td colspan="2" align="center" valign="top">
+    <td colspan="2" width="100%" align="center" valign="top">
       <br/>
-      <img src="https://img.shields.io/badge/07%20✦%20UI%2FUX%20DESIGN%20%26%20MOTION-b91c8c?style=for-the-badge&logo=figma&logoColor=white" />
+      <img src="https://img.shields.io/badge/──────────────────%2007%20✦%20UI%2FUX%20DESIGN%20%26%20MOTION%20──────────────────-b91c8c?style=for-the-badge&logo=figma&logoColor=white" />
       <br/><br/>
       <a href="https://skillicons.dev">
         <img src="https://skillicons.dev/icons?i=figma,framer,tailwind,css&perline=4&theme=dark" />
@@ -176,11 +174,11 @@ const harshid: Developer = {
   </tr>
 </table>
 
-<br/>
-<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="70%"/>
-<br/><br/>
-
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="70%"/>
 </div>
+
+<br/>
 
 <br/><br/>
 
