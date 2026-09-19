@@ -187,14 +187,20 @@ const harshid: Developer = {
 ## 📊 GitHub Analytics
 
 <div align="center">
-  <img src="https://github-readme-streak-stats.herokuapp.com?user=Harshid001&theme=tokyonight&hide_border=true&background=0d1117&ring=e94560&fire=ff6b6b&currStreakLabel=c8b6ff&sideLabels=c8b6ff&stroke=e94560&dates=8b8b8b" height="185" width="49%"/>
-  <img src="https://github-readme-stats-fast.vercel.app/api?username=Harshid001&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0d1117&title_color=e94560&icon_color=c8b6ff&text_color=ffffff&rank_icon=github" height="185" width="49%"/>
+  <img src="https://github-readme-streak-stats.herokuapp.com?user=Harshid001&theme=tokyonight&hide_border=true&background=0d1117&ring=e94560&fire=ff6b6b&currStreakLabel=c8b6ff&sideLabels=c8b6ff&stroke=e94560&dates=8b8b8b" width="49%"/>
+  <img src="https://github-readme-stats-fast.vercel.app/api?username=Harshid001&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0d1117&title_color=e94560&icon_color=c8b6ff&text_color=ffffff&rank_icon=github" width="49%"/>
 </div>
 
+<br/>
+
 <div align="center">
-  <img src="https://github-readme-stats-fast.vercel.app/api/top-langs/?username=Harshid001&layout=donut&theme=tokyonight&hide_border=true&bg_color=0d1117&title_color=e94560&text_color=ffffff&langs_count=8" height="185" width="38%"/>
-  &nbsp;
-  <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=Harshid001&theme=tokyonight" width="59%"/>
+  <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=Harshid001&theme=tokyonight" width="99%"/>
+</div>
+
+<br/>
+
+<div align="center">
+  <img src="https://github-readme-stats-fast.vercel.app/api/top-langs/?username=Harshid001&layout=donut&theme=tokyonight&hide_border=true&bg_color=0d1117&title_color=e94560&text_color=ffffff&langs_count=8" width="49%"/>
 </div>
 
 ---
