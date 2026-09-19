@@ -248,24 +248,6 @@ const harshid: Developer = {
 
 ---
 
-## 🔭 Currently Building
-
-<div align="center">
-
-```
-╔══════════════════════════════════════════════════════════════════╗
-║  🚧  CURRENTLY IN THE WORKSHOP  🚧                              ║
-╠══════════════════════════════════════════════════════════════════╣
-║  🤖  Smart Factory AI     →  Node.js · MongoDB · GenAI         ║
-║  📱  Cross-Platform App   →  React Native · Firebase · Expo    ║
-║  🔄  TypeScript Migration →  Upgrading existing codebases      ║
-║  🧠  DSA Tracker          →  Next.js · TypeScript · MongoDB    ║
-╚══════════════════════════════════════════════════════════════════╝
-```
-
-</div>
-
----
 
 ## 🐍 Contribution Snake
 
