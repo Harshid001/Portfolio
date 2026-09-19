@@ -210,11 +210,11 @@ const harshid: Developer = {
 
 ### 🎖️ Hackathons
 
-| 🏅 | Event | Level | Year |
-|:--:|:------|:-----:|:----:|
-| 🥇 | **Smart India Hackathon** — Smart Factory AI | 🌍 National | 2026 |
-| 🥈 | **Tic Tech Toe** — IEEE SB DAIICT | 🏢 National | 2026 |
-| 🥉 | **CodeFest Challenge** — StudyBuddy | 🏙️ State | 2025 |
+| 🏅 | Event | Year |
+|:--:|:------|:----:|
+| 🥇 | **Smart India Hackathon** — Smart Factory AI | 2026 |
+| 🥈 | **Tic Tech Toe** — IEEE SB DAIICT | 2026 |
+| 🥉 | **CodeFest Challenge** — StudyBuddy | 2025 |
 
 </td>
 <td width="50%" valign="top">
