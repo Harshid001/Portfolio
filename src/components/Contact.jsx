@@ -411,6 +411,7 @@ const Contact = () => {
                     style={{
                       backgroundColor: 'var(--color-ink)',
                       color: 'var(--color-paper)',
+                      borderBottom: '2px solid var(--color-green, #2ed573)',
                       outline: 'none',
                     }}
                   >
@@ -486,11 +487,17 @@ const Contact = () => {
                 >
                   <motion.button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || status.type === 'sent'}
                     aria-busy={isSubmitting}
-                    className={`w-full flex items-center justify-center gap-3 transition-colors ${isSubmitting ? 'cursor-not-allowed opacity-70' : 'btn-primary'}`}
-                    whileHover={reduced || isSubmitting ? undefined : { y: -2 }}
-                    whileTap={reduced || isSubmitting ? undefined : { scale: 0.985 }}
+                    className={`w-full flex items-center justify-center gap-3 transition-colors ${
+                      isSubmitting
+                        ? 'cursor-not-allowed opacity-70'
+                        : status.type === 'sent'
+                          ? 'cursor-default'
+                          : 'btn-primary'
+                    }`}
+                    whileHover={reduced || isSubmitting || status.type === 'sent' ? undefined : { y: -2 }}
+                    whileTap={reduced || isSubmitting || status.type === 'sent' ? undefined : { scale: 0.985 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                     style={{
                       padding: '16px',
@@ -499,11 +506,11 @@ const Contact = () => {
                       border: '2px solid var(--color-ink)',
                       borderColor:
                         status.type === 'sent'
-                          ? 'var(--color-red)'
+                          ? 'var(--color-green, #2ed573)'
                           : 'var(--color-ink)',
                       color:
                         status.type === 'sent'
-                          ? 'var(--color-red)'
+                          ? 'var(--color-green, #2ed573)'
                           : 'var(--color-paper)',
                       backgroundColor:
                         status.type === 'sent'

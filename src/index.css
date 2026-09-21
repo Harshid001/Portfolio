@@ -15,6 +15,7 @@
   --color-ink-3: #888888;
   --color-accent: #0d0d0d;
   --color-red: #c0392b;
+  --color-green: #16a34a;
   --color-white: #ffffff;
 
   /* New Clean Professional Fonts */
@@ -72,6 +73,7 @@
     --color-ink-3: #888888;
     --color-accent: #f5f2ed;
     --color-red: #ff4757;
+    --color-green: #2ed573;
     --color-white: #000000;
   }
 
