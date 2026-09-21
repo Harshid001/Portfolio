@@ -160,16 +160,20 @@ const Hero = () => {
 
           <motion.div
             variants={fadeUp}
-            className="flex flex-col lg:flex-row mb-12 w-full lg:w-auto flex-wrap lg:flex-nowrap gap-4 lg:gap-0"
+            className="flex flex-col sm:flex-row mb-12 w-full lg:w-auto flex-wrap lg:flex-nowrap gap-3 sm:gap-4 lg:gap-0"
           >
             <motion.a
               href="#projects"
               onClick={(e) => {
                 e.preventDefault();
-                document.querySelector('#projects')?.scrollIntoView();
+                if (window.__lenis) {
+                  window.__lenis.scrollTo('#projects', { duration: 1.2 });
+                } else {
+                  document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' });
+                }
               }}
               whileTap={{ scale: 0.95 }}
-              className="btn-primary h-[56px] w-full lg:w-auto flex items-center justify-center"
+              className="btn-primary h-[52px] sm:h-[56px] w-full sm:w-auto px-6 sm:px-8 flex items-center justify-center"
             >
               VIEW PROJECTS
             </motion.a>
@@ -177,10 +181,14 @@ const Hero = () => {
               href="#contact"
               onClick={(e) => {
                 e.preventDefault();
-                document.querySelector('#contact')?.scrollIntoView();
+                if (window.__lenis) {
+                  window.__lenis.scrollTo('#contact', { duration: 1.2 });
+                } else {
+                  document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
+                }
               }}
               whileTap={{ scale: 0.95 }}
-              className="btn-secondary h-[56px] w-full lg:w-auto flex items-center justify-center lg:-ml-[2px]"
+              className="btn-secondary h-[52px] sm:h-[56px] w-full sm:w-auto px-6 sm:px-8 flex items-center justify-center lg:-ml-[2px]"
             >
               CONTACT ME
             </motion.a>
@@ -189,7 +197,7 @@ const Hero = () => {
               target="_blank"
               rel="noopener noreferrer"
               whileTap={{ scale: 0.95 }}
-              className="btn-secondary h-[56px] w-full lg:w-auto flex items-center justify-center lg:-ml-[2px]"
+              className="btn-secondary h-[52px] sm:h-[56px] w-full sm:w-auto px-6 sm:px-8 flex items-center justify-center lg:-ml-[2px]"
             >
               DOWNLOAD RESUME
             </motion.a>
@@ -225,13 +233,6 @@ const Hero = () => {
                 rel="noreferrer"
                 aria-label={social.label}
                 whileTap={{ scale: 0.9, rotate: 5 }}
-                /*
-                  Hover/colour is handled by the `.social-icon` class now.
-                  The old inline onMouseEnter/onMouseLeave handlers wrote three
-                  inline styles per event, forcing a style recalc on every
-                  pointer pass, and their hardcoded paper background vanished
-                  against the dark bands of the hero shader.
-                */
                 className="social-icon w-[44px] h-[44px] flex items-center justify-center text-xl brutal-border"
               >
                 {social.icon}
@@ -243,8 +244,10 @@ const Hero = () => {
         {/* RIGHT COLUMN — SHOWCASE FOR BRIGHT THEME / TRANSPARENT FOR DARK 3D */}
         <motion.div
           variants={fadeUp}
-          className={`hero-right flex items-center justify-center relative w-full lg:w-auto min-h-[380px] lg:h-[500px] xl:h-[600px] mt-8 lg:mt-0 ${
-            isDark ? 'pointer-events-none' : 'pointer-events-auto'
+          className={`hero-right flex items-center justify-center relative w-full lg:w-auto ${
+            isDark
+              ? 'pointer-events-none min-h-0 lg:min-h-[500px] h-0 lg:h-auto'
+              : 'pointer-events-auto min-h-[380px] lg:h-[500px] xl:h-[600px] mt-8 lg:mt-0'
           }`}
         >
           {!isDark && <HeroBrightShowcase />}

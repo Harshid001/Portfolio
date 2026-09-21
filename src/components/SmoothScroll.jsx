@@ -7,42 +7,47 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function SmoothScroll({ children }) {
   useEffect(() => {
-    // Respect the OS-level motion preference: hijacking the scrollbar is one of
-    // the most nausea-inducing things a site can do to these users.
-    const reduceMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches;
-    if (reduceMotion) return;
+    // On touch-only mobile devices, native hardware scrolling is already optimal and battery-friendly.
+    // Desktop devices with mouse wheels or precision trackpads get luxurious Lenis smooth scrolling.
+    const isTouchOnly =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(pointer: coarse)').matches &&
+      !window.matchMedia('(pointer: fine)').matches;
+
+    if (isTouchOnly) return;
 
     const lenis = new Lenis({
-      duration: 1.05,
-      // Standard expo-out curve, slightly snappier than the previous 1.2s ramp
-      // so the page stops drifting after the wheel input ends.
+      duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.6,
-      // Native touch scrolling is already smooth and GPU-driven on mobile;
-      // syncing it through JS only adds jank and battery drain.
-      syncTouch: false,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.5,
+      infinite: false,
     });
 
-    const onScroll = () => ScrollTrigger.update();
+    window.__lenis = lenis;
+
+    // Connect Lenis to GSAP ScrollTrigger
+    const onScroll = () => {
+      ScrollTrigger.update();
+    };
     lenis.on('scroll', onScroll);
 
-    // Named reference so the cleanup below actually removes THIS callback.
-    // The previous version passed a brand-new arrow function to
-    // `gsap.ticker.remove()`, so the old one stayed registered forever and kept
-    // driving a destroyed Lenis instance on every frame.
-    const raf = (time) => lenis.raf(time * 1000);
-
-    gsap.ticker.add(raf);
-    gsap.ticker.lagSmoothing(0);
+    // Keep Lenis updated via native requestAnimationFrame at monitor refresh rate
+    let rafId;
+    function update(time) {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(update);
+    }
+    rafId = requestAnimationFrame(update);
 
     return () => {
-      gsap.ticker.remove(raf);
+      cancelAnimationFrame(rafId);
       lenis.off('scroll', onScroll);
       lenis.destroy();
+      delete window.__lenis;
     };
   }, []);
 

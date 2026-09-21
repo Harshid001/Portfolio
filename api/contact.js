@@ -34,7 +34,7 @@ export default async function handler(req, res) {
   const result = await sendContactEmail(payload);
 
   if (!result.success) {
-    return res.status(result.status).json({
+    return res.status(result.status || 500).json({
       success: false,
       error: result.error,
     });

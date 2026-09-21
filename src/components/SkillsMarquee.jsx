@@ -23,8 +23,8 @@ const SkillsMarquee = () => {
   return (
     <div
       style={{
-        width: '100vw',
-        marginLeft: 'calc(-50vw + 50%)',
+        width: '100%',
+        maxWidth: '100%',
         overflow: 'hidden',
         borderTop: '2px solid var(--color-ink)',
         borderBottom: '2px solid var(--color-ink)',

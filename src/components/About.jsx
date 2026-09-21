@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import heroImg from '../assets/Profile.png';
 import heroImgWebp from '../assets/Profile.webp';
 import GrainText from './GrainText';
@@ -22,31 +22,32 @@ const About = () => {
       </Suspense>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* HEADING */}
-        <motion.div
-          className="mb-20 about-heading-area relative"
+        {/* HEADING (Original size: clamp(40px, 10vw, 120px), strictly 2 lines, box width hugs word limit) */}
+        <Motion.div
+          className="mb-8 sm:mb-10 about-heading-area relative w-fit max-w-full"
           data-no-shader-action="true"
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
         >
           {/* Subtle soft paper aura to fade out dots behind heading text */}
           <div
-            className="absolute -inset-6 sm:-inset-10 pointer-events-none rounded-3xl -z-10"
+            className="absolute -inset-4 sm:-inset-6 pointer-events-none rounded-2xl -z-10"
             style={{
               background:
-                'radial-gradient(ellipse 75% 65% at 30% 50%, color-mix(in srgb, var(--color-paper) 80%, transparent) 0%, color-mix(in srgb, var(--color-paper) 40%, transparent) 60%, transparent 100%)',
+                'radial-gradient(ellipse 75% 65% at 40% 50%, color-mix(in srgb, var(--color-paper) 80%, transparent) 0%, color-mix(in srgb, var(--color-paper) 40%, transparent) 60%, transparent 100%)',
             }}
           />
           <span
-            className="section-label mb-4 block"
+            className="section-label mb-3 block"
             style={{ color: 'var(--color-ink)' }}
           >
             01 / ABOUT ME
           </span>
           <h2
+            className="w-fit"
             style={{
-              fontSize: 'clamp(40px, 10vw, 120px)',
+              fontSize: 'clamp(36px, 10vw, 120px)',
               lineHeight: 0.9,
               fontFamily: 'var(--font-heading)',
               color: 'var(--color-ink)',
@@ -54,19 +55,18 @@ const About = () => {
               margin: 0,
             }}
           >
-            <GrainText style={{ display: 'block', width: '100%' }}>
-              MORE THAN
-              <br />
-              JUST CODE
+            <GrainText style={{ display: 'inline-block', width: 'fit-content' }}>
+              <span className="whitespace-nowrap block">MORE THAN</span>
+              <span className="whitespace-nowrap block">JUST CODE</span>
             </GrainText>
           </h2>
-        </motion.div>
+        </Motion.div>
 
-        {/* 2-COLUMN GRID */}
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-24 items-center lg:items-start pt-8">
+        {/* 2-COLUMN GRID: Hero Image on Left, Beyond Code on Right */}
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-24 items-start">
           {/* LEFT COLUMN: Hero Image */}
           <div className="w-full flex justify-center lg:justify-start">
-            <motion.div
+            <Motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               whileTap={{ scale: 0.98 }}
@@ -90,12 +90,6 @@ const About = () => {
                   willChange: 'transform',
                 }}
               >
-                {/*
-                  WebP first, original PNG as fallback. Same pixels, same box:
-                  width/height still describe the original 1086x1448 aspect
-                  ratio, and object-cover means the rendered result is byte-for
-                  -byte identical in layout terms. 178KB -> 41KB.
-                */}
                 <picture>
                   <source srcSet={heroImgWebp} type="image/webp" />
                   <img
@@ -114,10 +108,10 @@ const About = () => {
                   style={{ backgroundColor: 'var(--color-ink)' }}
                 />
               </div>
-            </motion.div>
+            </Motion.div>
           </div>
 
-          {/* RIGHT COLUMN: Text content */}
+          {/* RIGHT COLUMN: Beyond Code Bio */}
           <div
             className="w-full flex flex-col gap-8 lg:pt-4 about-text-area relative"
             data-no-shader-action="true"
@@ -130,10 +124,11 @@ const About = () => {
                   'radial-gradient(ellipse 85% 75% at 45% 50%, color-mix(in srgb, var(--color-paper) 85%, transparent) 0%, color-mix(in srgb, var(--color-paper) 45%, transparent) 65%, transparent 100%)',
               }}
             />
+
             {/* Beyond Code (Description) */}
             <div>
-              <motion.h3
-                className="text-3xl sm:text-4xl mb-8 font-black uppercase tracking-tight"
+              <Motion.h3
+                className="text-3xl sm:text-4xl mb-6 font-black uppercase tracking-tight"
                 style={{
                   fontFamily: 'var(--font-heading)',
                   color: 'var(--color-ink)',
@@ -144,9 +139,9 @@ const About = () => {
                 transition={{ duration: 0.5 }}
               >
                 Beyond Code
-              </motion.h3>
+              </Motion.h3>
 
-              <motion.div
+              <Motion.div
                 className="space-y-6 lg:space-y-8"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -187,7 +182,7 @@ const About = () => {
                   my technical skills, adaptability, and innovative mindset to a
                   forward-thinking engineering team.
                 </p>
-              </motion.div>
+              </Motion.div>
             </div>
           </div>
         </div>
@@ -197,4 +192,3 @@ const About = () => {
 };
 
 export default About;
-

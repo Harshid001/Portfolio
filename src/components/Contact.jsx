@@ -387,7 +387,7 @@ const Contact = () => {
           >
             <form
               onSubmit={handleSubmit}
-              className="p-6 sm:p-10 relative"
+              className="p-5 sm:p-8 md:p-10 relative"
               style={{
                 backgroundColor: 'var(--color-white)',
                 border: '2px solid var(--color-ink)',

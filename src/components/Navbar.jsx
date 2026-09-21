@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 import {
   motion,
@@ -17,6 +18,16 @@ const navLinks = [
   { name: "Experience", href: "#experience" },
 ];
 
+const mobileNavLinks = [
+  { name: "Home", href: "#home" },
+  { name: "About", href: "#about" },
+  { name: "Skills", href: "#skills" },
+  { name: "Projects", href: "#projects" },
+  { name: "Experience", href: "#experience" },
+  { name: "Achievements", href: "#achievements" },
+  { name: "Contact", href: "#contact" },
+];
+
 const HOME_LABEL = "<HS />";
 
 const Navbar = () => {
@@ -32,6 +43,40 @@ const Navbar = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [clickedLink, setClickedLink] = useState(null);
   const [isAtFooter, setIsAtFooter] = useState(false);
+  const [isPreviewMaximized, setIsPreviewMaximized] = useState(false);
+
+  useEffect(() => {
+    const handlePreviewMaximize = (e) => {
+      const isMax = !!(e.detail?.isMaximized ?? e.detail);
+      setIsPreviewMaximized(isMax);
+      if (isMax) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener("preview:maximize", handlePreviewMaximize);
+    return () => {
+      window.removeEventListener("preview:maximize", handlePreviewMaximize);
+    };
+  }, []);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+      const handleKeyDown = (e) => {
+        if (e.key === "Escape") {
+          setIsMobileMenuOpen(false);
+        }
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.body.style.overflow = "";
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [isMobileMenuOpen]);
 
   const [isDark, setIsDark] = useState(() => {
     if (typeof window !== "undefined") {
@@ -205,15 +250,20 @@ const Navbar = () => {
   };
 
   return (
-    <motion.nav
-      animate={{ y: isAtFooter ? "-100%" : 0 }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
+    <>
+      <motion.nav
+      animate={{
+        y: isAtFooter || isPreviewMaximized ? "-100%" : 0,
+        opacity: isPreviewMaximized ? 0 : 1,
+      }}
+      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
       className="fixed top-0 left-0 w-full z-50 flex items-center backdrop-blur-md"
       style={{
         height: "75px",
         backgroundColor:
           "color-mix(in srgb, var(--color-paper) 85%, transparent)",
         borderBottom: `${isScrolled ? "1px" : "0px"} solid var(--color-ink-3)`,
+        pointerEvents: isPreviewMaximized ? "none" : "auto",
       }}
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-full relative">
@@ -343,15 +393,15 @@ const Navbar = () => {
         </div>
 
         {/* RIGHT SECTION: ACTIONS */}
-        <div className="flex-1 flex justify-end items-center gap-6 sm:gap-8 translate-x-2 lg:translate-x-6">
-          <div className="hidden md:flex items-center gap-6 sm:gap-8">
+        <div className="flex-1 flex justify-end items-center gap-3 sm:gap-6 lg:gap-8 translate-x-2 lg:translate-x-6">
+          <div className="hidden xl:flex items-center gap-6 sm:gap-8">
             <a
               href="/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="btn-secondary h-[40px] flex items-center justify-center transition-transform hover:scale-[1.02]"
               style={{
-                padding: "0 32px",
+                padding: "0 28px",
                 fontFamily: "var(--font-body)",
                 fontWeight: 600,
                 fontSize: "13px",
@@ -365,7 +415,7 @@ const Navbar = () => {
               onClick={(e) => scrollTo(e, "#contact")}
               className="btn-primary h-[40px] flex items-center justify-center transition-transform hover:scale-[1.02]"
               style={{
-                padding: "0 32px",
+                padding: "0 28px",
                 fontFamily: "var(--font-body)",
                 fontWeight: 600,
                 fontSize: "13px",
@@ -381,7 +431,7 @@ const Navbar = () => {
             onClick={toggleTheme}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
-            className="w-[40px] h-[40px] rounded-full flex items-center justify-center border-2 transition-colors"
+            className="w-[40px] h-[40px] rounded-full flex items-center justify-center border-2 transition-colors shrink-0 cursor-pointer"
             style={{
               borderColor: "var(--color-ink)",
               backgroundColor: "var(--color-paper-2)",
@@ -402,98 +452,17 @@ const Navbar = () => {
             </motion.div>
           </motion.button>
 
-          {/* MOBILE HAMBURGER MENU */}
+          {/* MOBILE & TABLET HAMBURGER MENU (< 1024px) */}
           <button
-            className="w-10 h-10 flex md:hidden items-center justify-end text-3xl transition-transform active:scale-95"
+            className="w-10 h-10 flex lg:hidden items-center justify-center text-3xl transition-transform active:scale-95 shrink-0 cursor-pointer"
             style={{ color: "var(--color-ink)" }}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
           >
             {isMobileMenuOpen ? <HiX /> : <HiMenuAlt3 />}
           </button>
         </div>
       </div>
-
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ clipPath: "inset(0 0 100% 0)" }}
-            animate={{ clipPath: "inset(0 0 0% 0)" }}
-            exit={{ clipPath: "inset(0 0 100% 0)" }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="fixed inset-0 flex flex-col p-10 z-[100] md:hidden"
-            style={{ backgroundColor: "var(--color-ink)" }}
-          >
-            <div className="flex justify-end mb-12">
-              <button
-                className="text-4xl"
-                style={{ color: "var(--color-paper)" }}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <HiX />
-              </button>
-            </div>
-            <div className="flex flex-col gap-6">
-              {navLinks.map((link) => (
-                <motion.a
-                  key={link.name}
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  whileTap={{ scale: 0.9, x: 10 }}
-                  href={link.href}
-                  onClick={(e) => scrollTo(e, link.href)}
-                  className="text-4xl sm:text-5xl transition-all duration-100"
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    color:
-                      activeSection === link.href.slice(1)
-                        ? "var(--color-red)"
-                        : "var(--color-paper)",
-                    transform:
-                      clickedLink === link.href ? "scale(0.92)" : "scale(1)",
-                    opacity: clickedLink === link.href ? 0.8 : 1,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = "var(--color-red)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color =
-                      activeSection === link.href.slice(1)
-                        ? "var(--color-red)"
-                        : "var(--color-paper)";
-                  }}
-                >
-                  {link.name}
-                </motion.a>
-              ))}
-              <motion.a
-                initial={{ opacity: 0, x: -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                whileTap={{ scale: 0.9, x: 10 }}
-                href="/resume.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-4xl sm:text-5xl transition-colors mt-4"
-                style={{
-                  fontFamily: "var(--font-display)",
-                  color: "var(--color-ink)",
-                  WebkitTextStroke: "1px var(--color-paper)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = "var(--color-red)";
-                  e.currentTarget.style.WebkitTextStroke = "0px";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = "var(--color-ink)";
-                  e.currentTarget.style.WebkitTextStroke =
-                    "1px var(--color-paper)";
-                }}
-              >
-                RESUME
-              </motion.a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <style>{`
         .logo-link {
@@ -540,6 +509,199 @@ const Navbar = () => {
         }
       `}</style>
     </motion.nav>
+
+    {/* PORTALED FULLSCREEN MOBILE & TABLET DRAWER */}
+    {typeof document !== "undefined" &&
+      createPortal(
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              key="mobile-drawer"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="fixed inset-0 z-[9999] flex flex-col justify-between p-5 sm:p-7 md:p-8 overflow-y-auto lg:hidden"
+              style={{
+                backgroundColor: "var(--color-paper)",
+                color: "var(--color-ink)",
+              }}
+            >
+              {/* Top Drawer Header */}
+              <div
+                className="flex items-center justify-between pb-4 border-b-2 shrink-0"
+                style={{ borderColor: "var(--color-ink-3)" }}
+              >
+                <div
+                  className="flex items-center gap-2"
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "1.25rem",
+                    fontWeight: 700,
+                    color: "var(--color-ink)",
+                  }}
+                >
+                  &lt;HARSHID /&gt;
+                </div>
+
+                <div className="flex items-center gap-3">
+                  {/* Theme Toggle Button in Drawer */}
+                  <button
+                    onClick={toggleTheme}
+                    className="w-10 h-10 rounded-full flex items-center justify-center border-2 transition-transform active:scale-95 cursor-pointer"
+                    style={{
+                      borderColor: "var(--color-ink)",
+                      backgroundColor: "var(--color-paper-2)",
+                      color: "var(--color-ink)",
+                    }}
+                    aria-label="Toggle Dark Mode"
+                  >
+                    {isDark ? (
+                      <HiOutlineMoon size={20} strokeWidth={1.5} />
+                    ) : (
+                      <HiOutlineSun size={20} strokeWidth={1.5} />
+                    )}
+                  </button>
+
+                  {/* Close Drawer Button */}
+                  <button
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-10 h-10 flex items-center justify-center text-2xl border-2 transition-transform active:scale-95 cursor-pointer"
+                    style={{
+                      borderColor: "var(--color-ink)",
+                      backgroundColor: "var(--color-ink)",
+                      color: "var(--color-paper)",
+                    }}
+                    aria-label="Close menu"
+                  >
+                    <HiX />
+                  </button>
+                </div>
+              </div>
+
+              {/* Navigation Links */}
+              <div className="flex flex-col gap-2.5 sm:gap-3.5 py-3 sm:py-5 my-auto overflow-y-auto min-h-0">
+                {mobileNavLinks.map((link, idx) => {
+                  const isActive = activeSection === link.href.slice(1);
+                  return (
+                    <motion.a
+                      key={link.name}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.03 * idx, duration: 0.2 }}
+                      href={link.href}
+                      onClick={(e) => {
+                        setIsMobileMenuOpen(false);
+                        scrollTo(e, link.href);
+                      }}
+                      className="flex items-baseline gap-3 transition-transform active:translate-x-2 cursor-pointer w-fit"
+                    >
+                      <span
+                        className="text-xs font-mono opacity-50"
+                        style={{
+                          color: isActive
+                            ? "var(--color-red)"
+                            : "var(--color-ink-2)",
+                        }}
+                      >
+                        {String(idx + 1).padStart(2, "0")} //
+                      </span>
+                      <span
+                        className="text-2xl sm:text-3xl font-black uppercase tracking-tight transition-colors"
+                        style={{
+                          fontFamily: "var(--font-heading)",
+                          color: isActive
+                            ? "var(--color-red)"
+                            : "var(--color-ink)",
+                        }}
+                      >
+                        {link.name}
+                      </span>
+                      {isActive && (
+                        <span
+                          className="w-2 h-2 rounded-full mb-1"
+                          style={{ backgroundColor: "var(--color-red)" }}
+                        />
+                      )}
+                    </motion.a>
+                  );
+                })}
+              </div>
+
+              {/* Bottom Actions & Socials */}
+              <div
+                className="flex flex-col gap-3 pt-4 border-t-2 shrink-0"
+                style={{ borderColor: "var(--color-ink-3)" }}
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <a
+                    href="/resume.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-secondary h-[42px] sm:h-[46px] flex items-center justify-center font-bold text-xs sm:text-sm tracking-widest uppercase cursor-pointer"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    DOWNLOAD RESUME
+                  </a>
+                  <a
+                    href="#contact"
+                    onClick={(e) => {
+                      setIsMobileMenuOpen(false);
+                      scrollTo(e, "#contact");
+                    }}
+                    className="btn-primary h-[42px] sm:h-[46px] flex items-center justify-center font-bold text-xs sm:text-sm tracking-widest uppercase cursor-pointer"
+                  >
+                    CONTACT ME
+                  </a>
+                </div>
+
+                <div
+                  className="flex items-center justify-between text-xs font-mono pt-2"
+                  style={{ color: "var(--color-ink-2)" }}
+                >
+                  <a
+                    href="https://github.com/Harshid001"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:underline"
+                  >
+                    GITHUB
+                  </a>
+                  <span>•</span>
+                  <a
+                    href="https://www.linkedin.com/in/harshid-soni-441500385/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:underline"
+                  >
+                    LINKEDIN
+                  </a>
+                  <span>•</span>
+                  <a
+                    href="https://www.youtube.com/@Harshid001"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:underline"
+                  >
+                    YOUTUBE
+                  </a>
+                  <span>•</span>
+                  <a
+                    href="https://x.com/HarshidSoni2007"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:underline"
+                  >
+                    TWITTER
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+    </>
   );
 };
 

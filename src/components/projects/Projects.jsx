@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+// eslint-disable-next-line no-unused-vars
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import ProjectShowcase from './ProjectShowcase';
 import ProjectNavigation from './ProjectNavigation';
 import './projects.css';
@@ -117,16 +118,37 @@ const projects = [
 const Projects = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
 
   useEffect(() => {
-    if (isHovered) return;
+    if (isHovered || isMaximized) return;
 
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % projects.length);
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [isHovered]);
+  }, [isHovered, isMaximized]);
+
+  useEffect(() => {
+    if (isMaximized) {
+      document.body.classList.add('preview-maximized');
+      window.dispatchEvent(
+        new CustomEvent('preview:maximize', { detail: { isMaximized: true } }),
+      );
+    } else {
+      document.body.classList.remove('preview-maximized');
+      window.dispatchEvent(
+        new CustomEvent('preview:maximize', { detail: { isMaximized: false } }),
+      );
+    }
+    return () => {
+      document.body.classList.remove('preview-maximized');
+      window.dispatchEvent(
+        new CustomEvent('preview:maximize', { detail: { isMaximized: false } }),
+      );
+    };
+  }, [isMaximized]);
 
   const activeProject = projects[activeIndex];
   const activeCategory = activeProject?.category || 'APPLICATIONS';
@@ -138,7 +160,9 @@ const Projects = () => {
   return (
     <section
       id="projects"
-      className="py-16 lg:py-24 relative border-t-2"
+      className={`relative border-t-2 transition-all duration-500 ${
+        isMaximized ? 'py-2 sm:py-4' : 'py-16 lg:py-24'
+      }`}
       style={{
         backgroundColor: 'var(--color-paper-2)',
         borderColor: 'var(--color-ink)',
@@ -146,8 +170,18 @@ const Projects = () => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+      <div
+        className={`mx-auto transition-all duration-500 ease-out ${
+          isMaximized
+            ? 'w-full max-w-full px-1 sm:px-2 md:px-3'
+            : 'max-w-7xl px-4 sm:px-6 lg:px-8'
+        }`}
+      >
+        <div
+          className={`flex flex-col md:flex-row md:items-end justify-between transition-all duration-300 gap-6 ${
+            isMaximized ? 'mb-4' : 'mb-12'
+          }`}
+        >
           <div className="max-w-2xl">
             <span className="section-label mb-4 block">03 / PORTFOLIO</span>
             <h2
@@ -166,35 +200,96 @@ const Projects = () => {
           {activeCategory.toLowerCase()}: {activeProject?.title}
         </div>
 
-        <div
-          className="flex flex-col lg:flex-row gap-8 lg:gap-12"
-          id="project-showcase"
-          role="tabpanel"
-          aria-labelledby={`tab-${activeIndex}`}
-        >
-          {/* Mobile Navigation */}
-          <div className="lg:hidden w-full">
-            <ProjectNavigation
-              projects={projects}
-              activeIndex={activeIndex}
-              setActiveIndex={setActiveIndex}
-            />
+        <LayoutGroup id="featured-projects-layout">
+          <div
+            className="flex flex-col lg:flex-row gap-8 lg:gap-12 relative items-start"
+            id="project-showcase"
+            role="tabpanel"
+            aria-labelledby={`tab-${activeIndex}`}
+          >
+            {/* Mobile Navigation */}
+            <div className="lg:hidden w-full">
+              <ProjectNavigation
+                projects={projects}
+                activeIndex={activeIndex}
+                setActiveIndex={setActiveIndex}
+              />
+            </div>
+
+            {/* Left Showcase - 70% normally, or full width in-place when maximized */}
+            <motion.div
+              layout
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className={`w-full ${
+                isMaximized ? 'lg:w-full' : 'lg:w-[70%]'
+              }`}
+            >
+              <ProjectShowcase
+                project={activeProject}
+                index={localIndex}
+                isMaximized={isMaximized}
+                setIsMaximized={setIsMaximized}
+                onPrev={() =>
+                  setActiveIndex(
+                    (prev) => (prev - 1 + projects.length) % projects.length,
+                  )
+                }
+                onNext={() =>
+                  setActiveIndex((prev) => (prev + 1) % projects.length)
+                }
+              />
+            </motion.div>
+
+            {/* Desktop Navigation Rail - smoothly moves ASIDE to the right with fluid slide animation */}
+            <AnimatePresence mode="popLayout">
+              {!isMaximized && (
+                <motion.div
+                  key="desktop-project-nav"
+                  layout
+                  initial={{ opacity: 0, x: 40 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{
+                    opacity: 0,
+                    x: 90,
+                    transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
+                  }}
+                  transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                  className="hidden lg:block lg:w-[30%] shrink-0"
+                >
+                  <ProjectNavigation
+                    projects={projects}
+                    activeIndex={activeIndex}
+                    setActiveIndex={setActiveIndex}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
-          {/* Left Showcase - 70% */}
-          <div className="w-full lg:w-[70%]">
-            <ProjectShowcase project={activeProject} index={localIndex} />
-          </div>
-
-          {/* Desktop Navigation Rail - 30% */}
-          <div className="hidden lg:block lg:w-[30%]">
-            <ProjectNavigation
-              projects={projects}
-              activeIndex={activeIndex}
-              setActiveIndex={setActiveIndex}
-            />
-          </div>
-        </div>
+          {/* When maximized, keep navigation rail accessible right below the showcase in the same plane */}
+          <AnimatePresence>
+            {isMaximized && (
+              <motion.div
+                key="maximized-project-nav"
+                initial={{ opacity: 0, y: 30, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 20, scale: 0.98 }}
+                transition={{
+                  delay: 0.15,
+                  duration: 0.4,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="hidden lg:block w-full mt-8"
+              >
+                <ProjectNavigation
+                  projects={projects}
+                  activeIndex={activeIndex}
+                  setActiveIndex={setActiveIndex}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </LayoutGroup>
       </div>
     </section>
   );

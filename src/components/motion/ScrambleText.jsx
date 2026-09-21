@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 const GLYPHS = '!<>-_\\/[]{}=+*^?#01';
 
@@ -18,15 +18,16 @@ const ScrambleText = ({
   className,
   style,
 }) => {
-  const [display, setDisplay] = useState(reduced || !active ? text : '');
-  const frame = useRef(0);
+  const displayRef = useRef(null);
 
   useEffect(() => {
-    if (reduced) {
-      setDisplay(text);
+    const el = displayRef.current;
+    if (!el) return;
+
+    if (reduced || !active) {
+      el.textContent = text;
       return;
     }
-    if (!active) return;
 
     let raf = 0;
     let start = 0;
@@ -41,13 +42,12 @@ const ScrambleText = ({
         if (i < locked || text[i] === ' ') out += text[i];
         else out += GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
       }
-      setDisplay(out);
+      el.textContent = out;
 
       if (progress < 1) {
-        frame.current += 1;
         raf = requestAnimationFrame(tick);
       } else {
-        setDisplay(text);
+        el.textContent = text;
       }
     };
 
@@ -60,9 +60,10 @@ const ScrambleText = ({
       {/* Reserves the final width so the scramble cannot reflow its neighbours. */}
       <span aria-hidden style={{ visibility: 'hidden' }}>{text}</span>
       <span
+        ref={displayRef}
         style={{ position: 'absolute', left: 0, top: 0, whiteSpace: 'pre' }}
       >
-        {display}
+        {reduced || !active ? text : ''}
       </span>
     </span>
   );

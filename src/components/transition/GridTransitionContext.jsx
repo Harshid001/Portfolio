@@ -21,9 +21,12 @@ export const GridTransitionProvider = ({ children }) => {
     setTimeout(() => {
       const targetElement = document.querySelector(targetHref);
       if (targetElement) {
-        // Instant scroll
-        const top = targetElement.getBoundingClientRect().top + window.pageYOffset;
-        window.scrollTo({ top, left: 0, behavior: 'instant' });
+        if (window.__lenis) {
+          window.__lenis.scrollTo(targetElement, { immediate: true });
+        } else {
+          const top = targetElement.getBoundingClientRect().top + window.pageYOffset;
+          window.scrollTo({ top, left: 0, behavior: 'instant' });
+        }
       }
       
       // 500-800ms: Next section fades in

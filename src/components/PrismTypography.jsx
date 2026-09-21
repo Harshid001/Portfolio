@@ -28,8 +28,9 @@ const PrismTypography = ({ text = '<HS/>' }) => {
     /* ================================================================== *
      * Parameters
      * ================================================================== */
+    const targetDensity = 3400;
     const params = {
-      text: text, density: 3200, size: 1.25, thickness: 0.09, depth: 3.2,
+      text: text, density: targetDensity, size: 1.25, thickness: 0.09, depth: 3.2,
       material: 'iridescent', bloom: 0.72, idle: 1.0, cameraDrift: true
     };
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -58,7 +59,7 @@ const PrismTypography = ({ text = '<HS/>' }) => {
       powerPreference: 'high-performance',
       stencil: false,
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setClearColor(0x000000, 0);
     let currentDark = document.documentElement.classList.contains('dark');
@@ -89,7 +90,9 @@ const PrismTypography = ({ text = '<HS/>' }) => {
     scene.add(key, fill, rim, new THREE.AmbientLight(currentDark ? 0x5a6e9e : 0x8898b0, currentDark ? 1.2 : 1.0));
 
     const sculpture = new THREE.Group();
-    sculpture.position.x = 5;   // shift model to the right
+    const isNarrow = window.innerWidth < 1024;
+    sculpture.position.x = isNarrow ? 0 : 5;
+    sculpture.position.y = isNarrow ? 0.5 : 0;
     scene.add(sculpture);
 
     /* ================================================================== *
@@ -194,9 +197,15 @@ const PrismTypography = ({ text = '<HS/>' }) => {
       shuffle(edgeCells); shuffle(inner);
 
       const target = params.density;
-      const chosen = edgeCells.slice(0, Math.min(edgeCells.length, Math.round(target*0.55)));
-      chosen.push(...inner.slice(0, Math.max(0, target - chosen.length)));
-      while (chosen.length < target && field.cells.length) chosen.push(field.cells[Math.random()*field.cells.length|0]);
+      // Ensure all edge perimeter cells are included so typography contours are 100% sharp
+      const chosen = [...edgeCells];
+      // Add all available inner cells up to the target density
+      const innerToTake = Math.min(inner.length, Math.max(0, target - chosen.length));
+      chosen.push(...inner.slice(0, innerToTake));
+      // Top up with random field cells so depth and volume are fully populated
+      while (chosen.length < target && field.cells.length) {
+        chosen.push(field.cells[Math.random() * field.cells.length | 0]);
+      }
       N = chosen.length;
 
       if (!geo || geoThickness !== params.thickness){
@@ -290,7 +299,7 @@ const PrismTypography = ({ text = '<HS/>' }) => {
     /* ------------------------------------------------------------------ *
      * Free-floating orbiters
      * ------------------------------------------------------------------ */
-    let orbiters = null, ORB = 40, orbData = null;
+    let orbiters = null, ORB = 16, orbData = null;
     function buildOrbiters(){
       if (orbiters){ scene.remove(orbiters); orbiters.dispose(); }
       orbiters = new THREE.InstancedMesh(geo, mat, ORB);
@@ -405,8 +414,6 @@ const PrismTypography = ({ text = '<HS/>' }) => {
     // Target rotation for smooth mouse-follow tilt
     let targetRotX = 0, targetRotY = 0;
     let currentRotX = 0, currentRotY = 0;
-    // Whether the pointer is inside the container
-    let pointerInside = false;
 
     const onPointerMove = e => {
       const rect = container.getBoundingClientRect();
@@ -414,13 +421,11 @@ const PrismTypography = ({ text = '<HS/>' }) => {
       const clientY = e.clientY - rect.top;
       mouseX = (clientX / rect.width) * 2 - 1;
       mouseY = -(clientY / rect.height) * 2 + 1;
-      pointerInside = true;
       // Map mouse → sculpture tilt angles (radians)
       targetRotY =  mouseX * 0.32;   // left–right tilt
       targetRotX = -mouseY * 0.18;   // up–down tilt
     };
     const onPointerLeave = () => {
-      pointerInside = false;
       targetRotX = 0;
       targetRotY = 0;
     };
@@ -489,7 +494,7 @@ const PrismTypography = ({ text = '<HS/>' }) => {
       sculpture.rotation.y = currentRotY;
     }
 
-    function updateInstances(t, dt){
+    function updateInstances(t){
       if (!mesh || !A) return;
       const idle = reduceMotion ? 0 : params.idle;
       const seq  = seqTime();
@@ -617,18 +622,24 @@ const PrismTypography = ({ text = '<HS/>' }) => {
     let rAFId = null;
     let isVisible = true;
     const globalClock = new THREE.Clock();
+    let lastRenderTime = 0;
+    const FRAME_INTERVAL = 1000 / 38; // ~38fps budget for expensive bloom composer
 
-    function renderLoop(){
-      // A3: park the loop entirely when the hero is scrolled out of view.
+    function renderLoop(currentTime = 0){
+      // Park the loop entirely when the hero is scrolled out of view
       if (!isVisible) { rAFId = null; return; }
       rAFId = requestAnimationFrame(renderLoop);
-      const dt = globalClock.getDelta();
+
+      if (currentTime - lastRenderTime < FRAME_INTERVAL) return;
+      lastRenderTime = currentTime;
+
+      globalClock.getDelta();
       const t = globalClock.elapsedTime;
 
       updateCamera(t);
       updateLights(t);
       updateSculptureTilt();
-      updateInstances(t, dt);
+      updateInstances(t);
       updateOrbiters(t);
 
       composer.render();
@@ -642,6 +653,9 @@ const PrismTypography = ({ text = '<HS/>' }) => {
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
       composer.setSize(w, h);
+      const isNarrow = window.innerWidth < 1024;
+      sculpture.position.x = isNarrow ? 0 : 5;
+      sculpture.position.y = isNarrow ? 0.5 : 0;
     };
     window.addEventListener('resize', handleResize);
 

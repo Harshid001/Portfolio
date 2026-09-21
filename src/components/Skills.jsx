@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaReact, FaNodeJs } from 'react-icons/fa';
 import { DiJavascript1, DiMongodb } from 'react-icons/di';
@@ -67,6 +68,7 @@ const skills = [
 ];
 
 const SkillItem = ({ skill }) => {
+  const [isFlipped, setIsFlipped] = useState(false);
   const Icon = skill.icon;
   return (
     <motion.div
@@ -74,12 +76,15 @@ const SkillItem = ({ skill }) => {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
-      className="group relative z-10 hover:z-20 focus:z-20 outline-none cursor-pointer"
+      onClick={() => setIsFlipped((prev) => !prev)}
+      className="group relative z-10 hover:z-20 focus:z-20 outline-none cursor-pointer select-none"
       style={{ height: '240px' }}
     >
       {/* Static Brutalist Shadow */}
       <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        className={`absolute inset-0 transition-opacity duration-500 pointer-events-none ${
+          isFlipped ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+        }`}
         style={{
           backgroundColor: 'var(--color-ink)',
           transform: 'translate(6px, 6px)',
@@ -87,7 +92,13 @@ const SkillItem = ({ skill }) => {
       />
 
       <div className="absolute inset-0 w-full h-full [perspective:1000px] transition-transform duration-500 group-hover:-translate-y-1 group-focus:-translate-y-1">
-        <div className="relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateX(180deg)] group-focus:[transform:rotateX(180deg)]">
+        <div
+          className={`relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] ${
+            isFlipped
+              ? '[transform:rotateX(180deg)]'
+              : 'group-hover:[transform:rotateX(180deg)] group-focus:[transform:rotateX(180deg)]'
+          }`}
+        >
           {/* Front Face */}
           <div
             className="absolute inset-0 flex flex-col gap-4 p-5 border-2 bg-[var(--color-paper-2)] [backface-visibility:hidden] [-webkit-backface-visibility:hidden] [transform:rotateX(0deg)]"

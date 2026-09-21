@@ -1,4 +1,5 @@
 import { useState, lazy, Suspense } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion } from 'framer-motion';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -8,8 +9,6 @@ import { GridTransitionProvider } from './components/transition/GridTransitionCo
 import GridOverlay from './components/transition/GridOverlay';
 import GhostCursor from './components/GhostCursor';
 
-// The intro plays once and is then thrown away, so it should never sit inside
-// the main bundle. Splitting it lets the browser parse the actual page sooner.
 const IntroAnimation = lazy(() => import('./components/IntroAnimation'));
 
 function App() {
@@ -17,13 +16,6 @@ function App() {
 
   return (
     <>
-      {/*
-        Mounted from the very first frame, including during the intro.
-        Previously it only mounted after the intro finished, so the cursor had
-        to boot up mid-interaction — that was the "slight delay" on entry.
-        The intro's skip button is a normal button, so it picks up the cursor's
-        hover state for free.
-      */}
       <GhostCursor />
 
       <AnimatePresence>
@@ -49,8 +41,6 @@ function App() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
               className="w-full"
-              // Drop the compositing layer once the entrance finishes so the
-              // whole page isn't permanently promoted to its own GPU texture.
               onAnimationComplete={(e) => {
                 if (e?.currentTarget) e.currentTarget.style.willChange = 'auto';
               }}
