@@ -148,10 +148,10 @@ const GhostCursor = () => {
         trail[i].y += (trail[i - 1].y - trail[i].y) * 0.3;
       }
 
-      // Reactivity on interactive elements: the diamond opens up into a larger
-      // hollow outline (see `.gc-ring.is-hover` in index.css) and punches back
+      // Reactivity on interactive elements: the diamond opens up into a slightly
+      // larger hollow outline (see `.gc-ring.is-hover` in index.css) and punches back
       // in on click.
-      const scale = clicking ? 0.68 : hovering ? 1.7 : 1;
+      const scale = clicking ? 0.68 : hovering ? 1.08 : 1;
       // A little extra rotation on hover makes the state change feel alive
       // rather than like a plain resize.
       const spin = hovering ? 135 : 45;

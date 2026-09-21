@@ -1,4 +1,4 @@
-﻿import React, { useLayoutEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './Experience.css';
@@ -134,14 +134,23 @@ const Experience = () => {
         />
       </div>
 
+      {/* Subtle readability backdrop over dynamic shader */}
+      <div
+        className="absolute inset-0 pointer-events-none z-10"
+        style={{
+          background: `
+            radial-gradient(ellipse 75% 65% at 50% 50%, color-mix(in srgb, var(--color-paper) 80%, transparent) 0%, color-mix(in srgb, var(--color-paper) 45%, transparent) 100%)
+          `,
+        }}
+      />
+
       <div className="max-w-7xl w-full mx-auto px-6 sm:px-12 lg:px-20 relative z-20">
         <div className="mb-12 md:mb-20 flex flex-col items-start">
           <span
             className="exp-breadcrumb section-label mb-4 block"
             style={{ 
               letterSpacing: '0.2em',
-              color: '#fff',
-              mixBlendMode: 'difference' 
+              color: 'var(--color-ink)',
             }}
           >
             04 / MY JOURNEY
@@ -152,8 +161,7 @@ const Experience = () => {
               fontSize: 'clamp(36px, 8vw, 80px)',
               lineHeight: 0.9,
               letterSpacing: '-0.02em',
-              color: '#fff',
-              mixBlendMode: 'difference',
+              color: 'var(--color-ink)',
             }}
           >
             EXPERIENCE
@@ -165,10 +173,9 @@ const Experience = () => {
           <p
             className="exp-paragraph"
             style={{
-              color: '#fff',
-              mixBlendMode: 'difference',
+              color: 'var(--color-ink)',
               fontSize: 'clamp(20px, 3vw, 32px)',
-              fontWeight: 300,
+              fontWeight: 400,
               lineHeight: 1.6,
             }}
           >

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
@@ -10,6 +10,9 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
 const PrismTypography = ({ text = '<HS/>' }) => {
   const containerRef = useRef(null);
+  const [isDark, setIsDark] = useState(() =>
+    typeof document !== 'undefined' ? document.documentElement.classList.contains('dark') : true
+  );
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -58,8 +61,10 @@ const PrismTypography = ({ text = '<HS/>' }) => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setClearColor(0x000000, 0);
+    let currentDark = document.documentElement.classList.contains('dark');
+
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
+    renderer.toneMappingExposure = currentDark ? 1.35 : 1.05;
 
     const scene = new THREE.Scene();
 
@@ -76,11 +81,12 @@ const PrismTypography = ({ text = '<HS/>' }) => {
 
     const pmrem = new THREE.PMREMGenerator(renderer);
     scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+    scene.environmentIntensity = currentDark ? 1.6 : 1.1;
 
-    const key  = new THREE.DirectionalLight(0xffffff, 2.6); key.position.set(-8, 10, 14);
-    const fill = new THREE.DirectionalLight(0x6fa8ff, 1.9); fill.position.set(14, -6, 8);
-    const rim  = new THREE.DirectionalLight(0xff9ad8, 1.4); rim.position.set(2, 4, -16);
-    scene.add(key, fill, rim, new THREE.AmbientLight(0x2b3350, 0.7));
+    const key  = new THREE.DirectionalLight(0xffffff, currentDark ? 3.2 : 2.8); key.position.set(-8, 10, 14);
+    const fill = new THREE.DirectionalLight(0x8bc0ff, currentDark ? 2.4 : 1.8); fill.position.set(14, -6, 8);
+    const rim  = new THREE.DirectionalLight(0xffb2e6, currentDark ? 1.8 : 1.4); rim.position.set(2, 4, -16);
+    scene.add(key, fill, rim, new THREE.AmbientLight(currentDark ? 0x5a6e9e : 0x8898b0, currentDark ? 1.2 : 1.0));
 
     const sculpture = new THREE.Group();
     sculpture.position.x = 5;   // shift model to the right
@@ -122,13 +128,13 @@ const PrismTypography = ({ text = '<HS/>' }) => {
     }
 
     function buildMaterial(kind){
-      const base = { metalness:1.0, envMapIntensity:2.0, vertexColors:true, side:THREE.DoubleSide };
+      const base = { metalness:0.78, envMapIntensity:2.4, vertexColors:true, side:THREE.DoubleSide };
       if (kind === 'chrome')
         return new THREE.MeshPhysicalMaterial({ ...base, color:0xffffff, roughness:0.06, clearcoat:1, clearcoatRoughness:0.04 });
       if (kind === 'titanium')
         return new THREE.MeshPhysicalMaterial({ ...base, color:0xc3bcb1, roughness:0.30, envMapIntensity:1.5 });
       return new THREE.MeshPhysicalMaterial({
-        ...base, color:0xffffff, roughness:0.11, clearcoat:1, clearcoatRoughness:0.06,
+        ...base, color:0xffffff, roughness:0.12, clearcoat:1, clearcoatRoughness:0.06,
         iridescence:1, iridescenceIOR:1.9, iridescenceThicknessRange:[120,780]
       });
     }
@@ -269,8 +275,9 @@ const PrismTypography = ({ text = '<HS/>' }) => {
         A.spin[i] = rnd(0.03, 0.22) * (Math.random() < 0.5 ? -1 : 1);
 
         const hue = 0.56 + (hx/WORLD_W)*0.16 + rnd(-0.03, 0.03);
-        const sat = params.material === 'titanium' ? 0.05 : 0.13;
-        col.setHSL(((hue%1)+1)%1, sat, 0.72 + Math.random()*0.2);
+        const sat = currentDark ? (params.material === 'titanium' ? 0.05 : 0.13) : 0.06;
+        const lightness = currentDark ? (0.72 + Math.random()*0.2) : (0.13 + Math.random()*0.14);
+        col.setHSL(((hue%1)+1)%1, sat, lightness);
         mesh.setColorAt(i, col);
         A.base[i*3] = col.r; A.base[i*3+1] = col.g; A.base[i*3+2] = col.b;
       }
@@ -299,7 +306,8 @@ const PrismTypography = ({ text = '<HS/>' }) => {
           s: rnd(0.30, 0.95), spin: rnd(0.15, 0.7),
           ax: new THREE.Vector3(rnd(-1,1), rnd(-1,1), rnd(-1,1)).normalize()
         });
-        col.setHSL(0.58 + rnd(-0.05,0.08), 0.16, 0.78);
+        const orbLightness = currentDark ? 0.78 : 0.22;
+        col.setHSL(0.58 + rnd(-0.05,0.08), currentDark ? 0.16 : 0.08, orbLightness);
         orbiters.setColorAt(i, col);
       }
       orbiters.instanceColor.needsUpdate = true;
@@ -311,6 +319,14 @@ const PrismTypography = ({ text = '<HS/>' }) => {
      * ------------------------------------------------------------------ */
     const dustGroup = new THREE.Group();
     scene.add(dustGroup);
+    const dustMat = new THREE.PointsMaterial({
+      size: 0.075,
+      color: currentDark ? 0x9fc0ff : 0x4a4640,
+      transparent: true,
+      opacity: currentDark ? 0.5 : 0.18,
+      blending: currentDark ? THREE.AdditiveBlending : THREE.NormalBlending,
+      depthWrite: false
+    });
     {
       const M = 1100, pos = new Float32Array(M*3);
       for (let i = 0; i < M; i++){
@@ -320,10 +336,7 @@ const PrismTypography = ({ text = '<HS/>' }) => {
       }
       const g = new THREE.BufferGeometry();
       g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-      const dust = new THREE.Points(g, new THREE.PointsMaterial({
-        size:0.075, color:0x9fc0ff, transparent:true, opacity:0.5,
-        blending:THREE.AdditiveBlending, depthWrite:false
-      }));
+      const dust = new THREE.Points(g, dustMat);
       dustGroup.add(dust);
     }
 
@@ -332,9 +345,47 @@ const PrismTypography = ({ text = '<HS/>' }) => {
      * ================================================================== */
     const composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
-    const bloom = new UnrealBloomPass(new THREE.Vector2(container.clientWidth, container.clientHeight), params.bloom, 0.62, 0.72);
+    const bloom = new UnrealBloomPass(new THREE.Vector2(container.clientWidth, container.clientHeight), currentDark ? params.bloom : 0.12, 0.62, 0.72);
     composer.addPass(bloom);
     composer.addPass(new OutputPass());
+
+    function updateTheme(dark) {
+      if (mesh && A) {
+        for (let i = 0; i < N; i++) {
+          const hx = A.home[i * 3];
+          const hue = 0.56 + (hx / WORLD_W) * 0.16 + rnd(-0.03, 0.03);
+          const sat = dark ? (params.material === 'titanium' ? 0.05 : 0.13) : 0.06;
+          const lightness = dark ? (0.72 + Math.random() * 0.2) : (0.13 + Math.random() * 0.14);
+          col.setHSL(((hue % 1) + 1) % 1, sat, lightness);
+          A.base[i * 3] = col.r;
+          A.base[i * 3 + 1] = col.g;
+          A.base[i * 3 + 2] = col.b;
+        }
+        mesh.instanceColor.needsUpdate = true;
+      }
+
+      if (orbiters && orbData) {
+        for (let i = 0; i < ORB; i++) {
+          const orbLightness = dark ? 0.78 : 0.22;
+          col.setHSL(0.58 + rnd(-0.05, 0.08), dark ? 0.16 : 0.08, orbLightness);
+          orbiters.setColorAt(i, col);
+        }
+        orbiters.instanceColor.needsUpdate = true;
+      }
+
+      dustMat.color.setHex(dark ? 0x9fc0ff : 0x4a4640);
+      dustMat.opacity = dark ? 0.5 : 0.18;
+      dustMat.blending = dark ? THREE.AdditiveBlending : THREE.NormalBlending;
+      dustMat.needsUpdate = true;
+
+      bloom.strength = dark ? params.bloom : 0.12;
+      renderer.toneMappingExposure = dark ? 1.35 : 1.05;
+      scene.environmentIntensity = dark ? 1.6 : 1.1;
+
+      key.intensity = dark ? 3.2 : 2.8;
+      fill.intensity = dark ? 2.4 : 1.8;
+      rim.intensity = dark ? 1.8 : 1.4;
+    }
 
     /* ================================================================== *
      * Sequence control
@@ -612,6 +663,16 @@ const PrismTypography = ({ text = '<HS/>' }) => {
     );
     visObserver.observe(container);
 
+    const themeObserver = new MutationObserver(() => {
+      const nextDark = document.documentElement.classList.contains('dark');
+      if (nextDark !== currentDark) {
+        currentDark = nextDark;
+        setIsDark(nextDark);
+        updateTheme(nextDark);
+      }
+    });
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
     build(true);
     buildOrbiters();
     renderLoop();
@@ -619,6 +680,7 @@ const PrismTypography = ({ text = '<HS/>' }) => {
     return () => {
       cancelAnimationFrame(rAFId);
       visObserver.disconnect();
+      themeObserver.disconnect();
       window.removeEventListener('resize', handleResize);
       container.removeEventListener('pointermove', onPointerMove);
       container.removeEventListener('pointerleave', onPointerLeave);
@@ -640,14 +702,23 @@ const PrismTypography = ({ text = '<HS/>' }) => {
         background: 'transparent'
       }}
     >
-      <div className="absolute inset-0 z-0 pointer-events-none" style={{
-        background: `radial-gradient(ellipse 42% 34% at 50% 50%,
-          rgba(6,7,12,.90) 0%,
-          rgba(6,7,12,.72) 34%,
-          rgba(6,7,12,.34) 58%,
-          rgba(6,7,12,.10) 76%,
-          rgba(6,7,12,0) 92%)`
-      }} />
+      <div
+        className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-500"
+        style={{
+          background: isDark
+            ? `
+              radial-gradient(ellipse 68% 54% at 56% 48%,
+                rgba(200, 225, 255, 0.22) 0%,
+                rgba(145, 185, 255, 0.14) 32%,
+                rgba(80, 115, 200, 0.05) 60%,
+                transparent 82%),
+              radial-gradient(ellipse 42% 34% at 56% 48%,
+                rgba(255, 255, 255, 0.16) 0%,
+                transparent 70%)
+            `
+            : 'none',
+        }}
+      />
     </div>
   );
 };

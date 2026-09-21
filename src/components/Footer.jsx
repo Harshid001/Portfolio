@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './Footer.css';
 
 const Footer = () => {
@@ -23,14 +23,14 @@ const Footer = () => {
 
     /* ---------- ticker: real content, slow ---------- */
     const feed = [
-      ['b', 'Letâ€™s build something'],
+      ['b', 'Let’s build something'],
       ['i', 'React 19 / Vite / Three.js / GLSL / Framer Motion'],
-      ['b', '2 slots left â€” Q3 2026'],
-      ['i', 'Last commit: particle-morph â€” cone spin atlas'],
+      ['b', '2 slots left — Q3 2026'],
+      ['i', 'Last commit: particle-morph — cone spin atlas'],
       ['b', 'Open to collaboration'],
-      ['i', 'Studio Kern Â· Northlane Â· Basil & Co Â· Meridian Labs'],
+      ['i', 'Studio Kern · Northlane · Basil & Co · Meridian Labs'],
       ['b', 'Frontend & WebGL'],
-      ['i', 'Avg. response 6h Â· Based in Gujarat, IN'],
+      ['i', 'Avg. response 6h · Based in Gujarat, IN'],
     ];
     const trEl = footer.querySelector('#tr');
     if (trEl) {

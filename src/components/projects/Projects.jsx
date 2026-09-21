@@ -4,7 +4,7 @@ import ProjectShowcase from './ProjectShowcase';
 import ProjectNavigation from './ProjectNavigation';
 import './projects.css';
 
-// â”€â”€ Project data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Project data ---------------------------------------------
 import studybuddyImg from '../../assets/studdy-buddy.png';
 import studybuddyImgWebp from '../../assets/studdy-buddy.webp';
 import pincodeImg from '../../assets/Pincode.png';

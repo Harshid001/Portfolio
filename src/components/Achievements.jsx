@@ -42,7 +42,7 @@ const hackathonStats = [
   { value: '5+', label: 'HACKATHONS ENTERED' },
   { value: '2', label: 'NATIONAL LEVEL' },
   { value: '48H', label: 'MAX SPRINT' },
-  { value: 'âˆž', label: 'LESSONS LEARNED' },
+  { value: '∞', label: 'LESSONS LEARNED' },
 ];
 
 const hackathonDetails = [
@@ -63,7 +63,7 @@ const hackathonDetails = [
 const hackathonHighlights = [
   {
     title: 'Rapid Prototyping',
-    body: 'Shipped full-stack apps in 24â€“48 hours under real competition pressure.',
+    body: 'Shipped full-stack apps in 24–48 hours under real competition pressure.',
   },
   {
     title: 'Team Collaboration',
@@ -629,7 +629,7 @@ const HackathonSection = () => {
                 transition={{ duration: 1, repeat: Infinity, times: [0, 0.5, 0.5, 1] }}
                 style={{ marginLeft: '2px' }}
               >
-                â–Œ
+                ▌
               </motion.span>
             )}
           </span>

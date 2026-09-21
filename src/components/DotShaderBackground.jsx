@@ -29,6 +29,8 @@ const DotMaterialImpl = shaderMaterial(
     rotation: 0,
     gridSize: 50,
     dotOpacity: 0.08,
+    headingBounds: new THREE.Vector4(0, 0, 0, 0),
+    textAreaBounds: new THREE.Vector4(0, 0, 0, 0),
   },
   `
     void main() {
@@ -45,6 +47,8 @@ const DotMaterialImpl = shaderMaterial(
     uniform float rotation;
     uniform float gridSize;
     uniform float dotOpacity;
+    uniform vec4 headingBounds;
+    uniform vec4 textAreaBounds;
 
     vec2 rotate(vec2 uv, float angle) {
       float s = sin(angle);
@@ -70,10 +74,23 @@ const DotMaterialImpl = shaderMaterial(
       vec2 gridUv = fract(rotatedUv * gridSize);
       vec2 gridUvCenterInScreenCoords = rotate((floor(rotatedUv * gridSize) + 0.5) / gridSize, -rotation);
 
-      float baseDot = sdfCircle(gridUv, 0.25);
-      
-      // Enhanced mouse influence — more lively cursor response
+      // Detect proximity to text areas (heading + description)
+      float inHeading = smoothstep(headingBounds.x - 0.04, headingBounds.x + 0.01, screenUv.x) *
+                        (1.0 - smoothstep(headingBounds.z - 0.01, headingBounds.z + 0.04, screenUv.x)) *
+                        smoothstep(headingBounds.y - 0.04, headingBounds.y + 0.01, screenUv.y) *
+                        (1.0 - smoothstep(headingBounds.w - 0.01, headingBounds.w + 0.04, screenUv.y));
+
+      float inTextArea = smoothstep(textAreaBounds.x - 0.04, textAreaBounds.x + 0.01, screenUv.x) *
+                         (1.0 - smoothstep(textAreaBounds.z - 0.01, textAreaBounds.z + 0.04, screenUv.x)) *
+                         smoothstep(textAreaBounds.y - 0.04, textAreaBounds.y + 0.01, screenUv.y) *
+                         (1.0 - smoothstep(textAreaBounds.w - 0.01, textAreaBounds.w + 0.04, screenUv.y));
+
+      float inText = clamp(max(inHeading, inTextArea), 0.0, 1.0);
+
+      // Enhanced mouse influence — suppressed inside and near text
       float mouseInfluence = texture2D(mouseTrail, gridUvCenterInScreenCoords).r;
+      mouseInfluence *= (1.0 - inText);
+
       float scaleInfluence = mouseInfluence * 0.9;
 
       float dotSize = 0.15; // fixed base size for uniform grid
@@ -83,8 +100,11 @@ const DotMaterialImpl = shaderMaterial(
       // Boosted opacity influence for dramatic cursor-following effect
       float opacityInfluence = mouseInfluence * 5.0;
 
-      // Make dots fully visible everywhere initially
-      vec3 composition = mix(bgColor, dotColor, smoothDot * dotOpacity * (1.0 + opacityInfluence));
+      // Gracefully fade the dots behind the text (85% reduction) so text reads clearly
+      float textFade = mix(1.0, 0.15, inText);
+      float effectiveDotOpacity = dotOpacity * textFade;
+
+      vec3 composition = mix(bgColor, dotColor, smoothDot * effectiveDotOpacity * (1.0 + opacityInfluence));
       gl_FragColor = vec4(composition, 1.0);
       #include <tonemapping_fragment>
       #include <colorspace_fragment>
@@ -113,8 +133,8 @@ function Scene() {
 
   const [trail, onMove] = useTrailTexture({
     size: 512,
-    radius: 0.25, // Increased radius to make it more responsive and visible
-    maxAge: 400, // Make trail last a bit longer
+    radius: 0.16, // Tighter radius to prevent unwanted spillover
+    maxAge: 350,
     interpolate: 1,
     ease: easeInOutCirc,
   });
@@ -178,8 +198,31 @@ function Scene() {
         width: r.width || 1,
         height: r.height || 1,
       };
+
+      const headingEl = el.querySelector(".about-heading-area");
+      if (headingEl && materialRef.current?.uniforms?.headingBounds) {
+        const headR = headingEl.getBoundingClientRect();
+        const minX = Math.max(0, (headR.left - r.left) / r.width);
+        const maxX = Math.min(1, (headR.right - r.left) / r.width);
+        const minY = Math.max(0, 1.0 - (headR.bottom - r.top) / r.height);
+        const maxY = Math.min(1, 1.0 - (headR.top - r.top) / r.height);
+        materialRef.current.uniforms.headingBounds.value.set(minX, minY, maxX, maxY);
+      }
+
+      const textAreaEl = el.querySelector(".about-text-area");
+      if (textAreaEl && materialRef.current?.uniforms?.textAreaBounds) {
+        const textR = textAreaEl.getBoundingClientRect();
+        const minX = Math.max(0, (textR.left - r.left) / r.width);
+        const maxX = Math.min(1, (textR.right - r.left) / r.width);
+        const minY = Math.max(0, 1.0 - (textR.bottom - r.top) / r.height);
+        const maxY = Math.min(1, 1.0 - (textR.top - r.top) / r.height);
+        materialRef.current.uniforms.textAreaBounds.value.set(minX, minY, maxX, maxY);
+      }
     };
     measure();
+    const t1 = setTimeout(measure, 100);
+    const t2 = setTimeout(measure, 350);
+    const t3 = setTimeout(measure, 800);
 
     let resizeTimer = null;
     const scheduleMeasure = () => {
@@ -191,6 +234,11 @@ function Scene() {
     ro.observe(el);
 
     const handleMove = (e) => {
+      // The noise / ripple animation action should not be performed in the text areas
+      if (e.target?.closest?.('.about-text-area, .about-heading-area, [data-no-shader-action]')) {
+        return;
+      }
+
       if (!ticking) {
         const touch = e.touches && e.touches.length > 0 ? e.touches[0] : e;
         const clientX = touch.clientX;
@@ -214,6 +262,9 @@ function Scene() {
     el.addEventListener("touchstart", handleMove, { passive: true });
 
     return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
       if (resizeTimer) clearTimeout(resizeTimer);
       window.removeEventListener("resize", scheduleMeasure);
       ro.disconnect();

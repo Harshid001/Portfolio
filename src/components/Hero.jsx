@@ -1,6 +1,8 @@
-﻿import { lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
-import { FaGithub, FaLinkedin, FaYoutube, FaTwitter, FaCode } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaYoutube, FaTwitter } from 'react-icons/fa';
+import { useTheme } from '../hooks/useTheme';
+import HeroBrightShowcase from './HeroBrightShowcase';
 
 // Both of these pull in `three`. Keeping them lazy means the hero text and
 // buttons are interactive long before the WebGL bundle finishes downloading.
@@ -26,34 +28,46 @@ const textSlam = {
 };
 
 const Hero = () => {
-  // The blinking caret used to be a 500ms setInterval driving React state,
-  // which re-rendered the entire hero (WebGL widget included) twice a second
-  // forever. It is now a pure CSS animation that runs off the main thread.
+  const { isDark } = useTheme();
+
   return (
     <section
       id="home"
       className="relative min-h-screen flex items-center pt-16 overflow-hidden"
     >
-      {/* 3D TYPOGRAPHY MODEL (FULL SCREEN) */}
-      <div className="absolute inset-0 z-0 pointer-events-auto">
-        <Suspense fallback={null}>
-          <PrismTypography text="<HS/>" />
-        </Suspense>
-      </div>
+      {/* Dark Theme Ambient Glow & 3D WebGL Model */}
+      {isDark && (
+        <>
+          <div
+            className="absolute inset-0 z-0 pointer-events-none"
+            style={{
+              background: `
+                radial-gradient(ellipse 75% 60% at 60% 48%, rgba(200, 225, 255, 0.14) 0%, rgba(130, 170, 245, 0.07) 40%, transparent 75%),
+                radial-gradient(ellipse 45% 40% at 58% 46%, rgba(255, 255, 255, 0.10) 0%, transparent 70%)
+              `,
+            }}
+          />
 
-      {/* Semi-transparent overlay for text legibility */}
-      <div
-        className="absolute inset-0 z-[1] pointer-events-none"
-        style={{
-          background: `
-              radial-gradient(ellipse at 30% 50%, color-mix(in srgb, var(--color-paper) 55%, transparent) 0%, transparent 60%),
-              linear-gradient(90deg, color-mix(in srgb, var(--color-paper) 50%, transparent) 0%, color-mix(in srgb, var(--color-paper) 15%, transparent) 50%, transparent 70%)
-            `,
-        }}
-      />
+          <div className="absolute inset-0 z-0 pointer-events-auto">
+            <Suspense fallback={null}>
+              <PrismTypography text="<HS/>" />
+            </Suspense>
+          </div>
+
+          <div
+            className="absolute inset-0 z-[1] pointer-events-none"
+            style={{
+              background: `
+                radial-gradient(ellipse at 25% 50%, color-mix(in srgb, var(--color-paper) 50%, transparent) 0%, transparent 60%),
+                linear-gradient(90deg, color-mix(in srgb, var(--color-paper) 45%, transparent) 0%, color-mix(in srgb, var(--color-paper) 10%, transparent) 45%, transparent 65%)
+              `,
+            }}
+          />
+        </>
+      )}
 
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 hero-two-col">
-        {/* LEFT COLUMN â€” TEXT CONTENT */}
+        {/* LEFT COLUMN — TEXT CONTENT */}
         <motion.div
           variants={staggerContainer}
           initial="hidden"
@@ -226,11 +240,14 @@ const Hero = () => {
           </motion.div>
         </motion.div>
 
-        {/* RIGHT COLUMN â€” NOW EMPTY TO ALLOW MODEL TO SHINE THROUGH */}
+        {/* RIGHT COLUMN — SHOWCASE FOR BRIGHT THEME / TRANSPARENT FOR DARK 3D */}
         <motion.div
           variants={fadeUp}
-          className="hero-right flex items-center justify-center relative w-full lg:w-auto h-[400px] lg:h-[500px] xl:h-[600px] mt-12 lg:mt-0 pointer-events-none"
+          className={`hero-right flex items-center justify-center relative w-full lg:w-auto min-h-[380px] lg:h-[500px] xl:h-[600px] mt-8 lg:mt-0 ${
+            isDark ? 'pointer-events-none' : 'pointer-events-auto'
+          }`}
         >
+          {!isDark && <HeroBrightShowcase />}
         </motion.div>
       </div>
 

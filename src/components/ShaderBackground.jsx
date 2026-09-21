@@ -33,6 +33,7 @@ export default function ShaderBackground() {
       uniform float hoverStrength;
       uniform vec3 uBgColor;
       uniform vec3 uRayColor;
+      uniform float uRayAlpha;
 
       void main(void) {
         vec2 uv = (gl_FragCoord.xy * 2.0 - resolution.xy) / min(resolution.x, resolution.y);
@@ -68,7 +69,7 @@ export default function ShaderBackground() {
         float brightness = (darkTint.r + darkTint.g + darkTint.b) / 3.0;
 
         float rayIntensity = smoothstep(0.0, 0.12, brightness);
-        vec3 finalColor = mix(uBgColor, uRayColor, rayIntensity * 0.85);
+        vec3 finalColor = mix(uBgColor, uRayColor, rayIntensity * uRayAlpha);
 
         gl_FragColor = vec4(finalColor, 1.0);
       }
@@ -85,7 +86,8 @@ export default function ShaderBackground() {
       mouse: { value: new THREE.Vector2(0.5, 0.5) },
       hoverStrength: { value: 0.0 },
       uBgColor: { value: new THREE.Color('#f5f2ed') },
-      uRayColor: { value: new THREE.Color('#0d0d0d') },
+      uRayColor: { value: new THREE.Color('#dedad3') },
+      uRayAlpha: { value: 0.22 },
     };
 
     const material = new THREE.ShaderMaterial({
@@ -201,13 +203,15 @@ export default function ShaderBackground() {
     };
 
     const updateColors = () => {
+      const isDark = document.documentElement.classList.contains('dark');
       const rootStyle = getComputedStyle(document.documentElement);
       const paperColor =
         rootStyle.getPropertyValue('--color-paper').trim() || '#f5f2ed';
       const inkColor =
         rootStyle.getPropertyValue('--color-ink').trim() || '#0d0d0d';
       uniforms.uBgColor.value.set(paperColor);
-      uniforms.uRayColor.value.set(inkColor);
+      uniforms.uRayColor.value.set(isDark ? inkColor : '#dedad3');
+      uniforms.uRayAlpha.value = isDark ? 0.75 : 0.22;
     };
     updateColors();
 

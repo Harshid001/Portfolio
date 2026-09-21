@@ -35,29 +35,27 @@ const ProjectNavigation = ({ projects, activeIndex, setActiveIndex }) => {
         onClick={() => setActiveIndex(globalIndex)}
         onKeyDown={(e) => handleKeyDown(e, globalIndex)}
         whileTap={{ scale: 0.98 }}
-        className={`w-full flex shrink-0 justify-start items-start gap-4 px-4 py-3 lg:px-5 lg:py-4 transition-all duration-300 ${
-          isActive ? '' : 'hover:pl-5 lg:hover:pl-7'
+        className={`w-full flex shrink-0 justify-start items-start gap-4 px-4 py-3 lg:px-5 lg:py-4 transition-all duration-200 cursor-pointer ${
+          isActive
+            ? 'bg-[var(--color-ink)] text-[var(--color-paper)]'
+            : 'hover:bg-[var(--color-paper-3)] hover:pl-5 lg:hover:pl-6 text-[var(--color-ink)]'
         }`}
         style={{
-          backgroundColor: 'transparent',
-          color: 'var(--color-paper)',
           borderLeft: isActive
-            ? '4px solid var(--color-paper)'
+            ? '4px solid var(--color-red)'
             : '4px solid transparent',
           fontFamily: 'var(--font-heading)',
           textAlign: 'left',
-          borderTopColor: 'transparent',
-          borderRightColor: 'transparent',
-          borderBottomColor: 'transparent',
         }}
       >
         <div
-          className="mt-1"
+          className="mt-0.5"
           style={{
             fontFamily: 'var(--font-mono)',
             fontSize: isActive ? '14px' : '13px',
-            opacity: isActive ? 1 : 0.5,
-            transition: 'all 0.3s ease',
+            color: isActive ? 'var(--color-red)' : 'var(--color-ink-3)',
+            fontWeight: isActive ? 700 : 500,
+            transition: 'all 0.2s ease',
           }}
         >
           {isActive ? '►' : String(localIndex + 1).padStart(2, '0')}
@@ -65,13 +63,13 @@ const ProjectNavigation = ({ projects, activeIndex, setActiveIndex }) => {
         <div className="flex flex-col">
           <span
             style={{
-              fontWeight: isActive ? 700 : 500,
+              fontWeight: isActive ? 700 : 600,
               fontSize: isActive ? '16px' : '15px',
-              transition: 'all 0.3s ease',
-              color: 'var(--color-paper)',
+              transition: 'all 0.2s ease',
+              color: isActive ? 'var(--color-paper)' : 'var(--color-ink)',
               whiteSpace: 'normal',
               wordBreak: 'break-word',
-              opacity: isActive ? 1 : 0.7,
+              opacity: isActive ? 1 : 0.9,
             }}
           >
             {project.title}
@@ -81,8 +79,8 @@ const ProjectNavigation = ({ projects, activeIndex, setActiveIndex }) => {
             style={{
               fontFamily: 'var(--font-mono)',
               fontSize: '11px',
-              opacity: isActive ? 0.8 : 0.5,
-              color: 'var(--color-paper)',
+              opacity: isActive ? 0.85 : 0.65,
+              color: isActive ? 'var(--color-paper)' : 'var(--color-ink-2)',
             }}
           >
             {project.tech.slice(0, 3).join(' • ')}
@@ -93,11 +91,10 @@ const ProjectNavigation = ({ projects, activeIndex, setActiveIndex }) => {
   };
 
   return (
-    <div className="w-full flex flex-col h-full">
+    <div className="w-full flex flex-col h-full bg-[var(--color-paper-2)] border-2 border-[var(--color-ink)] shadow-[4px_4px_0px_var(--color-ink)]">
       {/* Category Tabs */}
       <div
-        className="flex mb-0"
-        style={{ borderBottom: '2px solid var(--color-ink)' }}
+        className="flex mb-0 border-b-2 border-[var(--color-ink)]"
         role="tablist"
         aria-label="Project Categories"
       >
@@ -105,7 +102,7 @@ const ProjectNavigation = ({ projects, activeIndex, setActiveIndex }) => {
           role="tab"
           aria-selected={activeTab === 'APPLICATIONS'}
           onClick={() => handleTabClick('APPLICATIONS')}
-          className="flex-1 py-3 text-center transition-colors"
+          className="flex-1 py-3 text-center transition-colors cursor-pointer"
           style={{
             fontFamily: 'var(--font-mono)',
             fontSize: '12px',
@@ -125,7 +122,7 @@ const ProjectNavigation = ({ projects, activeIndex, setActiveIndex }) => {
           role="tab"
           aria-selected={activeTab === 'WEBSITES'}
           onClick={() => handleTabClick('WEBSITES')}
-          className="flex-1 py-3 text-center transition-colors"
+          className="flex-1 py-3 text-center transition-colors cursor-pointer"
           style={{
             fontFamily: 'var(--font-mono)',
             fontSize: '12px',
@@ -146,12 +143,12 @@ const ProjectNavigation = ({ projects, activeIndex, setActiveIndex }) => {
 
       {/* Navigation List - Mobile Horizontal / Desktop Vertical */}
       <div
-        className="flex flex-col flex-grow w-full py-4 space-y-1 dark-section overflow-y-auto dark-scrollbar max-h-[250px] md:max-h-[300px] lg:max-h-[550px]"
+        className="flex flex-col flex-grow w-full py-2 space-y-0.5 overflow-y-auto max-h-[250px] md:max-h-[300px] lg:max-h-[550px]"
         role="tablist"
         aria-label="Project selection"
         data-lenis-prevent="true"
         style={{
-          backgroundColor: 'var(--color-ink)',
+          backgroundColor: 'transparent',
           overscrollBehavior: 'auto',
           scrollBehavior: 'smooth',
         }}

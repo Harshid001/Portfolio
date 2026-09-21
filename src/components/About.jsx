@@ -1,4 +1,4 @@
-﻿import { lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import heroImg from '../assets/Profile.png';
 import heroImgWebp from '../assets/Profile.webp';
@@ -24,11 +24,20 @@ const About = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* HEADING */}
         <motion.div
-          className="mb-20"
+          className="mb-20 about-heading-area relative"
+          data-no-shader-action="true"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
         >
+          {/* Subtle soft paper aura to fade out dots behind heading text */}
+          <div
+            className="absolute -inset-6 sm:-inset-10 pointer-events-none rounded-3xl -z-10"
+            style={{
+              background:
+                'radial-gradient(ellipse 75% 65% at 30% 50%, color-mix(in srgb, var(--color-paper) 80%, transparent) 0%, color-mix(in srgb, var(--color-paper) 40%, transparent) 60%, transparent 100%)',
+            }}
+          />
           <span
             className="section-label mb-4 block"
             style={{ color: 'var(--color-ink)' }}
@@ -91,7 +100,7 @@ const About = () => {
                   <source srcSet={heroImgWebp} type="image/webp" />
                   <img
                     src={heroImg}
-                    alt="Harshid Soni â€” Full Stack Developer portrait"
+                    alt="Harshid Soni — Full Stack Developer portrait"
                     loading="lazy"
                     decoding="async"
                     width="800"
@@ -109,7 +118,18 @@ const About = () => {
           </div>
 
           {/* RIGHT COLUMN: Text content */}
-          <div className="w-full flex flex-col gap-8 lg:pt-4">
+          <div
+            className="w-full flex flex-col gap-8 lg:pt-4 about-text-area relative"
+            data-no-shader-action="true"
+          >
+            {/* Subtle soft paper aura to fade out dots behind paragraph text */}
+            <div
+              className="absolute -inset-6 sm:-inset-10 pointer-events-none rounded-3xl -z-10"
+              style={{
+                background:
+                  'radial-gradient(ellipse 85% 75% at 45% 50%, color-mix(in srgb, var(--color-paper) 85%, transparent) 0%, color-mix(in srgb, var(--color-paper) 45%, transparent) 65%, transparent 100%)',
+              }}
+            />
             {/* Beyond Code (Description) */}
             <div>
               <motion.h3
