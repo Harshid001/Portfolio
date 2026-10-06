@@ -362,6 +362,10 @@ const IntroAnimation = ({ onComplete }) => {
   const nameWrapRef = useRef(null);
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      if (onComplete) onComplete();
+      return;
+    }
     setIsTouchDevice(
       'ontouchstart' in window ||
         navigator.maxTouchPoints > 0 ||
@@ -373,7 +377,7 @@ const IntroAnimation = ({ onComplete }) => {
       document.body.classList.remove('hide-cursor');
       document.body.classList.remove('intro-animating-cursor');
     };
-  }, []);
+  }, [onComplete]);
 
   // Measure where "under the name" is so the eye-box has a real target.
   useEffect(() => {
@@ -436,7 +440,7 @@ const IntroAnimation = ({ onComplete }) => {
               right: 32,
               background: 'transparent',
               border: 'none',
-              color: '#555',
+              color: '#aaaaaa',
               fontFamily: '"Fira Code", monospace',
               fontSize: '11px',
               letterSpacing: '0.15em',
@@ -556,7 +560,7 @@ const IntroAnimation = ({ onComplete }) => {
                     style={{
                       fontFamily: '"Fira Code", monospace',
                       fontSize: '12px',
-                      color: '#666',
+                      color: '#aaaaaa',
                       letterSpacing: '0.35em',
                       textTransform: 'uppercase',
                       marginTop: '24px',
@@ -578,7 +582,7 @@ const IntroAnimation = ({ onComplete }) => {
                       width: '100%',
                       maxWidth: '320px',
                       height: '1px',
-                      backgroundColor: '#333',
+                      backgroundColor: '#555',
                       marginTop: '28px',
                       transformOrigin: 'left center',
                     }}
@@ -602,7 +606,7 @@ const IntroAnimation = ({ onComplete }) => {
                       style={{
                         position: 'relative',
                         background: 'transparent',
-                        border: '1px solid #444',
+                        border: '1px solid #777',
                         color: hovered ? '#0a0a0a' : '#f5f2ed',
                         fontFamily: '"Fira Code", monospace',
                         fontSize: '12px',
@@ -611,7 +615,7 @@ const IntroAnimation = ({ onComplete }) => {
                         cursor: 'pointer',
                         overflow: 'hidden',
                         transition: 'color 0.35s ease, border-color 0.35s ease',
-                        borderColor: hovered ? '#f5f2ed' : '#444',
+                        borderColor: hovered ? '#f5f2ed' : '#777',
                         zIndex: 1,
                       }}
                     >

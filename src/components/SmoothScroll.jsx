@@ -7,14 +7,18 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function SmoothScroll({ children }) {
   useEffect(() => {
-    // On touch-only mobile devices, native hardware scrolling is already optimal and battery-friendly.
-    // Desktop devices with mouse wheels or precision trackpads get luxurious Lenis smooth scrolling.
+    // On touch-only mobile devices or when reduced motion is preferred,
+    // native browser scrolling is optimal and respects user accessibility preferences.
     const isTouchOnly =
       typeof window !== 'undefined' &&
       window.matchMedia('(pointer: coarse)').matches &&
       !window.matchMedia('(pointer: fine)').matches;
 
-    if (isTouchOnly) return;
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (isTouchOnly || prefersReducedMotion) return;
 
     const lenis = new Lenis({
       duration: 1.2,
@@ -36,15 +40,28 @@ export default function SmoothScroll({ children }) {
     lenis.on('scroll', onScroll);
 
     // Keep Lenis updated via native requestAnimationFrame at monitor refresh rate
-    let rafId;
+    let rafId = null;
     function update(time) {
       lenis.raf(time);
       rafId = requestAnimationFrame(update);
     }
     rafId = requestAnimationFrame(update);
 
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+      } else if (rafId === null) {
+        rafId = requestAnimationFrame(update);
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
     return () => {
-      cancelAnimationFrame(rafId);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      if (rafId !== null) cancelAnimationFrame(rafId);
       lenis.off('scroll', onScroll);
       lenis.destroy();
       delete window.__lenis;

@@ -26,12 +26,17 @@ const initialStatus = { type: 'idle', message: '' };
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const validateForm = ({ name, email, message }) => {
-  if (!name || !email || !message) return 'Please fill in all fields.';
-  if (name.length < 2) return 'Please enter a valid name.';
-  if (!emailPattern.test(email)) return 'Please enter a valid email address.';
-  if (message.length < 10)
-    return 'Please enter a message with at least 10 characters.';
-  return '';
+  const errors = {};
+  if (!name || name.trim().length < 2) {
+    errors.name = 'Please enter a valid name (at least 2 characters).';
+  }
+  if (!email || !emailPattern.test(email.trim())) {
+    errors.email = 'Please enter a valid email address.';
+  }
+  if (!message || message.trim().length < 10) {
+    errors.message = 'Please enter a message with at least 10 characters.';
+  }
+  return errors;
 };
 
 // Hoisted out of the component: it depends on nothing stateful, so rebuilding
@@ -45,9 +50,6 @@ const inputStyle = {
   fontFamily: 'var(--font-body)',
   fontSize: '16px',
   outline: 'none',
-  // display:block keeps the control blockified now that it sits inside a
-  // relative wrapper rather than directly in the flex column - without it an
-  // inline baseline gap would add a few px of height.
   display: 'block',
 };
 
@@ -60,11 +62,6 @@ const labelStyle = {
 
 /**
  * One labelled control (input or textarea).
- *
- * The focus affordance is a 4px bar that scales in over the existing 2px
- * border, reproducing the old "border grows to 6px" look exactly - but as a
- * transform instead of an animated border-width + padding pair, so focusing a
- * field no longer triggers layout.
  */
 const Field = ({
   label,
@@ -76,6 +73,7 @@ const Field = ({
   disabled,
   reduced,
   invalid,
+  errorText,
   describedBy,
   inputRef,
 }) => {
@@ -85,7 +83,7 @@ const Field = ({
 
   return (
     <motion.div
-      className="flex flex-col gap-2"
+      className="flex flex-col gap-1.5"
       variants={reduced ? reducedVariants : blurSlideIn}
     >
       <label htmlFor={id} style={labelStyle}>
@@ -98,13 +96,16 @@ const Field = ({
           name={name}
           type={textarea ? undefined : type}
           rows={textarea ? 6 : undefined}
+          autoComplete={name === 'name' ? 'name' : name === 'email' ? 'email' : undefined}
+          maxLength={name === 'name' ? 100 : name === 'email' ? 254 : 5000}
           required
           disabled={disabled}
           value={value}
           onChange={onChange}
           aria-invalid={invalid ? 'true' : undefined}
           aria-describedby={describedBy}
-          style={textarea ? { ...inputStyle, resize: 'none' } : inputStyle}
+          style={textarea ? { ...inputStyle, resize: 'vertical' } : inputStyle}
+          className="focus-visible:outline-2 focus-visible:outline-[var(--color-ink)] focus-visible:outline-offset-2"
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
         />
@@ -119,12 +120,21 @@ const Field = ({
             top: 2,
             bottom: 2,
             width: 4,
-            backgroundColor: 'var(--color-ink)',
+            backgroundColor: invalid ? 'var(--color-red)' : 'var(--color-ink)',
             transformOrigin: 'left',
             pointerEvents: 'none',
           }}
         />
       </div>
+      {errorText && (
+        <span
+          id={`error-${name}`}
+          className="text-xs font-mono mt-1 block"
+          style={{ color: 'var(--color-red)' }}
+        >
+          {errorText}
+        </span>
+      )}
     </motion.div>
   );
 };
@@ -197,6 +207,7 @@ const SocialLink = ({ social, reduced }) => {
 
 const Contact = () => {
   const [formData, setFormData] = useState(initialFormData);
+  const [fieldErrors, setFieldErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState(initialStatus);
 
@@ -209,12 +220,14 @@ const Contact = () => {
   // Focus target for screen readers once a submit resolves.
   const statusRef = useRef(null);
   const nameRef = useRef(null);
+  const emailRef = useRef(null);
+  const messageRef = useRef(null);
 
   useEffect(() => {
-    if (status.type === 'sent' || status.type === 'error') {
+    if (status.type === 'sent' || (status.type === 'error' && Object.keys(fieldErrors).length === 0)) {
       statusRef.current?.focus();
     }
-  }, [status.type]);
+  }, [status.type, fieldErrors]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -225,12 +238,21 @@ const Contact = () => {
       message: formData.message.trim(),
     };
 
-    const validationError = validateForm(payload);
-    if (validationError) {
-      setStatus({ type: 'error', message: validationError });
+    const errors = validateForm(payload);
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setStatus({ type: 'error', message: 'Please correct the highlighted errors.' });
+      if (errors.name) {
+        nameRef.current?.focus();
+      } else if (errors.email) {
+        emailRef.current?.focus();
+      } else if (errors.message) {
+        messageRef.current?.focus();
+      }
       return;
     }
 
+    setFieldErrors({});
     setIsSubmitting(true);
     setStatus({ type: 'sending', message: '' });
 
@@ -263,11 +285,15 @@ const Contact = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((current) => ({ ...current, [name]: value }));
+    if (fieldErrors[name]) {
+      setFieldErrors((current) => {
+        const next = { ...current };
+        delete next[name];
+        return next;
+      });
+    }
     if (status.type !== 'idle') setStatus(initialStatus);
   };
-
-  const hasError = status.type === 'error';
-  const bannerShown = status.type === 'sent' || hasError;
 
   return (
     <section
@@ -362,8 +388,7 @@ const Contact = () => {
               style={{ color: 'var(--color-ink-2)', lineHeight: 1.8 }}
               variants={reduced ? reducedVariants : blurSlideIn}
             >
-              Open for opportunities, freelance projects, or just a chat. Don&apos;t
-              hesitate to reach out.
+              Interested in a frontend internship or junior developer role? Email me at harshidsoni01@gmail.com or send a message below.
             </motion.p>
 
             <div
@@ -453,8 +478,9 @@ const Contact = () => {
                   onChange={handleChange}
                   disabled={isSubmitting}
                   reduced={reduced}
-                  invalid={hasError}
-                  describedBy={hasError ? 'contact-error' : undefined}
+                  invalid={Boolean(fieldErrors.name)}
+                  errorText={fieldErrors.name}
+                  describedBy={fieldErrors.name ? 'error-name' : undefined}
                   inputRef={nameRef}
                 />
                 <Field
@@ -465,8 +491,10 @@ const Contact = () => {
                   onChange={handleChange}
                   disabled={isSubmitting}
                   reduced={reduced}
-                  invalid={hasError}
-                  describedBy={hasError ? 'contact-error' : undefined}
+                  invalid={Boolean(fieldErrors.email)}
+                  errorText={fieldErrors.email}
+                  describedBy={fieldErrors.email ? 'error-email' : undefined}
+                  inputRef={emailRef}
                 />
                 <Field
                   label="MESSAGE"
@@ -476,8 +504,10 @@ const Contact = () => {
                   onChange={handleChange}
                   disabled={isSubmitting}
                   reduced={reduced}
-                  invalid={hasError}
-                  describedBy={hasError ? 'contact-error' : undefined}
+                  invalid={Boolean(fieldErrors.message)}
+                  errorText={fieldErrors.message}
+                  describedBy={fieldErrors.message ? 'error-message' : undefined}
+                  inputRef={messageRef}
                 />
 
                 <motion.div

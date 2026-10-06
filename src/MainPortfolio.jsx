@@ -41,7 +41,16 @@ const MainPortfolio = () => {
         a size estimate so the scrollbar stays stable.
       */}
       <div
-        data-reveal="objects"
+        data-reveal="projects"
+        style={{ contentVisibility: 'auto', containIntrinsicSize: '1px 2200px' }}
+      >
+        <Suspense fallback={<SectionFallback />}>
+          <Projects />
+        </Suspense>
+      </div>
+
+      <div
+        data-reveal="about"
         style={{ contentVisibility: 'auto', containIntrinsicSize: '1px 2000px' }}
       >
         <Suspense fallback={<SectionFallback />}>
@@ -52,11 +61,10 @@ const MainPortfolio = () => {
       </div>
 
       <div
-        data-reveal="cards"
+        data-reveal="experience"
         style={{ contentVisibility: 'auto', containIntrinsicSize: '1px 3000px' }}
       >
         <Suspense fallback={<SectionFallback />}>
-          <Projects />
           <Experience />
           <Achievements />
         </Suspense>

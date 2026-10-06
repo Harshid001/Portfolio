@@ -13,7 +13,6 @@ export function useMediaQuery(query) {
   useEffect(() => {
     const mql = window.matchMedia(query);
     const onChange = (e) => setMatches(e.matches);
-    setMatches(mql.matches);
     mql.addEventListener('change', onChange);
     return () => mql.removeEventListener('change', onChange);
   }, [query]);

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import ProjectShowcase from './ProjectShowcase';
 import ProjectNavigation from './ProjectNavigation';
@@ -19,7 +18,7 @@ const projects = [
   {
     title: 'StudyBuddy',
     description:
-      'Students struggle to organize learning resources across scattered platforms. Built an AI-powered study assistant with smart chatbot, resource management, and progress tracking using React, Node.js, and MongoDB. Reduced study material lookup time by centralizing resources into a single searchable dashboard.',
+      'Centralizes learning resources into a single searchable dashboard. Features smart AI study assistant capabilities, course material indexing, and progress tracking using React, Node.js, Express, and MongoDB.',
     tech: ['React', 'Node.js', 'MongoDB', 'Express'],
     github: 'https://github.com/Harshid001/studybuddy',
     image: studybuddyImg,
@@ -29,7 +28,7 @@ const projects = [
   {
     title: 'MF-advisor',
     description:
-      'Investors find traditional mutual fund platforms complex and unintuitive. Built a voice-first mutual-fund advisory platform enabling real-time conversational interfaces using OpenAI STT and WebSocket streaming. Streamlined the investment discovery process by automating personalized report generation.',
+      'Educational voice-first mutual fund advisory prototype with simulated portfolios, computed performance metrics, and conversational interfaces using OpenAI STT and streaming WebSockets.',
     tech: ['React', 'Vite', 'Express', 'TypeScript'],
     github: 'https://github.com/Harshid001/team_hacksheild',
     live: 'https://mf-advisor-seven.vercel.app/',
@@ -40,19 +39,18 @@ const projects = [
   {
     title: 'Traveloop',
     description:
-      'Travel planning is often fragmented across multiple apps and websites, making trip organization frustrating. Built a modern travel platform with personalized onboarding, destination discovery, and itinerary planning using React. Delivers a seamless trip-planning experience with intuitive UI flows and responsive design across all devices.',
+      'Modern travel discovery interface prototype with personalized destination onboarding and interactive itinerary workflows built with React and responsive layouts across viewports.',
     tech: ['React', 'Vite', 'JavaScript'],
     github: 'https://github.com/Harshid001/traveloop',
-    live: 'https://traveloop-wheat.vercel.app/onboarding',
     image:
       'https://res.cloudinary.com/dxvggspmi/image/upload/q_auto/f_auto/v1781610545/Screenshot_2026-06-16_171746_oub72r.png',
     category: 'WEBSITES',
   },
   {
-    title: 'Crop Sphere',
+    title: 'Crop Sphere (AgriMind AI)',
     description:
-      'Farmers need accessible digital tools to manage crop data and agricultural planning. Built a comprehensive agricultural dashboard with crop tracking, weather integration, and analytics using React. Delivers real-time agricultural insights through an intuitive, mobile-friendly dashboard interface.',
-    tech: ['React', 'JavaScript'],
+      'Agricultural decision-support dashboard for crop planning, farm parameter tracking, and weather integration using dynamic React state management and accessible forms.',
+    tech: ['React', 'JavaScript', 'Tailwind CSS'],
     github: 'https://github.com/Harshid001/crop_sphere',
     live: 'https://crop-sphere.vercel.app/',
     image:
@@ -62,7 +60,7 @@ const projects = [
   {
     title: 'MediPrice',
     description:
-      'Patients struggle to compare healthcare costs across different providers and services. Built a medical pricing platform with provider search, cost comparison, and transparent pricing data using React. Aggregates pricing data from multiple sources into a single, easy-to-navigate comparison interface.',
+      'Pharmaceutical price comparison interface allowing users to explore provider options, compare pricing tiers, and find affordable medicine alternatives across multiple healthcare data points.',
     tech: ['React', 'JavaScript'],
     github: 'https://github.com/codinggita/mediPrice',
     live: 'https://mediprice-five.vercel.app/about',
@@ -73,7 +71,7 @@ const projects = [
   {
     title: 'Payfair',
     description:
-      'Peer-to-peer payments need simple, trustworthy interfaces that minimize friction. Built a digital payment platform with secure transaction processing, wallet management, and payment history using React. Implemented smooth payment flows with real-time balance updates and transaction confirmation.',
+      'An invoice-financing interface prototype connecting businesses with funding sources. Features clean dashboard workflows for invoice listing, verification status, and request handling with responsive React components.',
     tech: ['React', 'JavaScript'],
     github: 'https://github.com/Harshid001/PAYFAIR',
     live: 'https://payfair-nine.vercel.app/',
@@ -82,9 +80,9 @@ const projects = [
     category: 'WEBSITES',
   },
   {
-    title: 'Website Maker',
+    title: 'Website Maker (ShopCraft Studio)',
     description:
-      'Non-technical users need an intuitive way to build web pages without writing code. Built a drag-and-drop website builder with real-time layout customization, element styling, and live preview using React state management. Supports real-time editing with instant visual feedback across all viewport sizes.',
+      'Interactive website builder suite with layout customization, component selection, live preview canvas, and state management built with React.',
     tech: ['React', 'Vite', 'State Management'],
     github: 'https://github.com/Harshid001/Website-maker',
     live: 'https://website-maker-gevx.vercel.app/',
@@ -95,7 +93,7 @@ const projects = [
   {
     title: 'PINCODE',
     description:
-      'Finding accurate Indian postal data requires navigating outdated government portals. Built a full-stack pincode directory with bulk processing, geolocation services, and RESTful APIs using Python, Flask, and PostgreSQL. Features a React frontend and Docker containerization for reliable deployment.',
+      'Indian postal directory and search interface backed by a REST API. Built with React, Python, Flask, and PostgreSQL with Docker containerization for regional lookup and exploration.',
     tech: ['React', 'Python', 'Flask', 'PostgreSQL', 'Docker'],
     github: 'https://github.com/Harshid001/PINCODE',
     live: 'https://pincode-delta.vercel.app',
@@ -106,8 +104,8 @@ const projects = [
   {
     title: 'Smart Factory AI',
     description:
-      'Manufacturing facilities lack real-time visibility into production line anomalies. Built an AI-based monitoring system using Python and ML models to detect inefficiencies and predict maintenance needs via REST APIs. Processes real-time sensor data streams to flag anomalies before they cause downtime.',
-    tech: ['Python', 'AI/ML', 'REST API', 'Web'],
+      'Industrial anomaly detection dashboard prototype using Python and machine learning models to identify equipment inefficiency patterns and simulated maintenance alerts.',
+    tech: ['Python', 'AI/ML', 'REST API', 'React'],
     github: 'https://github.com/Harshid001/smartfactoryAIsystem',
     image: smartfactoryImg,
     imageWebp: smartfactoryImgWebp,
@@ -117,19 +115,9 @@ const projects = [
 
 const Projects = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
 
-  useEffect(() => {
-    if (isHovered || isMaximized) return;
-
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % projects.length);
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, [isHovered, isMaximized]);
-
+  // Deliberate manual navigation restores reading control and stops disorientation
   useEffect(() => {
     if (isMaximized) {
       document.body.classList.add('preview-maximized');
@@ -167,8 +155,6 @@ const Projects = () => {
         backgroundColor: 'var(--color-paper-2)',
         borderColor: 'var(--color-ink)',
       }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       <div
         className={`mx-auto transition-all duration-500 ease-out ${
@@ -183,7 +169,7 @@ const Projects = () => {
           }`}
         >
           <div className="max-w-2xl">
-            <span className="section-label mb-4 block">03 / PORTFOLIO</span>
+            <span className="section-label mb-4 block">01 / SELECTED PROJECTS</span>
             <h2
               style={{ fontSize: 'clamp(32px, 10vw, 80px)', lineHeight: 0.9 }}
             >
@@ -204,8 +190,8 @@ const Projects = () => {
           <div
             className="flex flex-col lg:flex-row gap-8 lg:gap-12 relative items-start"
             id="project-showcase"
-            role="tabpanel"
-            aria-labelledby={`tab-${activeIndex}`}
+            role="region"
+            aria-label="Project showcase"
           >
             {/* Mobile Navigation */}
             <div className="lg:hidden w-full">

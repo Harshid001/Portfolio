@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaYoutube, FaTwitter } from 'react-icons/fa';
 import { useTheme } from '../hooks/useTheme';
+import { useIsMobile } from '../hooks/useIsMobile';
 import HeroBrightShowcase from './HeroBrightShowcase';
 
 // Both of these pull in `three`. Keeping them lazy means the hero text and
@@ -29,6 +30,7 @@ const textSlam = {
 
 const Hero = () => {
   const { isDark } = useTheme();
+  const isMobile = useIsMobile();
 
   return (
     <section
@@ -36,10 +38,10 @@ const Hero = () => {
       className="relative min-h-screen flex items-center pt-16 overflow-hidden"
     >
       {/* Dark Theme Ambient Glow & 3D WebGL Model */}
-      {isDark && (
+      {isDark && !isMobile && (
         <>
           <div
-            className="absolute inset-0 z-0 pointer-events-none"
+            className="absolute inset-0 z-0 pointer-events-none hidden md:block"
             style={{
               background: `
                 radial-gradient(ellipse 75% 60% at 60% 48%, rgba(200, 225, 255, 0.14) 0%, rgba(130, 170, 245, 0.07) 40%, transparent 75%),
@@ -48,14 +50,14 @@ const Hero = () => {
             }}
           />
 
-          <div className="absolute inset-0 z-0 pointer-events-auto">
+          <div className="absolute inset-0 z-0 pointer-events-auto hidden md:block">
             <Suspense fallback={null}>
               <PrismTypography text="<HS/>" />
             </Suspense>
           </div>
 
           <div
-            className="absolute inset-0 z-[1] pointer-events-none"
+            className="absolute inset-0 z-[1] pointer-events-none hidden md:block"
             style={{
               background: `
                 radial-gradient(ellipse at 25% 50%, color-mix(in srgb, var(--color-paper) 50%, transparent) 0%, transparent 60%),
@@ -90,6 +92,7 @@ const Hero = () => {
 
           <div className="mb-4 overflow-hidden leading-[0.85]">
             <motion.h1
+              aria-label="Harshid Soni — React Frontend Developer"
               className="flex flex-col"
               style={{
                 fontSize: 'clamp(40px, 12vw, 110px)',
@@ -97,7 +100,8 @@ const Hero = () => {
                 letterSpacing: '-0.02em',
               }}
             >
-              <motion.span className="flex flex-wrap">
+              <span className="sr-only">Harshid Soni — React Frontend Developer</span>
+              <motion.span aria-hidden="true" className="flex flex-wrap">
                 {['H', 'A', 'R', 'S', 'H', 'I', 'D'].map((char, i) => (
                   <motion.span
                     key={`first-${i}`}
@@ -108,7 +112,7 @@ const Hero = () => {
                   </motion.span>
                 ))}
               </motion.span>
-              <motion.span className="flex flex-wrap">
+              <motion.span aria-hidden="true" className="flex flex-wrap">
                 {['S', 'O', 'N', 'I'].map((char, i) => (
                   <motion.span
                     key={`last-${i}`}
@@ -135,7 +139,7 @@ const Hero = () => {
                 fontWeight: 600,
               }}
             >
-              [ FULL STACK DEVELOPER ]
+              [ REACT FRONTEND DEVELOPER ]
               <span
                 className="caret-blink"
                 aria-hidden="true"
@@ -151,11 +155,13 @@ const Hero = () => {
 
           <motion.p
             variants={fadeUp}
-            className="text-lg max-w-[420px] mb-10"
+            className="text-lg max-w-[480px] mb-10"
             style={{ color: 'var(--color-ink-2)' }}
           >
-            Building scalable web apps & solving real-world problems. No fluff,
-            just functional code and brutal aesthetics.
+            I’m a computer science student building responsive interfaces and
+            full-stack applications with React, Node.js and Python. Explore my
+            projects and the decisions behind them. Open to frontend internships
+            and junior roles.
           </motion.p>
 
           <motion.div
@@ -175,7 +181,16 @@ const Hero = () => {
               whileTap={{ scale: 0.95 }}
               className="btn-primary h-[52px] sm:h-[56px] w-full sm:w-auto px-6 sm:px-8 flex items-center justify-center"
             >
-              VIEW PROJECTS
+              VIEW SELECTED PROJECTS
+            </motion.a>
+            <motion.a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileTap={{ scale: 0.95 }}
+              className="btn-secondary h-[52px] sm:h-[56px] w-full sm:w-auto px-6 sm:px-8 flex items-center justify-center lg:-ml-[2px]"
+            >
+              DOWNLOAD RESUME (PDF)
             </motion.a>
             <motion.a
               href="#contact"
@@ -190,16 +205,7 @@ const Hero = () => {
               whileTap={{ scale: 0.95 }}
               className="btn-secondary h-[52px] sm:h-[56px] w-full sm:w-auto px-6 sm:px-8 flex items-center justify-center lg:-ml-[2px]"
             >
-              CONTACT ME
-            </motion.a>
-            <motion.a
-              href="/resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileTap={{ scale: 0.95 }}
-              className="btn-secondary h-[52px] sm:h-[56px] w-full sm:w-auto px-6 sm:px-8 flex items-center justify-center lg:-ml-[2px]"
-            >
-              DOWNLOAD RESUME
+              GET IN TOUCH
             </motion.a>
           </motion.div>
 
@@ -244,10 +250,10 @@ const Hero = () => {
         {/* RIGHT COLUMN — SHOWCASE FOR BRIGHT THEME / TRANSPARENT FOR DARK 3D */}
         <motion.div
           variants={fadeUp}
-          className={`hero-right flex items-center justify-center relative w-full lg:w-auto ${
+          className={`hero-right hidden lg:flex items-center justify-center relative w-full lg:w-auto ${
             isDark
               ? 'pointer-events-none min-h-0 lg:min-h-[500px] h-0 lg:h-auto'
-              : 'pointer-events-auto min-h-[380px] lg:h-[500px] xl:h-[600px] mt-8 lg:mt-0'
+              : 'pointer-events-auto lg:h-[500px] xl:h-[600px] lg:mt-0'
           }`}
         >
           {!isDark && <HeroBrightShowcase />}

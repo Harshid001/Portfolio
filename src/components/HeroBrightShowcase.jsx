@@ -115,7 +115,9 @@ const HeroBrightShowcase = () => {
 
           {/* Bold <HS/> Typographic Sculpture */}
           <div className="relative my-2">
-            <h2
+            <div
+              role="img"
+              aria-label="Harshid Soni architectural monogram"
               className="font-mono font-black text-6xl sm:text-7xl tracking-tighter text-[var(--color-ink)]"
               style={{
                 textShadow:
@@ -124,11 +126,11 @@ const HeroBrightShowcase = () => {
               }}
             >
               {'<HS/>'}
-            </h2>
+            </div>
           </div>
 
           <p className="font-mono text-xs uppercase tracking-wider text-[var(--color-ink)] font-bold mt-3 px-3 py-1 bg-[var(--color-paper-2)] border border-[var(--color-ink)]">
-            FULL STACK DEVELOPER
+            REACT FRONTEND DEVELOPER
           </p>
         </motion.div>
 
@@ -141,7 +143,7 @@ const HeroBrightShowcase = () => {
             { label: 'MONGODB', note: 'NOSQL' },
             { label: 'NEXT.JS', note: 'HYBRID' },
             { label: 'SYSTEMS', note: 'C / C++' },
-          ].map((pill, i) => (
+          ].map((pill) => (
             <div
               key={pill.label}
               className="bg-[#ffffff] border border-[var(--color-ink)] px-2 py-1.5 flex flex-col items-start justify-center shadow-[2px_2px_0px_var(--color-ink)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_var(--color-ink)] transition-all"

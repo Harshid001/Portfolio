@@ -6,15 +6,22 @@ export default function ShaderBackground() {
   const containerRef = useRef(null);
   const sceneRef = useRef(null);
   const mouseRef = useRef({ x: 0.5, y: 0.5 });
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => (
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  ));
 
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
     if (isMobile || !containerRef.current) return;
     const container = containerRef.current;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const vertexShader = `
       void main() {
@@ -145,6 +152,9 @@ export default function ShaderBackground() {
         renderer.domElement.height,
       );
       measureBox();
+      if (prefersReducedMotion) {
+        renderer.render(scene, camera);
+      }
     };
     onResize();
     window.addEventListener('resize', onResize, false);
@@ -212,6 +222,9 @@ export default function ShaderBackground() {
       uniforms.uBgColor.value.set(paperColor);
       uniforms.uRayColor.value.set(isDark ? inkColor : '#dedad3');
       uniforms.uRayAlpha.value = isDark ? 0.75 : 0.22;
+      if (prefersReducedMotion) {
+        renderer.render(scene, camera);
+      }
     };
     updateColors();
 
@@ -228,9 +241,10 @@ export default function ShaderBackground() {
     const visObserver = new IntersectionObserver(
       ([entry]) => {
         isVisible = entry.isIntersecting;
-        if (isVisible && animationId === null) {
+        if (prefersReducedMotion) return;
+        if (isVisible && !document.hidden && animationId === null) {
           animate();
-        } else if (!isVisible && animationId !== null) {
+        } else if ((!isVisible || document.hidden) && animationId !== null) {
           cancelAnimationFrame(animationId);
           animationId = null;
           if (sceneRef.current) {
@@ -242,11 +256,34 @@ export default function ShaderBackground() {
     );
     visObserver.observe(container);
 
+    const onVisibilityChange = () => {
+      if (prefersReducedMotion) return;
+      if (document.hidden) {
+        if (animationId !== null) {
+          cancelAnimationFrame(animationId);
+          animationId = null;
+          if (sceneRef.current) {
+            sceneRef.current.animationId = null;
+          }
+        }
+      } else if (isVisible && animationId === null) {
+        animate();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    if (prefersReducedMotion) {
+      renderer.render(scene, camera);
+    } else {
+      animate();
+    }
+
     return () => {
       disposed = true;
       boxObserver.disconnect();
       visObserver.disconnect();
       themeObserver.disconnect();
+      document.removeEventListener('visibilitychange', onVisibilityChange);
       window.removeEventListener('resize', onResize);
       container.removeEventListener('mousemove', onMouseMove);
       container.removeEventListener('mouseenter', onMouseEnter);
@@ -261,7 +298,7 @@ export default function ShaderBackground() {
         material.dispose();
       }
     };
-  }, []);
+  }, [isMobile]);
 
   if (isMobile) return null;
 

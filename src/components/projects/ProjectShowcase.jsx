@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub } from 'react-icons/fa';
 import {
@@ -617,8 +616,8 @@ const ProjectShowcase = ({
                           title={`${project.title} live preview`}
                           className="relative z-10 w-full h-full border-0 bg-white"
                           style={{ overscrollBehavior: 'contain' }}
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+                          allow="fullscreen"
+                          sandbox="allow-scripts allow-forms allow-popups"
                         />
 
                         {/* Preview Mode Overlay: Shows 'CLICK TO INTERACT' and allows normal outer page scrolling */}
@@ -771,7 +770,7 @@ const ProjectShowcase = ({
                         alt={`${project.title} project screenshot`}
                         loading="lazy"
                         decoding="async"
-                        className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-active:grayscale-0 group-hover:scale-105 group-active:scale-105"
+                        className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-active:scale-105"
                       />
                     </picture>
                     <div className="absolute inset-0 bg-black/70 flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 group-hover:opacity-100 group-active:opacity-100 focus-within:opacity-100 transition-opacity duration-300">
@@ -946,6 +945,30 @@ const ProjectShowcase = ({
                   </span>
                 ))}
               </div>
+            </div>
+
+            {/* Permanent Action Buttons */}
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2">
+              {project.live && (
+                <a
+                  href={project.live}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-primary h-[48px] px-6 flex items-center justify-center gap-2 text-xs font-mono font-bold tracking-wider uppercase"
+                >
+                  <FiExternalLink className="text-base shrink-0" /> LIVE DEMO
+                </a>
+              )}
+              {project.github && (
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-secondary h-[48px] px-6 flex items-center justify-center gap-2 text-xs font-mono font-bold tracking-wider uppercase"
+                >
+                  <FaGithub className="text-base shrink-0" /> SOURCE CODE
+                </a>
+              )}
             </div>
           </motion.div>
         </motion.div>

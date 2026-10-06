@@ -12,7 +12,7 @@ import { useEffect, useRef, useState } from 'react';
  */
 export function useInView(options = {}) {
   const ref = useRef(null);
-  const [inView, setInView] = useState(false);
+  const [inView, setInView] = useState(() => typeof IntersectionObserver === 'undefined');
 
   const threshold = options.threshold ?? 0.15;
   const rootMargin = options.rootMargin ?? '0px';
@@ -23,7 +23,6 @@ export function useInView(options = {}) {
 
     // Graceful degradation for very old browsers: just show the content.
     if (typeof IntersectionObserver === 'undefined') {
-      setInView(true);
       return;
     }
 

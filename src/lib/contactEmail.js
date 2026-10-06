@@ -18,7 +18,19 @@ const normalizeText = (value) => (
 );
 const limitLength = (value, maxLength) => value.slice(0, maxLength);
 
-export const sanitizeContactPayload = (payload = {}) => {
+const escapeHtml = (str) =>
+  String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+
+export const sanitizeContactPayload = (payload) => {
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+    return { name: '', email: '', message: '' };
+  }
+
   const name = normalizeText(payload.name)
     .replace(HEADER_CHARS, ' ')
     .replace(/[<>]/g, '')
@@ -49,12 +61,10 @@ export const validateContactPayload = ({ name, email, message }) => {
 };
 
 export const sendContactEmail = async (payload) => {
-  console.log('[Backend] Contact API hit. Payload received:', { name: payload.name, email: payload.email });
   const contact = sanitizeContactPayload(payload);
   const validationError = validateContactPayload(contact);
 
   if (validationError) {
-    console.error('[Backend] Validation failed:', validationError);
     return { success: false, status: 400, error: validationError };
   }
 
@@ -65,12 +75,10 @@ export const sendContactEmail = async (payload) => {
     console.error('[Backend] Email service not configured properly. EMAIL_PASS is missing or using placeholder.');
     return {
       success: false,
-      status: 500,
-      error: 'Server Configuration Error: Missing or invalid Gmail App Password. Please check .env.local.',
+      status: 503,
+      error: 'Message service is temporarily unavailable. Please email directly to harshidsoni01@gmail.com.',
     };
   }
-
-  console.log('[Backend] Email credentials found. Attempting to connect to Gmail SMTP...');
 
   try {
     const transporter = nodemailer.createTransport({
@@ -82,8 +90,6 @@ export const sendContactEmail = async (payload) => {
         pass: emailPass,
       },
     });
-
-    console.log('[Backend] Transporter created. Sending email...');
 
     await transporter.sendMail({
       from: `"Portfolio Contact" <${emailUser}>`,
@@ -99,15 +105,15 @@ export const sendContactEmail = async (payload) => {
           <table style="width: 100%; margin: 16px 0; border-collapse: collapse;">
             <tr>
               <td style="padding: 8px 0; font-weight: bold; width: 80px; color: #666; font-size: 14px;">From:</td>
-              <td style="padding: 8px 0; font-size: 15px; font-weight: 600; color: #0d0d0d;">${contact.name}</td>
+              <td style="padding: 8px 0; font-size: 15px; font-weight: 600; color: #0d0d0d;">${escapeHtml(contact.name)}</td>
             </tr>
             <tr>
               <td style="padding: 8px 0; font-weight: bold; width: 80px; color: #666; font-size: 14px;">Email:</td>
-              <td style="padding: 8px 0; font-size: 15px;"><a href="mailto:${contact.email}" style="color: #ff3333; text-decoration: none; font-weight: 600;">${contact.email}</a></td>
+              <td style="padding: 8px 0; font-size: 15px;"><a href="mailto:${encodeURIComponent(contact.email)}" style="color: #ff3333; text-decoration: none; font-weight: 600;">${escapeHtml(contact.email)}</a></td>
             </tr>
           </table>
           <div style="margin-top: 16px; padding: 16px; background-color: #ffffff; border: 1px solid #d4d0c8; white-space: pre-wrap; font-size: 15px; line-height: 1.6; color: #1a1a1a;">
-${contact.message}
+${escapeHtml(contact.message)}
           </div>
           <p style="margin-top: 24px; font-size: 11px; color: #888; font-family: monospace; letter-spacing: 0.05em;">
             Harshid Soni Portfolio — Direct Inquiry
@@ -116,18 +122,17 @@ ${contact.message}
       `,
     });
 
-    console.log('[Backend] Email sent successfully to:', CONTACT_RECIPIENT);
     return {
       success: true,
       status: 200,
       message: 'Message sent successfully!',
     };
   } catch (error) {
-    console.error('[Backend] Nodemailer failed to send email:', error);
+    console.error('[Backend] Nodemailer failed to send email:', error?.message || error);
     return {
       success: false,
       status: 500,
-      error: `Failed to send message via SMTP: ${error.message || 'Unknown error'}`,
+      error: 'Unable to send message at this time. Please email directly to harshidsoni01@gmail.com.',
     };
   }
 };

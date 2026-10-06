@@ -5,7 +5,18 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores([
+    'dist',
+    '_unused/**',
+    '_archive/**',
+    'public/vendor/**',
+    'src/components/transition/Portal*/**',
+    'src/components/transition/Portal*',
+    'src/components/transition/portal*',
+    'src/components/transition/scene/**',
+    'src/components/transition/transitionState.js',
+    'src/components/transition/assetPreload.js',
+  ]),
   {
     files: ['**/*.{js,jsx}'],
     extends: [
@@ -23,11 +34,18 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      'no-unused-vars': [
+        'error',
+        {
+          varsIgnorePattern: '^[A-Z_]|motion',
+          argsIgnorePattern: '^[A-Z_]|motion',
+          caughtErrorsIgnorePattern: '^[A-Z_]',
+        },
+      ],
     },
   },
   {
-    files: ['api/**/*.js', 'src/app/api/**/*.js', 'src/lib/contactEmail.js'],
+    files: ['vite.config.js', 'api/**/*.js', 'src/app/api/**/*.js', 'src/lib/contactEmail.js'],
     languageOptions: {
       globals: {
         ...globals.node,

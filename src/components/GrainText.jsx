@@ -13,8 +13,9 @@ const GrainText = ({
   children,
   className = '',
   style = {},
-  as: Component = 'span',
+  as = 'span',
 }) => {
+  const Component = as;
   return (
     <Component
       className={`relative inline-block ${className}`}

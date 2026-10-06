@@ -53,10 +53,6 @@ const apiPlugin = () => ({
 export default defineConfig({
   plugins: [react(), tailwindcss(), apiPlugin()],
 
-  // Strip debug statements from the production bundle only. `dev` keeps them.
-  esbuild: {
-    drop: ['console', 'debugger'],
-  },
 
   build: {
     // Modern baseline: smaller output, no legacy transpilation overhead.

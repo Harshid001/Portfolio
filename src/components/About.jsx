@@ -42,7 +42,7 @@ const About = () => {
             className="section-label mb-3 block"
             style={{ color: 'var(--color-ink)' }}
           >
-            01 / ABOUT ME
+            02 / ABOUT ME
           </span>
           <h2
             className="w-fit"
@@ -94,7 +94,7 @@ const About = () => {
                   <source srcSet={heroImgWebp} type="image/webp" />
                   <img
                     src={heroImg}
-                    alt="Harshid Soni — Full Stack Developer portrait"
+                    alt="Harshid Soni — React Frontend Developer portrait"
                     loading="lazy"
                     decoding="async"
                     width="800"
@@ -155,9 +155,10 @@ const About = () => {
                     fontFamily: 'var(--font-body)',
                   }}
                 >
-                  I am a driven Full Stack Developer with a strong foundation in
-                  modern web technologies, currently pursuing my B.E. in
-                  Computer Science at Swaminarayan University.
+                  I’m pursuing a B.E. in Computer Science at Swaminarayan
+                  University. Since 2025, I’ve been building projects with React,
+                  JavaScript, Node.js and Python, including study tools,
+                  dashboards and postal-data interfaces.
                 </p>
                 <p
                   className="text-lg sm:text-xl leading-relaxed font-medium"
@@ -166,10 +167,9 @@ const About = () => {
                     fontFamily: 'var(--font-body)',
                   }}
                 >
-                  I specialize in building high-performance, scalable
-                  applications with intuitive user experiences. My focus is on
-                  writing clean, maintainable code and solving complex
-                  real-world problems efficiently.
+                  I focus on building responsive, accessible UI components,
+                  handling asynchronous state cleanly, and integrating backend
+                  APIs into robust interfaces.
                 </p>
                 <p
                   className="text-lg sm:text-xl leading-relaxed font-medium"
@@ -178,9 +178,10 @@ const About = () => {
                     fontFamily: 'var(--font-body)',
                   }}
                 >
-                  I thrive in collaborative environments and am eager to bring
-                  my technical skills, adaptability, and innovative mindset to a
-                  forward-thinking engineering team.
+                  I’m looking for a frontend internship or junior developer role
+                  where I can contribute to a product team and continue
+                  improving my testing, accessibility, and production delivery
+                  skills.
                 </p>
               </Motion.div>
             </div>

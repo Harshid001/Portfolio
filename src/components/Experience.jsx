@@ -8,13 +8,8 @@ const ShaderBackground = React.lazy(() => import('./ShaderBackground'));
 gsap.registerPlugin(ScrollTrigger);
 
 const paragraphText =
-  'In 2025, I started my journey with HTML, CSS, and JavaScript, exploring the fundamentals of web architecture and responsive design. I quickly moved on to building real-world projects like StudyBuddy (an AI study assistant) and e-commerce platforms, mastering React.js and incorporating Node.js and MongoDB. Moving into 2026, my focus shifted toward writing clean, efficient code and optimizing web performance, while learning advanced state management and API integration. Currently, I am actively looking for internships, freelance projects, and full-time roles to apply my skills and continue growing as a developer.';
+  'Since 2025, I have been building modern web applications with JavaScript, React, Node.js, and Python. Through projects like StudyBuddy, PINCODE, and MF-advisor, I have focused on building reusable UI components, responsive layouts, API integrations, and robust client-side state management. Moving through 2026, my priorities are web performance, accessibility, and production engineering practices while preparing for frontend internships and junior developer roles.';
 
-// Deterministic pseudo-random for scattering
-const seededRandom = (seed) => {
-  const x = Math.sin(seed * 9999) * 10000;
-  return x - Math.floor(x);
-};
 
 const Experience = () => {
   const containerRef = useRef(null);
@@ -153,7 +148,7 @@ const Experience = () => {
               color: 'var(--color-ink)',
             }}
           >
-            04 / MY JOURNEY
+            04 / EDUCATION &amp; EXPERIENCE
           </span>
           <h2
             className="exp-heading"
@@ -164,14 +159,17 @@ const Experience = () => {
               color: 'var(--color-ink)',
             }}
           >
-            EXPERIENCE
-            <br />& GROWTH
+            EDUCATION &amp;
+            <br />EXPERIENCE
           </h2>
         </div>
 
         <div className="relative w-full">
+          {/* Accessible plain paragraph for screen readers */}
+          <p className="sr-only">{paragraphText}</p>
           <p
             className="exp-paragraph"
+            aria-hidden="true"
             style={{
               color: 'var(--color-ink)',
               fontSize: 'clamp(20px, 3vw, 32px)',

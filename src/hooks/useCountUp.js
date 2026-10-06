@@ -11,14 +11,10 @@ import { useEffect, useState } from 'react';
  */
 export function useCountUp(target, options = {}) {
   const { active, duration = 1400, reduced = false } = options;
-  const [value, setValue] = useState(reduced ? target : 0);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
-    if (reduced) {
-      setValue(target);
-      return;
-    }
-    if (!active) return;
+    if (reduced || !active) return;
 
     let raf = 0;
     let start = 0;
@@ -33,7 +29,7 @@ export function useCountUp(target, options = {}) {
       const next = Math.round(ease(t) * target);
       if (next !== last) {
         last = next;
-        setValue(next);
+        setCount(next);
       }
       if (t < 1) raf = requestAnimationFrame(tick);
     };
@@ -42,7 +38,7 @@ export function useCountUp(target, options = {}) {
     return () => cancelAnimationFrame(raf);
   }, [target, active, duration, reduced]);
 
-  return value;
+  return reduced ? target : count;
 }
 
 /**

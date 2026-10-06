@@ -10,6 +10,9 @@ const Footer = () => {
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    const ac = new AbortController();
+    const { signal } = ac;
+
     /* ---------- clock ---------- */
     const clockEl = footer.querySelector('#clock');
     function tick() {
@@ -23,14 +26,14 @@ const Footer = () => {
 
     /* ---------- ticker: real content, slow ---------- */
     const feed = [
-      ['b', 'Let’s build something'],
-      ['i', 'React 19 / Vite / Three.js / GLSL / Framer Motion'],
-      ['b', '2 slots left — Q3 2026'],
-      ['i', 'Last commit: particle-morph — cone spin atlas'],
-      ['b', 'Open to collaboration'],
-      ['i', 'Studio Kern · Northlane · Basil & Co · Meridian Labs'],
-      ['b', 'Frontend & WebGL'],
-      ['i', 'Avg. response 6h · Based in Gujarat, IN'],
+      ['b', 'Let’s build something together'],
+      ['i', 'React 19 / JavaScript / Node.js / Python / Tailwind CSS'],
+      ['b', 'Open to frontend internships & junior roles'],
+      ['i', '9 selected projects with live demos & source code'],
+      ['b', 'Available for full-time & internship opportunities'],
+      ['i', 'B.E. Computer Science · Swaminarayan University'],
+      ['b', 'Frontend & Full-Stack UI Engineering'],
+      ['i', 'Based in Gujarat, IN · Direct: harshidsoni01@gmail.com'],
     ];
     const trEl = footer.querySelector('#tr');
     if (trEl) {
@@ -38,12 +41,12 @@ const Footer = () => {
     }
     const toTopEl = footer.querySelector('#toTop');
     if (toTopEl) {
-      toTopEl.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+      toTopEl.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }), { signal });
     }
 
     /* ---------- copy ---------- */
     const copyBtn = footer.querySelector('#copy');
-    const MAIL = 'hello@harshid.dev';
+    const MAIL = 'harshidsoni01@gmail.com';
     let copyTimer = null;
     if (copyBtn) {
       const copyTxt = copyBtn.querySelector('span');
@@ -52,14 +55,16 @@ const Footer = () => {
         e.stopPropagation();
         try {
           await navigator.clipboard.writeText(MAIL);
-        } catch (_) {
+        } catch {
           const ta = document.createElement('textarea');
           ta.value = MAIL;
           document.body.appendChild(ta);
           ta.select();
           try {
             document.execCommand('copy');
-          } catch (__) {}
+          } catch {
+            // Fallback execCommand failed
+          }
           ta.remove();
         }
         copyBtn.classList.add('done');
@@ -69,14 +74,14 @@ const Footer = () => {
           copyBtn.classList.remove('done');
           if (copyTxt) copyTxt.textContent = 'Copy';
         }, 1500);
-      });
+      }, { signal });
     }
 
     /* ---------- dismissible keyboard hint ---------- */
     const phint = footer.querySelector('#phint');
     const phintx = footer.querySelector('#phintx');
     if (phintx && phint) {
-      phintx.addEventListener('click', () => phint.classList.add('hide'));
+      phintx.addEventListener('click', () => phint.classList.add('hide'), { signal });
     }
 
     /* ---------- marks ---------- */
@@ -193,7 +198,7 @@ const Footer = () => {
       gridCtx.clearRect(0, 0, W, H);
       const CELL = 62;
     }
-    resize(); window.addEventListener('resize', resize);
+    resize(); window.addEventListener('resize', resize, { signal });
 
     const rest = new Float32Array(shapes[0]), intro = new Float32Array(COUNT * 3);
     for (let i = 0; i < COUNT; i++) {
@@ -209,7 +214,7 @@ const Footer = () => {
     let phase = reduce ? 'hold' : 'intro', phaseStart = performance.now();
     let restIndex = 0, from = shapes[0], to = shapes[0], introP = reduce ? 1 : 0;
     let morphMs = MORPH, displayLabel = LABEL[ORDER[0]], nextLabel = displayLabel, nextIndex = null;
-    let hovering = false, openHref = URLS[ORDER[0]], stillUntil = 0;
+    let hovering = false, stillUntil = 0;
     let lastInteract = performance.now();
 
     const SPRITE_PX = 10, PERSP = 300, ZOOM = 1.5;
@@ -238,7 +243,6 @@ const Footer = () => {
       bars.forEach(b => { b.style.animation = 'none'; void b.offsetWidth; b.style.animation = ''; });
       stage.classList.add('preview');
       hovering = true; lastInteract = performance.now();
-      openHref = el.getAttribute('href');
       if (reduce) return;
       if (el.dataset.key) morphTo(shapes[ORDER.indexOf(el.dataset.key)], LABEL[el.dataset.key], null, HOVER_MORPH);
       else if (el.dataset.glyph) morphTo(sampleGlyph(el.dataset.glyph), el.dataset.pvNum, null, HOVER_MORPH);
@@ -246,15 +250,14 @@ const Footer = () => {
     function rowLeave() {
       stage.classList.remove('preview');
       hovering = false; lastInteract = performance.now();
-      openHref = URLS[ORDER[restIndex]];
       if (!reduce) morphTo(shapes[restIndex], LABEL[ORDER[restIndex]], null, HOVER_MORPH);
     }
     const rows = [...footer.querySelectorAll('.lnk')];
     rows.forEach(el => {
-      el.addEventListener('mouseenter', () => rowEnter(el));
-      el.addEventListener('focus', () => rowEnter(el));
-      el.addEventListener('mouseleave', rowLeave);
-      el.addEventListener('blur', rowLeave);
+      el.addEventListener('mouseenter', () => rowEnter(el), { signal });
+      el.addEventListener('focus', () => rowEnter(el), { signal });
+      el.addEventListener('mouseleave', rowLeave, { signal });
+      el.addEventListener('blur', rowLeave, { signal });
     });
 
     /* ---------- keyboard 1-5 ---------- */
@@ -264,7 +267,7 @@ const Footer = () => {
       const row = footer.querySelector('.lnk[data-k="' + e.key + '"]');
       if (row) { e.preventDefault(); row.focus(); rowEnter(row); }
     };
-    document.addEventListener('keydown', handleKeydown);
+    document.addEventListener('keydown', handleKeydown, { signal });
 
     /* ---------- pointer ---------- */
     stage.addEventListener('mousemove', e => {
@@ -274,8 +277,8 @@ const Footer = () => {
       tRotY = ((lx / r.width) * 2 - 1) * .4; tRotX = -(((ly / r.height) * 2 - 1)) * .22;
       targetScale = ZOOM * 1.07; lastInteract = performance.now();
       stage.classList.add('dragged');
-    });
-    stage.addEventListener('mouseleave', () => { mouse.on = false; targetScale = ZOOM; tRotY = 0; tRotX = 0; lastInteract = performance.now(); });
+    }, { signal });
+    stage.addEventListener('mouseleave', () => { mouse.on = false; targetScale = ZOOM; tRotY = 0; tRotX = 0; lastInteract = performance.now(); }, { signal });
     function scatter(power, x, y) {
       for (let i = 0; i < COUNT; i++) {
         const dx = rest[i * 3] - x, dy = rest[i * 3 + 1] - y, d = Math.hypot(dx, dy) || 1;
@@ -289,7 +292,7 @@ const Footer = () => {
       scatter(1, (e.clientX - r.left - W / 2) / scale, (e.clientY - r.top - H / 2) / scale);
       lastInteract = performance.now();
       if (phase === 'hold' && !hovering) window.open(URLS[ORDER[restIndex]], '_blank', 'noopener,noreferrer');
-    });
+    }, { signal });
 
     const easeInOutCubic = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
     const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
@@ -333,7 +336,7 @@ const Footer = () => {
           for (let i = 0; i < rest.length; i++) rest[i] = from[i] + (to[i] - from[i]) * e;
           if (t >= 1) {
             phase = 'hold'; phaseStart = now; stillUntil = now + 600; displayLabel = nextLabel;
-            if (nextIndex !== null) { restIndex = nextIndex; setActive(ORDER[restIndex]); if (!hovering) openHref = URLS[ORDER[restIndex]]; }
+            if (nextIndex !== null) { restIndex = nextIndex; setActive(ORDER[restIndex]); }
           }
         }
       }
@@ -431,8 +434,7 @@ const Footer = () => {
       clearInterval(clockInt);
       cancelAnimationFrame(rAFId);
       io.disconnect();
-      document.removeEventListener('keydown', handleKeydown);
-      window.removeEventListener('resize', resize);
+      ac.abort();
       if (cv.parentNode) cv.parentNode.removeChild(cv);
     };
   }, []);
@@ -440,7 +442,7 @@ const Footer = () => {
   return (
     <footer ref={footerRef} className="brut-footer brut" id="footer">
       <div className="strip">
-        <span><span className="blink"></span>Available &mdash; 2 slots left Q3 2026</span>
+        <span><span className="blink"></span>Available &mdash; Open to frontend internships</span>
         <span id="clock">IST 00:00:00</span>
         <span>Est. 2007 &mdash; India</span>
       </div>
@@ -453,32 +455,32 @@ const Footer = () => {
       <div className="slab" id="slab">
         <div className="cell">
           <div className="cap"><span>Portfolio</span><span>&middot; 05</span></div>
-          <a className="lnk" data-dir="right" data-k="1" data-glyph="W" href="#work"
-             data-pv-num="01 / WORK" data-pv-ttl="Case Studies" data-pv-sub="12 case studies &middot; 2019 &rarr; 2026"
-             onClick={(e) => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView(); }}>
-            <span className="lhs"><span className="num">01</span><span className="txt"><span>Work</span><span className="sub">12 case studies</span></span></span>
+          <a className="lnk" data-dir="right" data-k="1" data-glyph="P" href="#projects"
+             data-pv-num="01 / PROJECTS" data-pv-ttl="Selected Projects" data-pv-sub="9 selected projects &middot; React &amp; Full-Stack"
+             onClick={(e) => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' }); }}>
+            <span className="lhs"><span className="num">01</span><span className="txt"><span>Projects</span><span className="sub">9 selected projects</span></span></span>
             <span className="kbd">[1]</span><span className="arw">&#8594;</span>
           </a>
-          <a className="lnk" data-dir="right" data-k="2" data-glyph="P" href="#projects"
-             data-pv-num="02 / PROJECTS" data-pv-ttl="Shipped" data-pv-sub="28 projects &middot; 9 open source"
-             onClick={(e) => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView(); }}>
-            <span className="lhs"><span className="num">02</span><span className="txt"><span>Projects</span><span className="sub">28 shipped &middot; 9 OSS</span></span></span>
+          <a className="lnk" data-dir="right" data-k="2" data-glyph="S" href="#skills"
+             data-pv-num="02 / SKILLS" data-pv-ttl="Skills &amp; Tools" data-pv-sub="React &middot; Node.js &middot; Python"
+             onClick={(e) => { e.preventDefault(); document.querySelector('#skills')?.scrollIntoView({ behavior: 'smooth' }); }}>
+            <span className="lhs"><span className="num">02</span><span className="txt"><span>Skills</span><span className="sub">Core Technologies</span></span></span>
             <span className="kbd">[2]</span><span className="arw">&#8594;</span>
           </a>
-          <a className="lnk" data-dir="right" data-k="3" data-glyph="&" href="#playground"
-             data-pv-num="03 / PLAYGROUND" data-pv-ttl="Experiments" data-pv-sub="WebGL &middot; shaders &middot; toys"
-             onClick={(e) => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView(); }}>
-            <span className="lhs"><span className="num">03</span><span className="txt"><span>Playground</span><span className="sub">WebGL &amp; shaders</span></span></span>
+          <a className="lnk" data-dir="right" data-k="3" data-glyph="C" href="#achievements"
+             data-pv-num="03 / CREDENTIALS" data-pv-ttl="Credentials" data-pv-sub="Hackathons &middot; Certifications"
+             onClick={(e) => { e.preventDefault(); document.querySelector('#achievements')?.scrollIntoView({ behavior: 'smooth' }); }}>
+            <span className="lhs"><span className="num">03</span><span className="txt"><span>Credentials</span><span className="sub">Hackathons &amp; Certs</span></span></span>
             <span className="kbd">[3]</span><span className="arw">&#8594;</span>
           </a>
           <a className="lnk" data-dir="right" data-k="4" data-glyph="A" href="#about"
-             data-pv-num="04 / ABOUT" data-pv-ttl="Who I Am" data-pv-sub="Frontend engineer &middot; Gujarat, IN"
-             onClick={(e) => { e.preventDefault(); document.querySelector('#about')?.scrollIntoView(); }}>
-            <span className="lhs"><span className="num">04</span><span className="txt"><span>About</span><span className="sub">Frontend engineer</span></span></span>
+             data-pv-num="04 / ABOUT" data-pv-ttl="About Me" data-pv-sub="B.E. CS &middot; Swaminarayan University"
+             onClick={(e) => { e.preventDefault(); document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' }); }}>
+            <span className="lhs"><span className="num">04</span><span className="txt"><span>About</span><span className="sub">Background &amp; Education</span></span></span>
             <span className="kbd">[4]</span><span className="arw">&#8594;</span>
           </a>
           <a className="lnk" data-dir="down" data-k="5" data-glyph="&#8595;" href="/resume.pdf" target="_blank" rel="noopener noreferrer"
-             data-pv-num="05 / RESUME" data-pv-ttl="Download" data-pv-sub="PDF &middot; 61 KB">
+             data-pv-num="05 / RESUME" data-pv-ttl="Download" data-pv-sub="PDF &middot; Resume">
             <span className="lhs"><span className="num">05</span><span className="txt"><span>Resume</span><span className="sub">PDF</span></span></span>
             <span className="kbd">[5]</span><span className="arw">&#8595;</span>
           </a>
@@ -490,9 +492,9 @@ const Footer = () => {
             <i className="corner c1"></i><i className="corner c2"></i><i className="corner c3"></i><i className="corner c4"></i>
             <div id="cur"></div>
             <div id="pv">
-              <div className="pvnum">01 / WORK</div>
-              <div className="pvttl display">Case Studies</div>
-              <div className="pvsub">12 case studies &middot; 2019 &rarr; 2026</div>
+              <div className="pvnum">01 / PROJECTS</div>
+              <div className="pvttl display">Selected Projects</div>
+              <div className="pvsub">9 selected projects &middot; React &amp; Full-Stack</div>
               <div className="bars"><i></i><i></i><i></i><i></i><i></i></div>
             </div>
             <div id="hint">Hover a row &mdash; the cloud becomes the mark &middot; drag to scatter</div>
@@ -517,16 +519,16 @@ const Footer = () => {
              data-pv-num="X / TWITTER" data-pv-ttl="@HarshidSoni2007" data-pv-sub="Build logs &middot; updates">
             <span className="lhs"><span className="num">04</span><span className="txt"><span>X / Twitter</span><span className="sub">@HarshidSoni2007</span></span></span><span className="arw">&#8599;</span>
           </a>
-          <a className="lnk" data-dir="up" data-glyph="@" href="mailto:hello@harshid.dev"
-             data-pv-num="EMAIL" data-pv-ttl="Say Hello" data-pv-sub="Replies within 24 hours">
-            <span className="lhs"><span className="num">05</span><span className="txt"><span>Email</span><span className="sub">Replies in &lt; 24h</span></span></span><span className="arw">&#8599;</span>
+          <a className="lnk" data-dir="up" data-glyph="@" href="mailto:harshidsoni01@gmail.com"
+             data-pv-num="EMAIL" data-pv-ttl="Say Hello" data-pv-sub="Replies promptly">
+            <span className="lhs"><span className="num">05</span><span className="txt"><span>Email</span><span className="sub">harshidsoni01@gmail.com</span></span></span><span className="arw">&#8599;</span>
           </a>
         </div>
       </div>
 
       <div className="proof">
-        <span>Worked with &mdash; <b>Studio Kern</b> &middot; <b>Northlane</b> &middot; <b>Basil &amp; Co</b> &middot; <b>Meridian Labs</b></span>
-        <span>Avg. response <b>6h</b> &middot; <b>4 yrs</b> shipping frontend</span>
+        <span>Computer science student &mdash; <b>Swaminarayan University</b> &middot; Building since <b>2025</b></span>
+        <span>Focused on <b>React</b>, <b>Node.js</b> &amp; <b>responsive UI engineering</b></span>
         <span className="phint" id="phint">Press 1&ndash;5 to jump <button id="phintx" type="button" aria-label="Dismiss hint">&times;</button></span>
       </div>
 
@@ -542,8 +544,8 @@ const Footer = () => {
 
       <div className="bar">
         <span>&copy; 2026 Harshid Soni &mdash; All rights reserved</span>
-        <span className="live"><span className="blink"></span>Last updated 3 days ago</span>
-        <span>React / Three.js / No templates</span>
+        <span className="live"><span className="blink"></span>Harshid Soni Portfolio &mdash; 2026</span>
+        <span>React / Three.js / Custom Architecture</span>
         <button className="top" id="toTop">&#8593; Back to top</button>
       </div>
     </footer>

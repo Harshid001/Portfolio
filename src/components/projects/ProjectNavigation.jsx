@@ -29,9 +29,9 @@ const ProjectNavigation = ({ projects, activeIndex, setActiveIndex }) => {
     return (
       <motion.button
         key={project.title}
-        role="tab"
-        aria-selected={isActive}
-        aria-controls="project-showcase"
+        type="button"
+        aria-pressed={isActive}
+        aria-label={`Select ${project.title}`}
         onClick={() => setActiveIndex(globalIndex)}
         onKeyDown={(e) => handleKeyDown(e, globalIndex)}
         whileTap={{ scale: 0.98 }}
@@ -91,16 +91,19 @@ const ProjectNavigation = ({ projects, activeIndex, setActiveIndex }) => {
   };
 
   return (
-    <div className="w-full flex flex-col h-full bg-[var(--color-paper-2)] border-2 border-[var(--color-ink)] shadow-[4px_4px_0px_var(--color-ink)]">
+    <div
+      role="region"
+      aria-label="Project selection"
+      className="w-full flex flex-col h-full bg-[var(--color-paper-2)] border-2 border-[var(--color-ink)] shadow-[4px_4px_0px_var(--color-ink)]"
+    >
       {/* Category Tabs */}
       <div
         className="flex mb-0 border-b-2 border-[var(--color-ink)]"
-        role="tablist"
         aria-label="Project Categories"
       >
         <button
-          role="tab"
-          aria-selected={activeTab === 'APPLICATIONS'}
+          type="button"
+          aria-pressed={activeTab === 'APPLICATIONS'}
           onClick={() => handleTabClick('APPLICATIONS')}
           className="flex-1 py-3 text-center transition-colors cursor-pointer"
           style={{

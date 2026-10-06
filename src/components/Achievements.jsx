@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import {
   motion,
   useScroll,
@@ -920,11 +920,16 @@ const CertificatePreview = ({
   totalCount,
   currentIndex,
 }) => {
+  const [prevId, setPrevId] = useState(cert?.id);
   const [loaded, setLoaded] = useState(false);
   const imgRef = useRef(null);
 
-  useEffect(() => {
+  if (cert?.id !== prevId) {
+    setPrevId(cert?.id);
     setLoaded(false);
+  }
+
+  useEffect(() => {
     if (imgRef.current?.complete) {
       setLoaded(true);
     }
@@ -1515,12 +1520,19 @@ const CertificatesSection = () => {
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < certificates.length - 1;
 
-  const handlePrev = () => {
-    if (hasPrev) setSelectedCert(certificates[currentIndex - 1]);
-  };
-  const handleNext = () => {
-    if (hasNext) setSelectedCert(certificates[currentIndex + 1]);
-  };
+  const handlePrev = useCallback(() => {
+    setSelectedCert((current) => {
+      const idx = certificates.findIndex((c) => c.id === current.id);
+      return idx > 0 ? certificates[idx - 1] : current;
+    });
+  }, []);
+
+  const handleNext = useCallback(() => {
+    setSelectedCert((current) => {
+      const idx = certificates.findIndex((c) => c.id === current.id);
+      return idx < certificates.length - 1 ? certificates[idx + 1] : current;
+    });
+  }, []);
 
   const handleSelectCert = (c) => {
     setSelectedCert(c);
@@ -1539,7 +1551,7 @@ const CertificatesSection = () => {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [hasPrev, hasNext, currentIndex]);
+  }, [hasPrev, hasNext, handleNext, handlePrev]);
 
   return (
     <section
@@ -1662,12 +1674,12 @@ const CertificatesSection = () => {
   );
 };
 
-/* â”€â”€â”€ Main Export â”€â”€â”€ */
+/* ─── Main Export ─── */
 const Achievements = () => (
-  <>
+  <div id="achievements" className="scroll-mt-20">
     <HackathonSection />
     <CertificatesSection />
-  </>
+  </div>
 );
 
 export default Achievements;

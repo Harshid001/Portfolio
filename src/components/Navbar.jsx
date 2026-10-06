@@ -12,17 +12,17 @@ import { useGridTransition } from "./transition/GridTransitionContext";
 
 const navLinks = [
   { name: "Home", href: "#home" },
+  { name: "Projects", href: "#projects" },
   { name: "About", href: "#about" },
   { name: "Skills", href: "#skills" },
-  { name: "Projects", href: "#projects" },
   { name: "Experience", href: "#experience" },
 ];
 
 const mobileNavLinks = [
   { name: "Home", href: "#home" },
+  { name: "Projects", href: "#projects" },
   { name: "About", href: "#about" },
   { name: "Skills", href: "#skills" },
-  { name: "Projects", href: "#projects" },
   { name: "Experience", href: "#experience" },
   { name: "Achievements", href: "#achievements" },
   { name: "Contact", href: "#contact" },
@@ -59,22 +59,31 @@ const Navbar = () => {
     };
   }, []);
 
-  // Lock body scroll when mobile menu is open
+  const openerButtonRef = useRef(null);
+
+  // Lock body scroll and trap accessibility focus when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = "hidden";
+      const mainEl = document.querySelector("main");
+      if (mainEl) mainEl.setAttribute("inert", "");
+
       const handleKeyDown = (e) => {
         if (e.key === "Escape") {
           setIsMobileMenuOpen(false);
+          openerButtonRef.current?.focus();
         }
       };
       window.addEventListener("keydown", handleKeyDown);
       return () => {
         document.body.style.overflow = "";
+        if (mainEl) mainEl.removeAttribute("inert");
         window.removeEventListener("keydown", handleKeyDown);
       };
     } else {
       document.body.style.overflow = "";
+      const mainEl = document.querySelector("main");
+      if (mainEl) mainEl.removeAttribute("inert");
     }
   }, [isMobileMenuOpen]);
 
@@ -90,38 +99,6 @@ const Navbar = () => {
   const [isScrolledLogo, setIsScrolledLogo] = useState(false);
   // ---- Nav slider state ----
   const [hoveredNav, setHoveredNav] = useState(null);
-
-  // ---- Logo: pointer-driven parallax for the hover caption ----
-  // Written directly to CSS custom properties via the ref (not React state)
-  // so mousemove doesn't trigger a re-render on every pixel.
-  const logoRef = useRef(null);
-  const handleLogoMove = (e) => {
-    const el = logoRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const px = (e.clientX - rect.left) / rect.width - 0.5;
-    const py = (e.clientY - rect.top) / rect.height - 0.5;
-    el.style.setProperty("--mx", px.toFixed(3));
-    el.style.setProperty("--my", py.toFixed(3));
-  };
-  const resetLogoMove = () => {
-    logoRef.current?.style.setProperty("--mx", 0);
-    logoRef.current?.style.setProperty("--my", 0);
-  };
-
-  // Logo now performs a plain scroll-to-top instead of the removed portal
-  // transition. Respects reduced-motion.
-  const handleLogoClick = (e) => {
-    e.preventDefault();
-    if (isGridTransitioning) return;
-    const reduce = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
-    setActiveSection("home");
-  };
-
-  const logoCaption = "Back to top";
 
   // ---- B3: cached section offsets ----
   // The old scroll handler called getBoundingClientRect() on up to six
@@ -202,18 +179,14 @@ const Navbar = () => {
     setIsAtFooter((prev) => (prev === nextAtFooter ? prev : nextAtFooter));
   });
 
-  // Theme bootstrap, split out of the old scroll effect so it runs once
-  // instead of tearing down and re-subscribing whenever isHome or
-  // isGridTransitioning flips.
+  // Sync theme class to html element
   useEffect(() => {
-    if (localStorage.theme === "light") {
-      setIsDark(false);
-      document.documentElement.classList.remove("dark");
-    } else {
-      setIsDark(true);
+    if (isDark) {
       document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
     }
-  }, []);
+  }, [isDark]);
 
   const toggleTheme = () => {
     const nextDark = !isDark;
@@ -454,10 +427,13 @@ const Navbar = () => {
 
           {/* MOBILE & TABLET HAMBURGER MENU (< 1024px) */}
           <button
-            className="w-10 h-10 flex lg:hidden items-center justify-center text-3xl transition-transform active:scale-95 shrink-0 cursor-pointer"
+            ref={openerButtonRef}
+            className="min-w-[44px] min-h-[44px] flex lg:hidden items-center justify-center text-3xl transition-transform active:scale-95 shrink-0 cursor-pointer"
             style={{ color: "var(--color-ink)" }}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-navigation-drawer"
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open navigation menu"}
           >
             {isMobileMenuOpen ? <HiX /> : <HiMenuAlt3 />}
           </button>
@@ -516,6 +492,10 @@ const Navbar = () => {
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
+              id="mobile-navigation-drawer"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Site navigation"
               key="mobile-drawer"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}

@@ -1,5 +1,4 @@
 import { useState, lazy, Suspense } from 'react';
-// eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion } from 'framer-motion';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -9,19 +8,43 @@ import { GridTransitionProvider } from './components/transition/GridTransitionCo
 import GridOverlay from './components/transition/GridOverlay';
 import GhostCursor from './components/GhostCursor';
 
+import ErrorBoundary from './components/ErrorBoundary';
+import NotFound from './components/NotFound';
+
 const IntroAnimation = lazy(() => import('./components/IntroAnimation'));
 
 function App() {
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const hasHash = Boolean(window.location.hash);
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const alreadySeen = sessionStorage.getItem('portfolio_intro_seen');
+    if (hasHash || prefersReduced || alreadySeen) return false;
+    return true;
+  });
+
+  const handleIntroComplete = () => {
+    setShowIntro(false);
+    try {
+      sessionStorage.setItem('portfolio_intro_seen', 'true');
+    } catch {
+      // Ignore storage errors in private browsing
+    }
+  };
 
   return (
     <>
       <GhostCursor />
 
+      {/* Visible on focus skip link for keyboard & screen reader accessibility */}
+      <a href="#projects" className="skip-to-content">
+        Skip to content
+      </a>
+
       <AnimatePresence>
         {showIntro && (
           <Suspense fallback={null}>
-            <IntroAnimation onComplete={() => setShowIntro(false)} />
+            <IntroAnimation onComplete={handleIntroComplete} />
           </Suspense>
         )}
       </AnimatePresence>
@@ -33,33 +56,23 @@ function App() {
           color: 'var(--color-ink)',
         }}
       >
-        <AnimatePresence>
-          {!showIntro && (
-            <motion.div
-              key="main-app-content"
-              initial={{ opacity: 0, y: 60 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-              className="w-full"
-              onAnimationComplete={(e) => {
-                if (e?.currentTarget) e.currentTarget.style.willChange = 'auto';
-              }}
-            >
-              <BrowserRouter>
-                <GridTransitionProvider>
-                  <Navbar />
-                  <GridOverlay />
+        <div className="w-full">
+          <BrowserRouter>
+            <GridTransitionProvider>
+              <Navbar />
+              <GridOverlay />
 
-                  <Routes>
-                    <Route path="/" element={<MainPortfolio />} />
-                  </Routes>
+              <ErrorBoundary>
+                <Routes>
+                  <Route path="/" element={<MainPortfolio />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </ErrorBoundary>
 
-                  <Footer />
-                </GridTransitionProvider>
-              </BrowserRouter>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              <Footer />
+            </GridTransitionProvider>
+          </BrowserRouter>
+        </div>
       </div>
     </>
   );

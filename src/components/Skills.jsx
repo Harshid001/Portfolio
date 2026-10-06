@@ -11,28 +11,28 @@ const skills = [
     name: 'React',
     category: 'Frontend',
     description:
-      'Component-driven UI architecture with hooks, context, and state management',
+      'Reusable UI components, controlled forms, custom hooks, and dynamic navigation flows across projects',
     icon: FaReact,
   },
   {
     name: 'Next.js',
     category: 'Frontend',
     description:
-      'React framework for production with server-side rendering and static generation',
+      'Exploring server-side rendering, file-based routing, and full-stack React application architecture',
     icon: SiNextdotjs,
   },
   {
     name: 'JavaScript',
     category: 'Frontend',
     description:
-      'ES6+ features, async patterns, DOM manipulation, and event-driven programming',
+      'ES6+ syntax, asynchronous promises & async/await, DOM APIs, and event-driven browser interactions',
     icon: DiJavascript1,
   },
   {
     name: 'TypeScript',
     category: 'Frontend',
     description:
-      'Strongly typed JavaScript — interfaces, generics, and scalable type-safe codebases',
+      'Type annotations, interfaces, typed component props, and contract safety for frontend codebases',
     icon: SiTypescript,
   },
 
@@ -41,28 +41,28 @@ const skills = [
     name: 'Node.js',
     category: 'Backend',
     description:
-      'Server-side JavaScript runtime for scalable network applications',
+      'Server-side JavaScript runtime for API services, file streaming, and asynchronous request handling',
     icon: FaNodeJs,
   },
   {
     name: 'Express',
     category: 'Backend',
     description:
-      'RESTful API design, middleware patterns, and route architecture',
+      'REST API route architecture, middleware pipelines, CORS, and JSON payload handling in StudyBuddy',
     icon: SiExpress,
   },
   {
     name: 'C / C++',
     category: 'Backend',
     description:
-      'Systems programming, data structures, algorithms, and competitive programming foundations',
+      'Foundations of data structures, algorithms, memory management, and computational problem-solving',
     icon: SiCplusplus,
   },
   {
     name: 'MongoDB',
     category: 'Backend',
     description:
-      'NoSQL document database for flexible, scalable data persistence and aggregation',
+      'NoSQL document collections, Mongoose schema modeling, and CRUD persistence for web apps',
     icon: DiMongodb,
   },
 ];
@@ -223,7 +223,7 @@ const Skills = () => {
             className="section-label mb-4 block"
             style={{ color: 'var(--color-ink)' }}
           >
-            02 / SKILLS
+            03 / TECHNICAL SKILLS
           </span>
           <h2
             style={{
