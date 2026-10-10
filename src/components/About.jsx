@@ -3,6 +3,7 @@ import { motion as Motion } from 'framer-motion';
 import heroImg from '../assets/Profile.png';
 import heroImgWebp from '../assets/Profile.webp';
 import GrainText from './GrainText';
+import ClaudeAgentPuppet from './ClaudeAgentPuppet';
 
 const DotShaderBackground = lazy(() => import('./DotShaderBackground'));
 
@@ -22,44 +23,54 @@ const About = () => {
       </Suspense>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* HEADING (Original size: clamp(40px, 10vw, 120px), strictly 2 lines, box width hugs word limit) */}
+        {/* HEADING (Extended black space spanning till Beyond Code width) */}
         <Motion.div
-          className="mb-8 sm:mb-10 about-heading-area relative w-fit max-w-full"
+          className="mb-8 sm:mb-10 about-heading-area relative w-full"
           data-no-shader-action="true"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
         >
-          {/* Subtle soft paper aura to fade out dots behind heading text */}
+          {/* Subtle soft paper aura to fade out dots across the entire black space */}
           <div
             className="absolute -inset-4 sm:-inset-6 pointer-events-none rounded-2xl -z-10"
             style={{
               background:
-                'radial-gradient(ellipse 75% 65% at 40% 50%, color-mix(in srgb, var(--color-paper) 80%, transparent) 0%, color-mix(in srgb, var(--color-paper) 40%, transparent) 60%, transparent 100%)',
+                'radial-gradient(ellipse 95% 85% at 45% 50%, color-mix(in srgb, var(--color-paper) 85%, transparent) 0%, color-mix(in srgb, var(--color-paper) 50%, transparent) 70%, transparent 100%)',
             }}
           />
-          <span
-            className="section-label mb-3 block"
-            style={{ color: 'var(--color-ink)' }}
-          >
-            02 / ABOUT ME
-          </span>
-          <h2
-            className="w-fit"
-            style={{
-              fontSize: 'clamp(36px, 10vw, 120px)',
-              lineHeight: 0.9,
-              fontFamily: 'var(--font-heading)',
-              color: 'var(--color-ink)',
-              textTransform: 'uppercase',
-              margin: 0,
-            }}
-          >
-            <GrainText style={{ display: 'inline-block', width: 'fit-content' }}>
-              <span className="whitespace-nowrap block">MORE THAN</span>
-              <span className="whitespace-nowrap block">JUST CODE</span>
-            </GrainText>
-          </h2>
+
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+            <div>
+              <span
+                className="section-label mb-3 block"
+                style={{ color: 'var(--color-ink)' }}
+              >
+                02 / ABOUT ME
+              </span>
+              <h2
+                className="w-fit"
+                style={{
+                  fontSize: 'clamp(36px, 10vw, 120px)',
+                  lineHeight: 0.9,
+                  fontFamily: 'var(--font-heading)',
+                  color: 'var(--color-ink)',
+                  textTransform: 'uppercase',
+                  margin: 0,
+                }}
+              >
+                <GrainText style={{ display: 'inline-block', width: 'fit-content' }}>
+                  <span className="whitespace-nowrap block">MORE THAN</span>
+                  <span className="whitespace-nowrap block">JUST CODE</span>
+                </GrainText>
+              </h2>
+            </div>
+
+            {/* Claude Code agent puppet with two trees, bush, and base land directly along the title */}
+            <div className="flex-1 w-full max-w-md sm:max-w-lg lg:max-w-xl flex justify-start lg:justify-end items-end pb-1 lg:pr-2">
+              <ClaudeAgentPuppet />
+            </div>
+          </div>
         </Motion.div>
 
         {/* 2-COLUMN GRID: Hero Image on Left, Beyond Code on Right */}

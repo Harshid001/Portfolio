@@ -9,6 +9,7 @@ import {
 } from "framer-motion";
 import { HiMenuAlt3, HiX, HiOutlineMoon, HiOutlineSun } from "react-icons/hi";
 import { useGridTransition } from "./transition/GridTransitionContext";
+import CodingActivity from "./CodingActivity";
 
 const navLinks = [
   { name: "Home", href: "#home" },
@@ -239,14 +240,13 @@ const Navbar = () => {
         pointerEvents: isPreviewMaximized ? "none" : "auto",
       }}
     >
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-full relative">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center gap-3 sm:gap-6 xl:gap-8 h-full relative">
         {/* LEFT SECTION: LOGO */}
-        <div className="flex-1 flex justify-start items-center">
+        <div className="shrink-0 flex justify-start items-center mr-auto lg:mr-0">
           <div
-            className="logo-base select-none"
+            className="logo-base select-none text-[1.05rem] sm:text-[1.3rem]"
             style={{
               fontFamily: "var(--font-display)",
-              fontSize: "1.3rem",
               fontWeight: 600,
               color: "var(--color-ink)",
               display: "inline-flex",
@@ -306,7 +306,7 @@ const Navbar = () => {
 
         {/* CENTER SECTION: NAVIGATION LINKS */}
         <div
-          className="hidden lg:flex justify-center items-center h-full gap-2 xl:gap-4 shrink-0"
+          className="hidden lg:flex flex-1 justify-center items-center h-full gap-1 xl:gap-2"
           onMouseLeave={() => setHoveredNav(null)}
         >
           {navLinks.map((link) => {
@@ -322,7 +322,7 @@ const Navbar = () => {
                 onMouseEnter={() => setHoveredNav(link.name)}
                 className="relative flex items-center justify-center transition-all duration-100"
                 style={{
-                  padding: "8px 16px",
+                  padding: "8px 10px",
                   fontFamily: "var(--font-body)",
                   fontWeight: 600,
                   fontSize: "13px",
@@ -366,15 +366,15 @@ const Navbar = () => {
         </div>
 
         {/* RIGHT SECTION: ACTIONS */}
-        <div className="flex-1 flex justify-end items-center gap-3 sm:gap-6 lg:gap-8 translate-x-2 lg:translate-x-6">
-          <div className="hidden xl:flex items-center gap-6 sm:gap-8">
+        <div className="shrink-0 flex justify-end items-center gap-3 xl:gap-4">
+          <div className="hidden xl:flex items-center gap-3">
             <a
               href="/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="btn-secondary h-[40px] flex items-center justify-center transition-transform hover:scale-[1.02]"
               style={{
-                padding: "0 28px",
+                padding: "0 20px",
                 fontFamily: "var(--font-body)",
                 fontWeight: 600,
                 fontSize: "13px",
@@ -388,7 +388,7 @@ const Navbar = () => {
               onClick={(e) => scrollTo(e, "#contact")}
               className="btn-primary h-[40px] flex items-center justify-center transition-transform hover:scale-[1.02]"
               style={{
-                padding: "0 28px",
+                padding: "0 20px",
                 fontFamily: "var(--font-body)",
                 fontWeight: 600,
                 fontSize: "13px",
@@ -399,18 +399,20 @@ const Navbar = () => {
             </a>
           </div>
 
+          <div className="flex items-center gap-2">
+          <CodingActivity />
           {/* THEME TOGGLE (Visible everywhere) */}
           <motion.button
             onClick={toggleTheme}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
-            className="w-[40px] h-[40px] rounded-full flex items-center justify-center border-2 transition-colors shrink-0 cursor-pointer"
+            className="w-[40px] h-[40px] rounded-none flex items-center justify-center border-2 transition-colors shrink-0 cursor-pointer"
             style={{
               borderColor: "var(--color-ink)",
-              backgroundColor: "var(--color-paper-2)",
-              color: "var(--color-ink)",
+              backgroundColor: "var(--color-ink)",
+              color: "var(--color-paper)",
             }}
-            aria-label="Toggle Dark Mode"
+            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
           >
             <motion.div
               animate={{ rotate: isDark ? 180 : 0 }}
@@ -424,6 +426,7 @@ const Navbar = () => {
               )}
             </motion.div>
           </motion.button>
+          </div>
 
           {/* MOBILE & TABLET HAMBURGER MENU (< 1024px) */}
           <button
@@ -452,7 +455,6 @@ const Navbar = () => {
         }
         .logo-base {
           display: inline-block;
-          font-size: 1.5rem;
           color: var(--color-ink);
           transform: translate3d(calc(var(--mx) * 4px), calc(var(--my) * 3px), 0);
           transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s ease;
@@ -528,11 +530,11 @@ const Navbar = () => {
                   {/* Theme Toggle Button in Drawer */}
                   <button
                     onClick={toggleTheme}
-                    className="w-10 h-10 rounded-full flex items-center justify-center border-2 transition-transform active:scale-95 cursor-pointer"
+                    className="w-10 h-10 rounded-none flex items-center justify-center border-2 transition-transform active:scale-95 cursor-pointer"
                     style={{
                       borderColor: "var(--color-ink)",
-                      backgroundColor: "var(--color-paper-2)",
-                      color: "var(--color-ink)",
+                      backgroundColor: "var(--color-ink)",
+                      color: "var(--color-paper)",
                     }}
                     aria-label="Toggle Dark Mode"
                   >

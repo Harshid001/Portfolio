@@ -2,6 +2,7 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { sendContactEmail } from './src/lib/contactEmail.js';
+import activityHandler from './api/activity.js';
 
 /**
  * Dev-only middleware that mirrors the Vercel `/api/contact` function so the
@@ -11,6 +12,14 @@ const apiPlugin = () => ({
   name: 'api-plugin',
   apply: 'serve',
   configureServer(server) {
+    server.middlewares.use('/api/activity', (req, res) => {
+      res.status = (code) => { res.statusCode = code; return res; };
+      res.json = (data) => {
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(data));
+      };
+      activityHandler(req, res).catch(() => res.status(500).json({ error: 'Unable to load activity' }));
+    });
     server.middlewares.use((req, res, next) => {
       if (req.url !== '/api/contact' || req.method !== 'POST') return next();
 
