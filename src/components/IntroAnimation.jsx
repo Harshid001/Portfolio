@@ -395,14 +395,11 @@ const IntroAnimation = ({ onComplete }) => {
   const handleComplete = () => {
     if (isExiting) return;
     setIsExiting(true);
-    setTimeout(() => {
-      if (onComplete) onComplete();
-    }, 1000);
   };
 
   return (
-    <AnimatePresence>
-      {!isExiting ? (
+    <AnimatePresence onExitComplete={onComplete}>
+      {!isExiting && (
         <motion.div
           key="intro-screen"
           className="dark-section"
@@ -639,21 +636,6 @@ const IntroAnimation = ({ onComplete }) => {
             </AnimatePresence>
           </motion.div>
         </motion.div>
-      ) : (
-        /* ── EXIT OVERLAY ── */
-        <motion.div
-          key="intro-exit"
-          className="dark-section"
-          initial={{ opacity: 1 }}
-          animate={{ opacity: 0 }}
-          transition={{ duration: 0.9, ease: 'easeInOut' }}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 10000,
-            backgroundColor: '#0a0a0a',
-          }}
-        />
       )}
     </AnimatePresence>
   );

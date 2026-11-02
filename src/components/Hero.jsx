@@ -1,13 +1,9 @@
-import { lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaYoutube, FaTwitter } from 'react-icons/fa';
 import { useTheme } from '../hooks/useTheme';
 import { useIsMobile } from '../hooks/useIsMobile';
 import HeroBrightShowcase from './HeroBrightShowcase';
-
-// Both of these pull in `three`. Keeping them lazy means the hero text and
-// buttons are interactive long before the WebGL bundle finishes downloading.
-const PrismTypography = lazy(() => import('./PrismTypography'));
+import AdaptiveHeroModel from './AdaptiveHeroModel';
 
 const staggerContainer = {
   hidden: {},
@@ -51,9 +47,7 @@ const Hero = () => {
           />
 
           <div className="absolute inset-0 z-0 pointer-events-auto hidden md:block">
-            <Suspense fallback={null}>
-              <PrismTypography text="<HS/>" />
-            </Suspense>
+            <AdaptiveHeroModel />
           </div>
 
           <div

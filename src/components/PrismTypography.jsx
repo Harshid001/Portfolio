@@ -8,7 +8,7 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-const PrismTypography = ({ text = '<HS/>' }) => {
+const PrismTypography = ({ text = '<HS/>', quality, onUnavailable }) => {
   const containerRef = useRef(null);
   const [isDark, setIsDark] = useState(() =>
     typeof document !== 'undefined' ? document.documentElement.classList.contains('dark') : true
@@ -28,7 +28,7 @@ const PrismTypography = ({ text = '<HS/>' }) => {
     /* ================================================================== *
      * Parameters
      * ================================================================== */
-    const targetDensity = 3400;
+    const targetDensity = quality.density;
     const params = {
       text: text, density: targetDensity, size: 1.25, thickness: 0.09, depth: 3.2,
       material: 'iridescent', bloom: 0.72, idle: 1.0, cameraDrift: true
@@ -51,15 +51,22 @@ const PrismTypography = ({ text = '<HS/>' }) => {
     // toDataURL / toBlob / readPixels, and it defeats the driver's fast-clear
     // path every frame. Removing both is a zero-visual-change win, which is
     // why no SMAAPass compensation is needed.
-    const renderer = new THREE.WebGLRenderer({
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
       canvas,
       antialias: false,
       alpha: true,
       preserveDrawingBuffer: false,
       powerPreference: 'high-performance',
       stencil: false,
-    });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
+      });
+    } catch {
+      canvas.remove();
+      onUnavailable();
+      return;
+    }
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, quality.dpr));
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setClearColor(0x000000, 0);
     let currentDark = document.documentElement.classList.contains('dark');
@@ -81,7 +88,11 @@ const PrismTypography = ({ text = '<HS/>' }) => {
     controls.enabled = false;
 
     const pmrem = new THREE.PMREMGenerator(renderer);
-    scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+    const room = new RoomEnvironment();
+    const environmentTarget = pmrem.fromScene(room, 0.04);
+    scene.environment = environmentTarget.texture;
+    room.dispose();
+    pmrem.dispose();
     scene.environmentIntensity = currentDark ? 1.6 : 1.1;
 
     const key  = new THREE.DirectionalLight(0xffffff, currentDark ? 3.2 : 2.8); key.position.set(-8, 10, 14);
@@ -131,6 +142,9 @@ const PrismTypography = ({ text = '<HS/>' }) => {
     }
 
     function buildMaterial(kind){
+      if (!quality.bloom) {
+        return new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.6, roughness: 0.3, vertexColors: true });
+      }
       const base = { metalness:0.78, envMapIntensity:2.4, vertexColors:true, side:THREE.DoubleSide };
       if (kind === 'chrome')
         return new THREE.MeshPhysicalMaterial({ ...base, color:0xffffff, roughness:0.06, clearcoat:1, clearcoatRoughness:0.04 });
@@ -198,7 +212,7 @@ const PrismTypography = ({ text = '<HS/>' }) => {
 
       const target = params.density;
       // Ensure all edge perimeter cells are included so typography contours are 100% sharp
-      const chosen = [...edgeCells];
+      const chosen = edgeCells.slice(0, target);
       // Add all available inner cells up to the target density
       const innerToTake = Math.min(inner.length, Math.max(0, target - chosen.length));
       chosen.push(...inner.slice(0, innerToTake));
@@ -299,7 +313,7 @@ const PrismTypography = ({ text = '<HS/>' }) => {
     /* ------------------------------------------------------------------ *
      * Free-floating orbiters
      * ------------------------------------------------------------------ */
-    let orbiters = null, ORB = 16, orbData = null;
+    let orbiters = null, ORB = quality.bloom ? 12 : 4, orbData = null;
     function buildOrbiters(){
       if (orbiters){ scene.remove(orbiters); orbiters.dispose(); }
       orbiters = new THREE.InstancedMesh(geo, mat, ORB);
@@ -337,7 +351,7 @@ const PrismTypography = ({ text = '<HS/>' }) => {
       depthWrite: false
     });
     {
-      const M = 1100, pos = new Float32Array(M*3);
+      const M = quality.bloom ? 600 : 150, pos = new Float32Array(M*3);
       for (let i = 0; i < M; i++){
         pos[i*3]   = rnd(-48, 48);
         pos[i*3+1] = rnd(-28, 28);
@@ -352,11 +366,14 @@ const PrismTypography = ({ text = '<HS/>' }) => {
     /* ================================================================== *
      * Post-processing
      * ================================================================== */
-    const composer = new EffectComposer(renderer);
-    composer.addPass(new RenderPass(scene, camera));
-    const bloom = new UnrealBloomPass(new THREE.Vector2(container.clientWidth, container.clientHeight), currentDark ? params.bloom : 0.12, 0.62, 0.72);
-    composer.addPass(bloom);
-    composer.addPass(new OutputPass());
+    let useBloom = quality.bloom;
+    const composer = useBloom ? new EffectComposer(renderer) : null;
+    const bloom = useBloom ? new UnrealBloomPass(new THREE.Vector2(container.clientWidth, container.clientHeight), currentDark ? params.bloom : 0.12, 0.62, 0.72) : null;
+    if (composer) {
+      composer.addPass(new RenderPass(scene, camera));
+      composer.addPass(bloom);
+      composer.addPass(new OutputPass());
+    }
 
     function updateTheme(dark) {
       if (mesh && A) {
@@ -387,7 +404,7 @@ const PrismTypography = ({ text = '<HS/>' }) => {
       dustMat.blending = dark ? THREE.AdditiveBlending : THREE.NormalBlending;
       dustMat.needsUpdate = true;
 
-      bloom.strength = dark ? params.bloom : 0.12;
+      if (bloom) bloom.strength = dark ? params.bloom : 0.12;
       renderer.toneMappingExposure = dark ? 1.35 : 1.05;
       scene.environmentIntensity = dark ? 1.6 : 1.1;
 
@@ -623,15 +640,48 @@ const PrismTypography = ({ text = '<HS/>' }) => {
     let isVisible = true;
     const globalClock = new THREE.Clock();
     let lastRenderTime = 0;
-    const FRAME_INTERVAL = 1000 / 38; // ~38fps budget for expensive bloom composer
+    const FRAME_INTERVAL = 1000 / quality.fps;
+    let sampleStart = 0, sampleFrames = 0, slowWindows = 0;
+    let downgraded = false;
 
     function renderLoop(currentTime = 0){
       // Park the loop entirely when the hero is scrolled out of view
-      if (!isVisible) { rAFId = null; return; }
+      if (!isVisible || document.hidden) { rAFId = null; return; }
       rAFId = requestAnimationFrame(renderLoop);
 
       if (currentTime - lastRenderTime < FRAME_INTERVAL) return;
-      lastRenderTime = currentTime;
+      lastRenderTime = currentTime - ((currentTime - lastRenderTime) % FRAME_INTERVAL);
+
+      // Measure visible frame delivery, including CPU work and GPU stalls.
+      // Require two slow windows; isolated compilation/resize stalls don't count.
+      if (!sampleStart) sampleStart = currentTime;
+      sampleFrames++;
+      if (currentTime - sampleStart >= 2000) {
+        const averageMs = (currentTime - sampleStart) / sampleFrames;
+        slowWindows = averageMs > 55 ? slowWindows + 1 : 0;
+        sampleStart = currentTime;
+        sampleFrames = 0;
+        if (slowWindows >= 2) {
+          slowWindows = 0;
+          if (downgraded) {
+            cancelAnimationFrame(rAFId);
+            rAFId = null;
+            onUnavailable();
+            return;
+          }
+          downgraded = true;
+          useBloom = false;
+          N = Math.min(N, 500);
+          mesh.count = N;
+          const previousMaterial = mat;
+          mat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.6, roughness: 0.3, vertexColors: true });
+          mesh.material = mat;
+          orbiters.material = mat;
+          previousMaterial.dispose();
+          renderer.setPixelRatio(0.75);
+          handleResize();
+        }
+      }
 
       globalClock.getDelta();
       const t = globalClock.elapsedTime;
@@ -642,7 +692,8 @@ const PrismTypography = ({ text = '<HS/>' }) => {
       updateInstances(t);
       updateOrbiters(t);
 
-      composer.render();
+      if (useBloom) composer.render();
+      else renderer.render(scene, camera);
     }
 
     const handleResize = () => {
@@ -652,7 +703,7 @@ const PrismTypography = ({ text = '<HS/>' }) => {
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
-      composer.setSize(w, h);
+      if (composer) composer.setSize(w, h);
       const isNarrow = window.innerWidth < 1024;
       sculpture.position.x = isNarrow ? 0 : 5;
       sculpture.position.y = isNarrow ? 0.5 : 0;
@@ -666,7 +717,10 @@ const PrismTypography = ({ text = '<HS/>' }) => {
     const visObserver = new IntersectionObserver(
       ([entry]) => {
         isVisible = entry.isIntersecting;
-        if (isVisible && rAFId === null) {
+        sampleStart = 0;
+        sampleFrames = 0;
+        slowWindows = 0;
+        if (isVisible && !document.hidden && rAFId === null) {
           // Discard the accumulated pause so the animation resumes smoothly
           // instead of jumping by the full off-screen duration.
           globalClock.getDelta();
@@ -676,6 +730,26 @@ const PrismTypography = ({ text = '<HS/>' }) => {
       { threshold: 0, rootMargin: '200px 0px' },
     );
     visObserver.observe(container);
+
+    const handleVisibility = () => {
+      sampleStart = 0;
+      sampleFrames = 0;
+      slowWindows = 0;
+      if (document.hidden) {
+        cancelAnimationFrame(rAFId);
+        rAFId = null;
+      } else if (isVisible && rAFId === null) {
+        globalClock.getDelta();
+        lastRenderTime = 0;
+        rAFId = requestAnimationFrame(renderLoop);
+      }
+    };
+    const handleContextLost = (event) => {
+      event.preventDefault();
+      onUnavailable();
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    canvas.addEventListener('webglcontextlost', handleContextLost);
 
     const themeObserver = new MutationObserver(() => {
       const nextDark = document.documentElement.classList.contains('dark');
@@ -695,16 +769,29 @@ const PrismTypography = ({ text = '<HS/>' }) => {
       cancelAnimationFrame(rAFId);
       visObserver.disconnect();
       themeObserver.disconnect();
+      document.removeEventListener('visibilitychange', handleVisibility);
+      canvas.removeEventListener('webglcontextlost', handleContextLost);
       window.removeEventListener('resize', handleResize);
       container.removeEventListener('pointermove', onPointerMove);
       container.removeEventListener('pointerleave', onPointerLeave);
-      if (renderer) renderer.dispose();
-      if (composer) composer.dispose();
+      controls.dispose();
+      mesh?.dispose();
+      orbiters?.dispose();
+      geo?.dispose();
+      mat?.dispose();
+      dustGroup.children.forEach(child => child.geometry.dispose());
+      dustMat.dispose();
+      environmentTarget.dispose();
+      if (composer) {
+        composer.passes.forEach(pass => pass.dispose());
+        composer.dispose();
+      }
+      renderer.dispose();
       if (container.contains(canvas)) {
         container.removeChild(canvas);
       }
     };
-  }, [text]);
+  }, [text, quality, onUnavailable]);
 
   return (
     <div 
